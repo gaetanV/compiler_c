@@ -5,6 +5,7 @@ export class test {
         constructor(
                 String value,
                 /Bundles/UserBundle/Service/inject inject
+                        //suprebe
         )
         {
            // $("/Bundles/UserBundle/Service/inject");
@@ -13,8 +14,12 @@ export class test {
             console.log(value);
             console.log(inject);
         }
-        superbe(){
+        public superbe(a,v){
             console.log("superbe");
+        }
+        static ret(c,n){
+            console.log("re");
+            
         }
 }
 

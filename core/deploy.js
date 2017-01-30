@@ -10,6 +10,7 @@
         import: "import[^\{]*{([^\}]*)}[^f]*from([^;]*)",
         constructor: "constructor[\\s]*\\(([^\)]*)\\)[^\{]*\{",
         export: "export[\\s]*class[\\s]*${func}[\\s]*([^\{]*)\{",
+        reflect: "(private[\\s]*|static[\\s]*|public[\\s]*|constructor[\\s]*)([^\(]*)\\(([^\)]*)[^\{]*\{",
         js: "^(.*).js$",
     }
 
@@ -29,10 +30,23 @@
        static parseInnerClass(fn,file){
             let exportRegex = new RegExp(REGEX.export.apply({func: fn}),"g");
             let func={
+                parseArrayFunc: (txt) => {
+                    return txt.split(",").map(function(arg) {
+                       return arg.replace(/\/\*.*\*\//, '').trim();
+                    }).filter(function(arg) {
+                       return arg;
+                    });
+                },
                 getExportName: (fn,file) => {
                    //TO DO :: EXTENDS NAMESPACE + INTERFACES
+                  
                     let match = exportRegex.exec(file);
-                    if(!match){throw "ERROR "+fn+" CLASS IS NOT CORRECTLY DEFINED"};
+               
+                 
+                    if(!match){
+                        
+                        throw "ERROR "+fn+" CLASS IS NOT CORRECTLY DEFINED"
+                    };
                     return match;
                 },
                 getImport: (file) => {
@@ -61,48 +75,58 @@
                         cmp+= a;
                         if(cmp == 0){r = b;}
                     });
+                    
                     if(!r){ throw "ERROR IN CLASS"};
                     return file.slice(start_index,r+1);
                 },
-                getConstructorArgs: (c) => {
-                    let match =  new RegExp(REGEX.constructor,"g").exec(c), args;
-                    if(match){
-                        if(match[1]){
-                            args = match[1].split(",");
-                            args=args.map(function(a,b){return a.trim().split(" ");})
-                            return { values: args, match: match } ;
+                getReflexion: (c) =>{
+                     console.log(c);
+                    let inject={"public":[], "private":[], "static":[], "constructor":{} },m= new RegExp(REGEX.reflect,"g"),match,args;
+                    do {
+                        match = m.exec(c);
+                        if (match) {
+                            args = func.parseArrayFunc(match[3]);
+                            let index = {start: match.index , end: match.index + match[0].length};
+                            let type  = match[1].trim();
+                            let result = { type: type , index : index , argsText:match[3] , name : match[2]  , args : args  } ;
+                            switch(type){
+                                case "constructor":
+                                    result.args=args.map(function(a,b){return a.trim().split(" ");});
+                                    inject.constructor= result;
+                                    break;
+                                case "static":
+                                case "public":
+                                case "private":
+                                    inject[type].push(result);
+                                    break;
+                            }
                         }
-                     }
-                     return false;
+                    } while (match);
+                    return inject
                 }
             }
 
             let match = func.getExportName(fn, file);
             let inject = func.getImport(file);
             let c  = func.getInnerFunc(match.index+match[0].length-1, file);
-            let argsObj = func.getConstructorArgs(c);
-            
-            let args = [];
-            
-            if(argsObj){
-                args = argsObj.values;
-                var index = argsObj.match.index + argsObj.match[0].length;
-                
-                if(args) {
-                    let rest = "";
-                    if(inject.length>0){
+            let m = func.getReflexion(c);
+            let args=[];
+            if(m.constructor){
+                var index = m.constructor.index.end;
+                if(inject.length>0){
+                        let rest = "";
                         rest += "let $=new autoload();\n";
                         for(var i in inject){
                                    rest+="let "+inject[i].name+" = $("+inject[i].space+");\n";
                         }
-                        c = c.slice(0, index) + rest + c.slice(index);
-                        
-                        
-                        
-                    }
-                    c = c.replace(argsObj.match[1],args.map(function(a,b){ return a[1]; }));   
+                        c = c.slice(0, index) + rest + c.slice(index);     
+                }
+                if(m.constructor.args) {
+                    c = c.replace(m.constructor.argsText,m.constructor.args.map(function(a,b){ return a[1]; }));   
+                    args = m.constructor.args;
                 }
             }
+            
             return {fn:"class "+fn+" "+match[1]+c,args:args,inject:inject}
         }
              

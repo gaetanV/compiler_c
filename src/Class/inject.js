@@ -13,4 +13,7 @@ export class inject {
             console.log(integer);
             
         }
+        private superbe(a,v){
+            console.log("superbe private");
+        }
 }

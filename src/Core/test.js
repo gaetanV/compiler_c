@@ -4,10 +4,7 @@
 import { test } from '/Bundle/Superbe'; 
 import { a } from '/Bundle/ert';
 
-
 export class test {
-        test : int;
-        
         constructor(
                 String value,
                 /Bundles/UserBundle/Service/inject inject
@@ -19,6 +16,15 @@ export class test {
             console.log(value);
             console.log(inject);
         }
+        private test(a){
+            console.log("reflexion mapping");
+        }
+        public re(){
+            
+        }
+        static de(s){
+            console.log("reflexion static");
+        }   
 }
 
 
