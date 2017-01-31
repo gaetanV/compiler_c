@@ -13,24 +13,24 @@ module.exports=(function(){
                     if(!match){ throw "ERROR "+ this.funcName +" CLASS IS NOT CORRECTLY DEFINED"}; 
                     
                     let inject = classBuild.getImport(file);
-                    let pointer=match.index+match[0].length-1;
+                    let pointer=match.index+match[0].length;
                     let end =false ;
                     var map = [] , current = [] , d;
                     classBuild.getBracket(file).map(function(a,b){
                            if(a == 1) { current.push(b); };
-                           if(a == -1){ d = current.pop() ;  if( d > (pointer+1) && !end ){  map[d - (pointer+1)] =  b  - (pointer+1)   }  ; pointer == d && ( end = b ); }
+                           if(a == -1){ d = current.pop() ;  if( d > (pointer) && !end ){  map[d - (pointer)] =  b  - (pointer)   }  ; pointer-1 == d && ( end = b ); }
                     });
                      
-                    this.content = file.slice(pointer+1,end);
+                    this.content = file.slice(pointer,end);
                     this.index= map;
-                    this.reflexion = this.getReflexion(this.content);    
+                    this.reflect = this.getReflect(this.content);    
                 }
    
                 header(namespace) {
                     let str ="";
                     str+= "(function () {\n"
                     str+= "'use strict';\n";
-                    str+= "autoload("+namespace+").class('"+this.funcName+"', "+this.funcName+"("+JSON.stringify(this.reflexion.constructor.args)+");\n";
+                    str+= "autoload("+namespace+").class('"+this.funcName+"', "+this.funcName+"("+JSON.stringify(this.reflect.constructor.args)+");\n";
                     str+= "class "+this.funcName +"{\n";
                     return str;
                 }
@@ -39,6 +39,7 @@ module.exports=(function(){
                     str+= this.funcConstructor();
                     str+= this.funcPublic();
                     str+= this.funcStatic();
+                    str+= this.funcReflect();
                     return  str;
                 }
                 footer() {
@@ -46,7 +47,7 @@ module.exports=(function(){
                 }
                 funcStatic(){
                      let str ="";
-                     this.reflexion.static.every(function(a,b){
+                     this.reflect.static.every(function(a,b){
                           str+= "static "+a.name+"("+a.args+"){\n"+ a.content + "\n"+"}\n";
                      });
                      return str;
@@ -54,19 +55,40 @@ module.exports=(function(){
                 
                 funcPublic(){
                      let str ="";
-                     this.reflexion.public.every(function(a,b){
+                     this.reflect.public.every(function(a,b){
                           str+= a.name+"("+a.args+"){\n"+a.content+"\n"+"}\n";
                      });
                      return str;
                 }
                 
                 funcConstructor(){
-                    return "constructor ("+this.reflexion.constructor.args.map(function(a,b){ return a[1]; })+")";
-                    str+= this.reflexion.constructor.content;
+                    let str = "constructor ("+this.reflect.constructor.args.map(function(a,b){ return a[1]; })+"){\n";
+                    str+= this.reflect.constructor.content;
                     str+= "\n"+"}\n" ;
+                    return str;
                 }
-
-                getReflexion(c) {
+                funcReflect(c) {
+                    let str ="static reflect(){\n";
+                    let cr=  this.reflect.constructor;
+                    let constructor={
+                        type : cr.type,
+                        name : cr.type,
+                        args : cr.args
+                    }
+                    str+= "return " + JSON.stringify(
+                            this.reflect.public.map(function(a,b){return {type:a.type, name:a.name, args:a.args }})
+                            .concat(
+                                this.reflect.static.map(function(a,b){return {type:a.type, name:a.name, args:a.args }})
+                            ).concat(
+                                this.reflect.private.map(function(a,b){return {type:a.type, name:a.name, args:a.args }})
+                            ).concat(
+                                [constructor]
+                            )
+                     );
+                    str+= "\n"+"}\n" ;
+                    return str;
+                }
+                getReflect(c) {
                     let inject={"public":[], "private":[], "static":[], "constructor":{} },m= new RegExp(REGEX.reflect,"g"),match,args;
                     do {
                         match = m.exec(c);
