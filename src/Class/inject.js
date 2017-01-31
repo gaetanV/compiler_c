@@ -5,8 +5,10 @@ import { test } from '/Bundle/Superbe';
 import { a } from '/Bundle/ert';
 
 export class inject {
+
         constructor(String value,int integer)
         {
+            SELF.genial = "superbe";
             new test("ss");
             console.log("-----inject-----");
             console.log(value);

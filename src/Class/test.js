@@ -5,7 +5,6 @@ export class test {
         constructor(
                 String value,
                 /Bundles/UserBundle/Service/inject inject
-                        //suprebe
         )
         {
            // $("/Bundles/UserBundle/Service/inject");
