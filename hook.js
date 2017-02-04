@@ -1,5 +1,5 @@
-'use strict'
 module.exports = (function () {
+    'use strict'
     return {
         name: "run.js",
         injection: "type",

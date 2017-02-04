@@ -16,7 +16,7 @@ module.exports = (function () {
 
         header(namespace) {
             let str = "";
-            str += "(function () {\n"
+            str += "(function (autoload) {\n"
             str += "'use strict';\n";
             str += "autoload('" + namespace + "').class('" + this.funcName + "', " + this.funcName + ", " + JSON.stringify(this.reflect.constructor.args) + ");\n";
             return str;
@@ -29,7 +29,7 @@ module.exports = (function () {
             return  str;
         }
         footer() {
-            return "})();\n";
+            return "})(autoload);\n";
         }
         funcStatic() {
             let str = "";
@@ -41,7 +41,7 @@ module.exports = (function () {
 
         funcPublic() {
             let str = "";
-            this.reflect.public.every(function (a, b) {
+            this.reflect.public.forEach(function (a, b) {
                 str += this.funcName + ".prototype." + a.name + " = function(" + a.args + "){\n" + a.content + "\n" + "}\n";
             }.bind(this));
             return str;
@@ -49,9 +49,10 @@ module.exports = (function () {
 
         funcConstructor() {
             let str = "";
-            str += "function " + this.funcName + "(" + this.reflect.constructor.args.map(function (a, b) {
-                return a[1];
-            }) + "){\n";
+            str += "function " + this.funcName + "(args){\n";
+            this.reflect.constructor.args.map(function (a, b) {
+                str+= "var "+a[1]+" = args."+a[1]+";\n";
+            });
             str += this.reflect.constructor.content;
             str += "\n" + "}\n";
             return str;
