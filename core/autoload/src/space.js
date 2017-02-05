@@ -1,10 +1,7 @@
 class Space {
     constructor(owner) {
         this.children = [];
-        this.owner = owner;
         this.Class = [];
-        this.Abstract = [];
-        this.Interface = [];
     }
     class(name, fn, inject) {
         if (!this.Class[name]) {

@@ -1,7 +1,9 @@
 class Class {
-    constructor(fn, inject) {
+    constructor(fn, inject ,type) {
+        
         this.fn = fn;
         this.inject = inject;
+        this.type = type?type:"class";
 
     }
 }

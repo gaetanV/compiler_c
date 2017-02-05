@@ -4,48 +4,49 @@ const $path = require('path');
 const autoload = require($path.join(__dirname, 'autoload.js'));
 let bootstrap = (function () {
     'use strict'
-    let user = class {}
-    let root = new user();
-    let ab = new user();
-    autoload.owner('/Bundles/', root);
+    let key = {name: "bootstrap", method: "strict" ,role: "root"};
+
+    autoload.containers(
+            {
+                "/Bundles/UserBundle/Service/": ["/Bundles/UserBundle/Service/"],
+                "/Bundles/": ["/Bundles/UserBundle/", "/Bundles/"]
+            },
+            key
+            );
+
     return class {
         constructor() {
-            let $ = new autoload.$(["/Bundles/"], root);
-            let b = new $('/Bundles/UserBundle/Service/inject')({string: "test", integer: 5});
-            console.log(b);
+            let $ = autoload.deploy(key);
+            console.log($('/Bundles/UserBundle/Service/test'));
+             $('/Bundles/UserBundle/Service/inject')({string: "string", integer:5});
         }
     }
 
 })();
-(function () {
-    class inject {
-        constructor(params) {
-            let $ = new autoload.$(["/Bundles/"], root);
-            let string = params.string;
-            let integer = params.integer;
-            let c = new $('/Bundles/UserBundle/Service/test')({string: "test", inject: this});
-            console.log(c);
-
-            console.log("-----inject-----");
-            console.log(`{string:${string},integer:${integer}}`);
-        }
+autoload('/Bundles/UserBundle/Service/').class('inject', class inject {
+    constructor(params) {
+       
+        let importA = params.import('/Bundles/UserBundle/Service/test');
+        let string = params.string;
+        let integer = params.integer;
+        
+        importA({string: "string", inject:this});
+        console.log(params);
+   
     }
-    autoload('/Bundles/UserBundle/Service/').class('inject', inject, {string: "string", integer: "int"});
-})();
-(function () {
-    class test {
-        constructor(params) {
-            let $ = new autoload.$(["/Bundles/"], root);
-            let string = params.string;
-            let inject = params.inject;
+}, {string: "string", integer: "int"});
 
-            console.log("-----test-------");
-            console.log(`{string:${string},inject:${inject}}`);
+autoload('/Bundles/UserBundle/Service/').class('test', class test {
+    constructor(params) {
 
-        }
+        let string = params.string;
+        let inject = params.inject;
+      
+
+        console.log("-----test-------");
+        console.log(`{string:${string},inject:${inject}}`);
+
     }
-    autoload('/Bundles/UserBundle/Service/').class('test', test, {string: "string", inject: "/Bundles/UserBundle/Service/inject"});
-})();
-
+}, {string: "string", inject: "/Bundles/UserBundle/Service/inject"});
 
 new bootstrap();

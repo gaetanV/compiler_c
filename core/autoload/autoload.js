@@ -1,55 +1,176 @@
 module.exports = (function () {
 'use strict'
-class $ {
-    constructor(namespace, user, myspace) {
-        this.myspace = myspace;
-        this.namespace = namespace;
-        this.user = user;
+class Autoload {
+    constructor() {
+        this.mapping;
+      
+        this.namespace = new Namespace();
+        this.isdeploy;
+        this.lock;
+        var c = this.self.bind(this);
+        c.containers = this.containers.bind(this);
+       
+        c.deploy = this.deploy.bind(this);
         var vm = this;
-        function self(namespace) {
-
-            var n = namespace.split("/");
-            var fnname = n.pop();
-            var n = n.slice(1);
-
-            var thatspace = vm.myspace.getNamespaceByUser(n, vm.user);
-            if (!thatspace) {
-                throw"THAT SPACE NOT EXIST";
-            }
-            var thatclass = thatspace.Class[fnname];
-            if (this == "undefined") {
-                return thatclass
+        return c;
+    }
+    self(namespace) {
+        if (!this.isdeploy && this.lock) {
+            var n = namespace.split("/").slice(1, -1);
+            var namespace = this.namespace.getNamespace(n);
+            if (namespace) {
+                return {
+                    class: function (name, fn, inject) {
+                        var space = namespace;
+                        space.class(name, fn, inject);
+                    }.bind(this)
+                }
             } else {
-                return function (args) {
+                return {
+                    class: function (name, fn, inject) {
+                        var space = this.namespace.setNamespace(n);
 
-                    for (var i in args) {
-                        if (thatclass.inject[i]) {
-                            var type = thatclass.inject[i];
-
-                            try {
-                                if (type[0] != "/") {
-                                    vm.typeValidator(args[i], type);
-                                } else {
-                                    vm.classValidator(args[i], type);
-                                }
-
-                            } catch (err) {
-                                console.log(err);
-                            }
-
+                        space.class(name, fn, inject);
+                    }.bind(this)
+                }
+            }
+        }else {
+            console.log("DON'T TRY TO HACK");
+        }
+    }
+    containers(mapping, locky) {
+        if (!this.mapping && !this.lock) {
+            this.lock = locky;
+            this.mapping = mapping;
+            return true;
+        } else {
+            console.log("DON'T TRY TO HACK");
+        }
+        return false;
+    }
+    deploy(key) {
+        if (!this.isdeploy && key === this.lock) {
+            let tmpregister = [], register = [];
+            for (var i in this.mapping) {
+                var n = i.split("/").slice(1, -1);
+                let c = this.mapping[i];
+                let space = this.namespace.getNamespace(n);
+                if (space) {
+                    let func = [];
+                    for (var j in c) {
+                        let a = c[j].split("/").slice(1, -1);
+                        let b = this.namespace.getNamespace(a);
+                        let result = Autoload.parseInner(a.join("/"), b);
+                        for (var j in result) {
+                            func[j] = result[j];
                         }
                     }
-                    var c={};
+
+                    let owner = Autoload.parseInner(n.join("/"), space);
+
+                    tmpregister.push({owner: owner, func: func});
+                }
+            }
+            tmpregister.forEach((e) => {
+                for (var j in e.owner) {
+                    if (!register[j]) {
+                        var owner =e.owner[j];
+                        register[j] = new Injection({
+                            fn:owner.fn,
+                            inject:owner.inject,
+                            type:owner.type,
+                        });
+                    }
            
-                    
-                    return  new thatclass.fn(args);
-                   
-                };
+                    for (var k in e.func) {
+                        register[j].imports[k] = e.func[k];
+                    }
+                }
+            })
+            /*******
+             * RECURSIVE
+             */ 
+             for (var i in register) {
+                   for (var j in register[i].imports) {
+                        register[i].imports[j] = register[j];
+                   }
+             }
+             
+            this.isdeploy = true;
+            return function(space){   
+                   return function(args){
+                       register[space].build(args);
+                   } 
+            }
+             
+        }else {
+            console.log("DON'T TRY TO HACK");
+        }
+    }
+    static parseInner(namespace, space) {
+        let array = [];
+        for (var i in space.Class) {
+            array[("/"+namespace + "/" + i).replace(/\/\//g, "/")] = space.Class[i];
+        }
+        if (space.children) {
+            for (var i in space.children) {
+                let result = Autoload.parseInner(("/"+namespace + "/" + i).replace(/\/\//g, "/"), space.children[i]);
+                for (var j in result) {
+                    array[j] = result[j];
+                }
             }
         }
-        return self;
-    }  
+        return array;
+    }
 
+}
+class Class {
+    constructor(fn, inject ,type) {
+        
+        this.fn = fn;
+        this.inject = inject;
+        this.type = type?type:"class";
+
+    }
+}
+class Injection {
+    constructor(space) {
+        this.fn = space.fn;
+        this.imports = [];
+        this.inject = space.inject;
+        this.type = space.type;
+    }
+    build(args) {
+        for (var i in args) {
+            if (this.inject[i]) {
+                var type = this.inject[i];
+                
+                try {
+                    if (type[0] != "/") {
+                        this.typeValidator(args[i], type);
+                    } else {
+                        this.classValidator(args[i], type);
+                    }
+
+                } catch (err) {
+                    console.log(err);
+                    return false;
+                  
+                    
+                }
+            }
+        }
+        args.import  = (namespace) => {
+            if(this.imports[namespace]){
+              return (args) => {
+                this.imports[namespace].build(args);
+              }
+            }else{
+                console.log("error import not exist");
+            }
+        }
+        return  new this.fn(args);
+    }
     typeValidator(a, type) {
         switch (type) {
             default:
@@ -85,99 +206,22 @@ class $ {
         return true;
 
     }
-    classValidator(a, namespace) {
-        var n = namespace.split("/");
-        var fnname = n.pop();
-        var n = n.slice(1);
-        var thatspace = this.myspace.getNamespaceByUser(n, this.user);
-
+    classValidator(a, namespace) {   
+        let thatspace = this.imports[namespace];
         if (!thatspace) {
             throw"THAT SPACE NOT EXIST";
         }
-        var thatclass = thatspace.Class[fnname];
-        if (thatclass.fn !== a.constructor) {
+        if (thatspace.fn !== a.constructor) {
+
             throw "ERROR NOT A OWNER OBJECT";
         }
         return true;
     }
 
 }
-class Autoload {
-    constructor() {
-        this.namespace = new Namespace();
-        var c = this.self.bind(this);
-        c.owner = this.owner.bind(this);
-        var vm = this;
-        c.$ = function (namespace, user) {
-            var myspace = new Namespace();
-            for (var i in namespace) {
-                var n = namespace[i].split("/").slice(1, -1);
-                var spaceInject = vm.namespace.getNamespaceByUser(n, user);
-                if (spaceInject) {
-                    var space = myspace.setNamespace(n);
-                    Object.assign(space, spaceInject);
-                }
-            }
-            return new $(namespace, user, myspace);
-        };
-        return c;
-    }
-    self(namespace) {
-        
-        var n = namespace.split("/").slice(1, -1);
-        var namespace = this.namespace.getNamespace(n);
-        if (namespace) {
-            return {
-                class: function (name, fn, inject) {
-                    var space = namespace;
-                    space.class(name, fn, inject);
-                }.bind(this)
-            }
-        } else {
-            return {
-                class: function (name, fn, inject) {
-                    var space = this.namespace.setNamespace(n);
-
-                    space.class(name, fn, inject);
-                }.bind(this)
-            }
-        }
-    }
-    owner(namespace, owner) {
-        if (owner.constructor.name == "User") {
-            var n = namespace.split("/").slice(1, -1);
-            namespace = n[0];
-            if (this.namespace.getNamespace(n)) {
-                return false;
-            } else {
-                this.namespace.setNamespace(n);
-                this.namespace.setOwner(n, owner);
-            }
-        }
-    }
-}
-class Class {
-    constructor(fn, inject) {
-        this.fn = fn;
-        this.inject = inject;
-
-    }
-}
 class Namespace {
     constructor() {
         this.spaces = {};
-    }
-    setOwner(n, user) {
-        var space = this.getNamespace(n);
-        console.log("setOwner");
-        if (space.owner === false) {
-            space.owner = user;
-
-            return true;
-        } else {
-            console.log("ERROR USER IS ALREADY DEFININED");
-            return false;
-        }
     }
     setNamespace(n, name, fn, inject) {
         console.log("setNamespace");
@@ -208,35 +252,11 @@ class Namespace {
         }
         return tmpspaces;
     }
-    getNamespaceByUser(n, user) {
-        var tmpspaces = this.spaces;
-        for (var i in n) {
-            tmpspaces = tmpspaces[n[i]];
-
-            if (!tmpspaces) {
-                return false;
-            } else {
-                if (tmpspaces.owner != false) {
-                    if (tmpspaces.owner !== user) {
-                        console.log("ERROR USER CAN ACCES THIS SPACE");
-                        return false;
-                    }
-                }
-            }
-            if (i != n.length - 1) {
-                tmpspaces = tmpspaces.children;
-            }
-        }
-        return tmpspaces;
-    }
 }
 class Space {
     constructor(owner) {
         this.children = [];
-        this.owner = owner;
         this.Class = [];
-        this.Abstract = [];
-        this.Interface = [];
     }
     class(name, fn, inject) {
         if (!this.Class[name]) {
