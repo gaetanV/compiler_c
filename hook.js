@@ -1,18 +1,57 @@
 module.exports = (function () {
     'use strict'
     return {
-        name: "run.js",
-        injection: "type",
-        namespace: {
-            "Bundles/Class/": "./exemple/Class/",
-            "Core": "./exemple/Core/"
+        param: {
+            restrict_bundle_space : "/var/www/private/tmp",
+            htpp :{
+                ip : "58.125.136.124",
+                port : 8080,
+            }
         },
-        target: "es6",
-        mapping: {
-            "app.js": ["Core", "Bundles/Class/"],
-            "Bundles/Class/": ["Bundles/Class/"]
+        contenairs : {
+            bundle :{
+                 injection: "none",
+                 src: "./exemple/Bundle/",
+                 namespace: "Bundles/Class/",
+                 imports : ["Bundles/Class/entity/", "Bundles/Class/security/"] ,
+                 services : {
+                     "bundleFile" : "bundleFile",
+                 }
+            },
+            route :{
+                 injection: "typeJS",
+                 src: "./exemple/Route/",
+                 namespace: "Bundles/Route/",
+                 imports : ["Bundles/Class/"] ,
+                 services : {
+                     "serveurHttp" : "serveurHttp",
+                 }
+            },
         },
-        bootstrap: "./app/bootstrap.js",
-        start: "./app/app.js"
+        services: {
+            bundleFile: {
+               injection: "typeJS",
+               class: "./exemple/Core/fs/fs",
+               inject: { 
+                   spaceRestraint: "%restrict_bundle_space%"
+               },
+               import: ["./exemple/Core/fs/lib/"]
+            },
+            serveurHttp:{
+               injection: "typeJS",
+               class: "./exemple/Core/server/serverHttp",
+               inject: {
+                   ip: "%ip%",
+                   port : "%port%"
+               },
+               import: ["./exemple/Core/server/lib/"]
+            },
+            response:{
+                injection: "none",
+                class: "./exemple/Core/http/respnse",
+            }
+        },
+        target : "es6",
+        bootstrap: "./app/bootstrap.js"
     }
 })();

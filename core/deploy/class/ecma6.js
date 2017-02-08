@@ -8,22 +8,16 @@ module.exports = (function () {
 
         build(namespace) {
             let str = "";
-            str += this.header(namespace);
-            str += this.body();
-            str += this.footer();
-            return str;
-        }
-
-        header(namespace) {
-            let str = "";
-            str += "(function (autoload) {\n"
-            str += "'use strict';\n";
-            str += "autoload('" + namespace + "').class('" + this.funcName + "', " + this.funcName + ", " + JSON.stringify(this.reflect.constructor.args) + ");\n";
+            str += "autoload('" + namespace + "').class('" + this.funcName + "', ",
             str += "class " + this.funcName + "{\n";
+            str += this.inner();
+            str += "}\n";
+            str += ", " + JSON.stringify(this.reflect.constructor.args) + ");\n";
+
             return str;
         }
 
-        body() {
+        inner() {
             let str = "";
             str += this.funcConstructor();
             str += this.funcPublic();
@@ -31,9 +25,7 @@ module.exports = (function () {
             str += this.funcReflect();
             return  str;
         }
-        footer() {
-            return "};\n" + "})(autoload);\n";
-        }
+       
         funcStatic() {
             let str = "";
             this.reflect.static.every(function (a, b) {

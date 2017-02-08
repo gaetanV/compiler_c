@@ -12,6 +12,7 @@ module.exports = (function () {
                 const repertory_path = directory ; 
                 return new Promise((resolve, reject) => {
                     $fs.readdir(repertory_path, function (err, files) {
+                        
                         if (!files) {
                             resolve([]);
                         }
@@ -35,6 +36,7 @@ module.exports = (function () {
                                 })
                             }
                         })
+                         
 
                     })
                 });

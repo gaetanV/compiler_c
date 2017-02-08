@@ -42,6 +42,7 @@ class Injection {
             default:
                 throw "ERROR NOT A UNKNOWN TYPE"
                 break;
+            case "String":
             case "string":
                 if (a.constructor !== String) {
                     throw `ERROR ${a} NOT A string`
