@@ -1,10 +1,17 @@
 ```
-#Study a tool for a node framework
- 
-Restrinct import by static containers 
-Restrinct service by static containers 
-Injection by type
-Add security to natif write in ecma6 
-Downgrade to ecma5 if you want
+*******************************************
+*  Container tool for a server framework  *
+*******************************************
+
+Restrinct import , services , deamons by containers
+---------------------------------------
+
+Add security to natif write in ecma6 ( node )
+Injection by type , Interface , private ...
+
+Upgrade to go 
+
+---------------------------------------
+Next support other server languages 
 
 ```

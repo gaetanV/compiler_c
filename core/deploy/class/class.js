@@ -5,19 +5,21 @@ module.exports = (function () {
         export: "export[\\s]*class[\\s]*${func}[\\s]*([^\{]*)\{",
         reflect: "(private[\\s]*|static[\\s]*|public[\\s]*|constructor[\\s]*)([^\(]*)\\(([^\)]*)[^\{]*\{",
     }
-    return class parse {
+    return class Class {
         constructor(funcName, file) {
             this.funcName = funcName;
             let match = new RegExp(REGEX.export.apply({func: this.funcName}), "g").exec(file);
+           
             if (!match) {
                 throw "ERROR " + this.funcName + " CLASS IS NOT CORRECTLY DEFINED"
             }
-    
-            let inject = parse.getImport(file);
+     
+            let inject = Class.getImport(file);
             let pointer = match.index + match[0].length;
+            
             let end = false;
             var map = [], current = [], d;
-            parse.getBracket(file).map(function (a, b) {
+            Class.getBracket(file).map(function (a, b) {
                 if (a == 1) {
                     current.push(b);
                 }
@@ -37,19 +39,27 @@ module.exports = (function () {
             this.reflect = this.getReflect(this.content);
         }
         getReflect(c) {
-            let inject = {"public": [], "private": [], "static": [], "constructor": {}}, m = new RegExp(REGEX.reflect, "g"), match, args;
+            let inject = {"public": [], "private": [], "static": [], "constructor": {}}, m = new RegExp(REGEX.reflect, "g"), match, args ,tmp;
             do {
                 match = m.exec(c);
                 if (match) {
-                    args = parse.parseArrayFunc(match[3]);
+                    args = Class.parseArrayFunc(match[3]);
                     let index = {start: match.index, end: match.index + match[0].length};
                     let type = match[1].trim();
+                
                     let result = {type: type, content: this.content.slice(index.end, this.index[index.end - 1]).trim(), index: index, argsText: match[3], name: match[2], args: args};
                     switch (type) {
                         case "constructor":
-                            result.args = args.map(function (a, b) {
-                                return a.trim().split(" ");
+                            let t ={};
+                            args.map(function (a, b) {
+                               var  c = a.trim().split(" ");
+                               if(c[0]&&c[1]){
+                                   t[c[1]]=c[0];
+                               }else{
+                                   throw "error";
+                               }
                             });
+                            result.args = t;   
                             inject.constructor = result;
                             break;
                         case "static":

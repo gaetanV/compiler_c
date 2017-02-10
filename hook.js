@@ -11,45 +11,53 @@ module.exports = (function () {
         contenairs : {
             bundle :{
                  injection: "none",
-                 src: "./exemple/Bundle/",
-                 namespace: "Bundles/Class/",
-                 imports : ["Bundles/Class/entity/", "Bundles/Class/security/"] ,
-                 services : {
-                     "bundleFile" : "bundleFile",
-                 }
+                 src: "./exemple/Container/Bundle/",
+                 imports : ["/bundle/Class/entity/", "/bundle/Class/security/"] ,
+                 services : ["bundleFile"],    
             },
             route :{
                  injection: "typeJS",
-                 src: "./exemple/Route/",
-                 namespace: "Bundles/Route/",
-                 imports : ["Bundles/Class/"] ,
-                 services : {
-                     "serveurHttp" : "serveurHttp",
-                 }
+                 src: "./exemple/Container/Route/",
+                 imports : ["/bundle/Class/"] ,
+                 services : [ "cache"],
+                 deamon: ["serveurHttp","eventDispatcher"],
             },
         },
         services: {
+            cache: {
+               injection: "typeJS",
+               class: "./exemple/Core/cache/cache",
+               deamon: ["eventDispatcher"],
+            },
             bundleFile: {
                injection: "typeJS",
                class: "./exemple/Core/fs/fs",
                inject: { 
                    spaceRestraint: "%restrict_bundle_space%"
                },
-               import: ["./exemple/Core/fs/lib/"]
-            },
-            serveurHttp:{
+               import: [],
+            }
+        },
+        deamon: {
+             eventDispatcher: {
+                 injection: "typeJS",
+                 class: "./exemple/Core/server/serverHttp",
+             },   
+             serveurHttp: {
                injection: "typeJS",
                class: "./exemple/Core/server/serverHttp",
                inject: {
                    ip: "%ip%",
                    port : "%port%"
                },
-               import: ["./exemple/Core/server/lib/"]
-            },
-            response:{
-                injection: "none",
-                class: "./exemple/Core/http/respnse",
-            }
+               import: [],
+             },
+             cron: {
+               injection: "typeJS",
+               class: "./exemple/Core/cron/cron",
+               inject: {},
+               import: [],
+             }
         },
         target : "es6",
         bootstrap: "./app/bootstrap.js"

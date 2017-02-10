@@ -4,11 +4,12 @@ module.exports = (function () {
     const $path = require('path');
     const $fs = require('fs');
     require($path.join(__dirname, '..', 'natif', 'string.js'));
-
-    const $ecma6 = require($path.join(__dirname, 'class', 'ecma6.js'));
-    const $ecma5 = require($path.join(__dirname, 'class', 'ecma5.js'));
+    
+    const $go = require($path.join(__dirname, 'class','lang','go.js'));
+    const $ecma6 = require($path.join(__dirname, 'class','lang','ecma6.js'));
+    const $containers = require($path.join(__dirname, 'bootstrap','lang','ecma6.js'));
     const $repertory = new (require($path.join(__dirname, '..', 'files.js')))();
-    const $kernel = require($path.join(__dirname, 'kernel', 'kernel.js'));
+
 
     const PATH = {
         server: $path.join(__dirname, "..", "..", "/"),
@@ -35,13 +36,15 @@ module.exports = (function () {
         }
 
         autoload(container) {
-            let directory = container.src, namespace=container.namespace, restrict=container.restrict;
-            directory = directory.replace(/\\/g, "/");
-            namespace = !namespace ? directory : namespace.replace(/\\/g, "/");
+            let directory = container.src, namespace=container.name, restrict=container.restrict;
+            namespace = "/"+namespace.replace(/\\/g, "_").replace(/\\\\/g, "_").trim()+"/";
+     
+     
             return new Promise((resolve, reject) => {
                 let innerClass;
                 $repertory.src($path.join(PATH.server, directory)).then((e) => {
                     e.map((file) => {
+                        
                         let fn = Deploy.getClassName(file.name);
                         switch (this.target) {
                             case "es6":
@@ -50,26 +53,31 @@ module.exports = (function () {
                             case "es5":
                                 innerClass = new $ecma5(fn, file.content);
                                 break;
+                            case "go":
+                                innerClass = new $go(fn, file.content);
+                                break;
+                                
                             default:
                                 throw "error";
                                 break;
                         }
+                        
                         this.str += innerClass.build(namespace + file.namespace);
                     })
+                    
                     resolve( );
                 });
             })
 
         }
         build(mapping) {
-            let kernel = new $kernel(mapping);
+            let containers = new $containers(mapping);
             let cycle = [];
-            for (var i in kernel.contenairs) {
-                cycle.push(kernel.contenairs[i]);
+            for (var i in containers.contenairs) {
+                cycle.push(containers.contenairs[i]);
             }
             this.cycle = cycle;         
-            kernel.bootstrap().then((value)=>{
-        
+            containers.build().then((value)=>{
                 this.str = value;
                 this.compile().then(()=>{
                        this.write();
@@ -78,9 +86,10 @@ module.exports = (function () {
         }
         
         compile() {
+            let limit = this.cycle.length;
             function* thread() {
                 var index = 0;
-                while (index < this.cycle.length -1) {
+                while (index < limit -1) {
                     yield index++;
                 }
             }

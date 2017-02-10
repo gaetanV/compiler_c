@@ -5,7 +5,7 @@
     const $fs = require('fs');
 
 
-    const $repertory = new (require($path.join(__dirname, '..', 'files.js')))();
+    const $repertory = new (require($path.join(__dirname,'..', '..','..', 'files.js')))();
 
 
 
@@ -22,7 +22,7 @@
                     src += file.content.trim();
                     src += "\n";
                 })
-                src += "return new Autoload()";
+                src += "return new Register()";
                 src += "\n" + "})();\n";
 
                 resolve(src);
@@ -32,7 +32,7 @@
     function compile() {
         
         buildAutoload().then((a) => {
-            $fs.writeFile($path.join(__dirname, "autoload.js"), a, function (error) {
+            $fs.writeFile($path.join(__dirname, "register.js"), a, function (error) {
                 if (error) {
                     console.error("write error:  " + error.message);
                 } else {

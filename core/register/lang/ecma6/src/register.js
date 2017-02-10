@@ -1,4 +1,4 @@
-class Autoload {
+class Register {
     constructor() {
         this.mapping;
       
@@ -15,6 +15,7 @@ class Autoload {
     self(namespace) {
         if (!this.isdeploy && this.lock) {
             var n = namespace.split("/").slice(1, -1);
+            console.log(this.namespace);
             var namespace = this.namespace.getNamespace(n);
             if (namespace) {
                 return {
@@ -58,13 +59,12 @@ class Autoload {
                     for (var j in c) {
                         let a = c[j].split("/").slice(1, -1);
                         let b = this.namespace.getNamespace(a);
-                        let result = Autoload.parseInner(a.join("/"), b);
+                        let result = Register.parseInner(a.join("/"), b);
                         for (var j in result) {
                             func[j] = result[j];
                         }
                     }
-
-                    let owner = Autoload.parseInner(n.join("/"), space);
+                    let owner = Register.parseInner(n.join("/"), space);
 
                     tmpregister.push({owner: owner, func: func});
                 }
@@ -112,7 +112,7 @@ class Autoload {
         }
         if (space.children) {
             for (var i in space.children) {
-                let result = Autoload.parseInner(("/"+namespace + "/" + i).replace(/\/\//g, "/"), space.children[i]);
+                let result = Register.parseInner(("/"+namespace + "/" + i).replace(/\/\//g, "/"), space.children[i]);
                 for (var j in result) {
                     array[j] = result[j];
                 }
