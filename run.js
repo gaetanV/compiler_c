@@ -2,8 +2,8 @@
  *  run
  *
  * (c) Gaetan Vigneron <gaetan@webworkshops.fr>
- *  V 0.0.16
- *  09/02/2017
+ *  V 0.0.17
+ *  11/02/2017
  *  
  **/
 (function () {

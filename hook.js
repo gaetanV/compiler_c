@@ -8,11 +8,11 @@ module.exports = (function () {
                 port : 8080,
             }
         },
-        contenairs : {
+        containers : {
             bundle :{
                  injection: "none",
                  src: "./exemple/Container/Bundle/",
-                 imports : ["/bundle/Class/entity/", "/bundle/Class/security/"] ,
+                 imports : [] ,
                  services : ["bundleFile"],    
             },
             route :{
@@ -24,39 +24,33 @@ module.exports = (function () {
             },
         },
         services: {
-            cache: {
-               injection: "typeJS",
-               class: "./exemple/Core/cache/cache",
-               deamon: ["eventDispatcher"],
-            },
             bundleFile: {
                injection: "typeJS",
-               class: "./exemple/Core/fs/fs",
+               src: "./exemple/Service/bundleFile/",
+               class : "bundle",
+               imports: [],
                inject: { 
                    spaceRestraint: "%restrict_bundle_space%"
                },
-               import: [],
+              
             }
         },
-        deamon: {
-             eventDispatcher: {
-                 injection: "typeJS",
-                 class: "./exemple/Core/server/serverHttp",
-             },   
+        deamons: {
              serveurHttp: {
                injection: "typeJS",
-               class: "./exemple/Core/server/serverHttp",
+               src: "./exemple/Deamon/serveurHttp/",
+               bootstrap : "serverHttp",
                inject: {
                    ip: "%ip%",
                    port : "%port%"
                },
-               import: [],
+               imports: [],
              },
              cron: {
                injection: "typeJS",
-               class: "./exemple/Core/cron/cron",
+               src: "./exemple/Deamon/cron/",
                inject: {},
-               import: [],
+               imports: [],
              }
         },
         target : "es6",

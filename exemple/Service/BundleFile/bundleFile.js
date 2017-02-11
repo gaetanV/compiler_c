@@ -4,10 +4,8 @@
 import { test } from '/Bundle/Superbe'; 
 import { a } from '/Bundle/ert';
 
-export class inject {
-
+export class bundleFile {
         constructor(String value,int integer) {
-             console.log("Func /bundle/Controller/inject");
-        }
-        private superbe(a,v){ console.log("superbe private");}
+             console.log("Func /service/BundleFile/bundleFile");
+        }     
 }

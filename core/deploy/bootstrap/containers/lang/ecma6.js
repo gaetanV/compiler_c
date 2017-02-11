@@ -6,7 +6,8 @@ module.exports = (function () {
             super(hook);
         }
         build() {
-            let limit = Object.keys(this.contenairs).length;
+            let limit = Object.keys(this.container).length;
+               
             let bootstrap ="";
             bootstrap += `let bootstrap = (function () {\n`;
             bootstrap += `'use strict'\n`;
@@ -22,11 +23,14 @@ module.exports = (function () {
              
             let iterator = thread();
             return new Promise((resolve, reject) => {
-                for (var index in this.contenairs) {
-                    let container = this.contenairs[index];
+                for (var i in this.container) {
+                    let container = this.container[i];
+
                     bootstrap += `"${container.name}":[${container.imports.map((a)=>{return "'"+a+"'"}).join(",")}],\n`;
                        if (iterator.next().done == 1) {
                           bootstrap += "},key);\n";
+                          bootstrap += this.kernel();
+                                         
                           bootstrap += "})();\n";
                           resolve(bootstrap); 
        
@@ -34,7 +38,15 @@ module.exports = (function () {
                 }
             });
         }
-
+        kernel(){
+            let bootstrap ="";
+            bootstrap +=`return class{`;
+            bootstrap +=`   constructor(){`;
+            bootstrap +=`       let $ = register.deploy(key);`;
+            bootstrap +=`   }`
+            bootstrap +=`}`;
+            return bootstrap;
+        }
     }
 
 })();

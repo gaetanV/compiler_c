@@ -101,7 +101,6 @@ class Namespace {
         this.spaces = {};
     }
     setNamespace(n, name, fn, inject) {
-        console.log("setNamespace");
         if (!this.getNamespace(n)) {
             var tmpspaces = this.spaces;
             for (var i = 0; i < n.length; i++) {
@@ -147,7 +146,6 @@ class Register {
     self(namespace) {
         if (!this.isdeploy && this.lock) {
             var n = namespace.split("/").slice(1, -1);
-            console.log(this.namespace);
             var namespace = this.namespace.getNamespace(n);
             if (namespace) {
                 return {
@@ -182,9 +180,11 @@ class Register {
     deploy(key) {
         if (!this.isdeploy && key === this.lock) {
             let tmpregister = [], register = [];
+
             for (var i in this.mapping) {
-                var n = i.split("/").slice(1, -1);
+                let n = [i];
                 let c = this.mapping[i];
+            
                 let space = this.namespace.getNamespace(n);
                 if (space) {
                     let func = [];
@@ -192,12 +192,12 @@ class Register {
                         let a = c[j].split("/").slice(1, -1);
                         let b = this.namespace.getNamespace(a);
                         let result = Register.parseInner(a.join("/"), b);
+                       
                         for (var j in result) {
                             func[j] = result[j];
                         }
-                    }
+                    }            
                     let owner = Register.parseInner(n.join("/"), space);
-
                     tmpregister.push({owner: owner, func: func});
                 }
             }
@@ -211,7 +211,6 @@ class Register {
                             type:owner.type,
                         });
                     }
-           
                     for (var k in e.func) {
                         register[j].imports[k] = e.func[k];
                     }
@@ -229,6 +228,8 @@ class Register {
             this.isdeploy = true;
             return function(space){   
                    return function(args){
+                       //console.log(register);
+                       
                        register[space].build(args);
                    } 
             }

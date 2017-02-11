@@ -3,12 +3,15 @@ module.exports = (function () {
     const $watch = require('node-watch');
     const $path = require('path');
     const $fs = require('fs');
-    require($path.join(__dirname, '..', 'natif', 'string.js'));
+    require($path.join(__dirname, '..', 'tools', 'string.js'));
     
     const $go = require($path.join(__dirname, 'class','lang','go.js'));
     const $ecma6 = require($path.join(__dirname, 'class','lang','ecma6.js'));
-    const $containers = require($path.join(__dirname, 'bootstrap','lang','ecma6.js'));
-    const $repertory = new (require($path.join(__dirname, '..', 'files.js')))();
+    const $services = require($path.join(__dirname, 'bootstrap','services','lang','ecma6.js'));
+    const $containers = require($path.join(__dirname, 'bootstrap','containers','lang','ecma6.js'));
+    const $deamons = require($path.join(__dirname, 'bootstrap','deamons','lang','ecma6.js'));
+    
+    const $repertory = new (require($path.join(__dirname, '..','tools', 'files.js')))();
 
 
     const PATH = {
@@ -50,13 +53,9 @@ module.exports = (function () {
                             case "es6":
                                 innerClass = new $ecma6(fn, file.content);
                                 break;
-                            case "es5":
-                                innerClass = new $ecma5(fn, file.content);
-                                break;
                             case "go":
                                 innerClass = new $go(fn, file.content);
-                                break;
-                                
+                                break;                               
                             default:
                                 throw "error";
                                 break;
@@ -72,10 +71,21 @@ module.exports = (function () {
         }
         build(mapping) {
             let containers = new $containers(mapping);
+            let services = new $services(mapping);
+            let deamons = new $deamons(mapping);
             let cycle = [];
-            for (var i in containers.contenairs) {
-                cycle.push(containers.contenairs[i]);
+
+            for (var i in containers.container) {
+                cycle.push(containers.container[i]);
             }
+            for (var i in services.service) {
+                cycle.push(services.service[i]);
+            }
+            for (var i in deamons.deamon) {
+                cycle.push(deamons.deamon[i]);
+            }
+
+            
             this.cycle = cycle;         
             containers.build().then((value)=>{
                 this.str = value;

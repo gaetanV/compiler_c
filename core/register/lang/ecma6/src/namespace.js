@@ -3,7 +3,6 @@ class Namespace {
         this.spaces = {};
     }
     setNamespace(n, name, fn, inject) {
-        console.log("setNamespace");
         if (!this.getNamespace(n)) {
             var tmpspaces = this.spaces;
             for (var i = 0; i < n.length; i++) {

@@ -13,7 +13,6 @@ module.exports = (function () {
             str += this.inner();
             str += `}\n`;
             str += `,${JSON.stringify(this.reflect.constructor.args)});\n`;
-            console.log(this.reflect.constructor.args);
             return str;
         }
 

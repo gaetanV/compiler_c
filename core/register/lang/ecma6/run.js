@@ -5,7 +5,7 @@
     const $fs = require('fs');
 
 
-    const $repertory = new (require($path.join(__dirname,'..', '..','..', 'files.js')))();
+    const $repertory = new (require($path.join(__dirname,'..', '..','..','tools', 'files.js')))();
 
 
 

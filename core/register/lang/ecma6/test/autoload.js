@@ -14,9 +14,9 @@ let bootstrap = (function () {
     }, key)
    return class {
         constructor() {
-          //  let $ = autoload.deploy(key);
-           // console.log($('/Bundles/UserBundle/Service/test'));
-           // $('/Bundles/UserBundle/Service/inject')({string: "string", integer: 5});
+            let $ = register.deploy(key);
+            console.log($('/bundle/Controller/inject'));
+            $('/bundle/Controller/inject')({string: "string", integer: 5});
         }
     }
     
@@ -41,10 +41,11 @@ register('/route/').class('test', class {
     }
 }
 , {"value": "String", "inject": "/Bundles/UserBundle/Service/inject"});
-register('/bundle/Controller').class('inject', class {
+register('/bundle/Controller/').class('inject', class {
     constructor(args) {
         let value = args.value;
         let integer = args.integer;
+        console.log("ss");
 
     }
     static reflect() {
@@ -52,11 +53,11 @@ register('/bundle/Controller').class('inject', class {
     }
 }
 , {"value": "String", "integer": "int"});
-register('/bundle/Controller').class('test', class {
+register('/bundle/Controller/').class('test', class {
     constructor(args) {
         let value = args.value;
         let inject = args.inject;
-
+      
     }
     superbe(a, v) {
 
@@ -71,3 +72,4 @@ register('/bundle/Controller').class('test', class {
     }
 }
 , {"value": "String", "inject": "/Bundles/UserBundle/Service/inject"});
+new bootstrap();
