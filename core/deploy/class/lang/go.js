@@ -8,7 +8,7 @@ module.exports = (function () {
             super(funcName, file);
         }
         
-        build(namespace) {
+        build() {
             let str = "";
             str += this.inner();
             return str;
@@ -23,11 +23,16 @@ module.exports = (function () {
         
         funcStruct(){
             let str = "";
-            var a = this.reflect.constructor;
-            str += `type ${this.funcName}struct {\n`;
-            for(var i in a.args){
-                 str+= `${i} ${a.args[i]}\n`;
+            str += `type ${this.funcName} struct {\n`;
+            for(var i in this.interface){
+                 str+= `${i} ${this.interface[i]}\n`;
             }
+            str += `}\n`
+            
+            str += `type ${this.funcName}Interface interface {\n`;      
+            this.reflect.public.every(function (a, b) {
+                   str +=  `${a.name}(${a.args})\n`
+            });
             str += `}\n`
             return str;
         }
@@ -36,7 +41,7 @@ module.exports = (function () {
             let str = "";
             let d = this.funcName;
             this.reflect.public.every(function (a, b) {
-                str += `func (${self} *${d}) (${a.args}){\n${a.content}\n}\n`;
+                str += `func (${self} *${d}) ${a.name}(${a.args}){\n${a.content}\n}\n`;
             });
             return str;
         }
@@ -45,11 +50,10 @@ module.exports = (function () {
             let a = this.reflect.constructor;
             let args = "";
             for(var i in a.args){
-                args += `${i} ${a.args[i]} `
+                args += `${a.args[i]} ${i}`
             }
-            let str = "";
-            str += `func new${this.funcName} (${args}){\n${a.content}\n}\n`;
-            return str;
+    
+            return `func new${this.funcName} (${args})  ${this.funcName}Interface{\nthis := new(${this.funcName})\n${a.content}\nreturn this\n}\n`;
         }
         
     }  

@@ -3,6 +3,8 @@ module.exports = (function () {
     const REGEX = {
         import: "import[^\{]*{([^\}]*)}[^f]*from([^;]*)",
         export: "export[\\s]*class[\\s]*${func}[\\s]*([^\{]*)\{",
+        interface: "interface[^\{]*{([^\}]*)}",
+        interfaceInner : "[\r\n]*([^\:]*):([^\;]*);",
         reflect: "(private[\\s]*|static[\\s]*|public[\\s]*|constructor[\\s]*)([^\(]*)\\(([^\)]*)[^\{]*\{",
     }
     return class Class {
@@ -15,6 +17,7 @@ module.exports = (function () {
             }
      
             let inject = Class.getImport(file);
+   
             let pointer = match.index + match[0].length;
             
             let end = false;
@@ -33,7 +36,7 @@ module.exports = (function () {
                     pointer - 1 == d && (end = b);
                 }
             });
-
+            this.interface = Class.getInterface(file);
             this.content = file.slice(pointer, end);
             this.index = map;
             this.reflect = this.getReflect(this.content);
@@ -107,6 +110,20 @@ module.exports = (function () {
                 }
             } while (tmp);
             return inject
+        }
+        static  getInterface(file) {
+            var interfaces = {}, m = new RegExp(REGEX.interface, "g") , inner = new RegExp(REGEX.interfaceInner, "g") ,tmp2;
+            var tmp = m.exec(file);
+            if (tmp) {
+               do {
+                   tmp2 = inner.exec(tmp[1]);
+                   if(tmp2){
+                       interfaces[tmp2[1].trim()] = tmp2[2].trim();
+                   }
+               } while (tmp2);
+            }
+    
+            return interfaces;
         }
     }
 })();

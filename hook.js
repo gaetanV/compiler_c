@@ -53,7 +53,5 @@ module.exports = (function () {
                imports: [],
              }
         },
-        target : "go",
-        bootstrap: "./app/bootstrap.js"
     }
 })();
