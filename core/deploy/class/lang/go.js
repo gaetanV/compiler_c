@@ -2,8 +2,12 @@ module.exports = (function () {
     'use strict'
     const $class = require('./../class.js');
     const self = "this";
-    return class go extends $class {
+    const REGEX = {
+        command: "{%([\x00-\x7E]*)%}([\x00-\x7E]*){%([\x00-\x7E]*)%}",
+        operator: "(if)([^=<>]*)([=<>]*)(.*)"
+    }
 
+    return class go extends $class {
         constructor(funcName, file) {
             super(funcName, file);
         }
@@ -12,6 +16,67 @@ module.exports = (function () {
             let str = "";
             str += this.inner();
             return str;
+        }
+        buildTemplate(scope, method) {
+            var factory = {public: [], private: [], static: [], constructor: this.reflect.constructor}
+            delete this.reflect.constructor;
+
+            var apply = (string, scope) => {
+                for (var i in  scope) {
+                    string = string.replace(new RegExp(`{{${i}}}`, 'g'), scope[i]);
+                }
+                return string;
+            };
+            var compile = (string, scope) => {
+                var m = new RegExp(REGEX.command, "g"), match, operator;
+                do {
+                    operator = false;
+                    match = m.exec(string);
+                    if (match) {
+                        var start = match.index + match[1].length + 4;
+                        var end = start + match[2].length;
+
+                        var content = string.slice(start, end);
+
+                        var tmp = RegExp(REGEX.operator, "g").exec(match[1]);
+
+                        switch (tmp[1]) {
+                            case "if":
+                                var t1 = tmp[2].trim()
+                                var t2 = scope[t1]
+                                if (t2) {
+                                    var func = "return " + tmp[2] + tmp[3] + tmp[4];
+                                    if (new Function(t1, func)(t2)) {
+                                        operator = true;
+                                    }
+                                }
+                                break
+                        }
+                        if (operator) {
+                            string = string.replace(match[0], content);
+                        } else {
+                            string = string.replace(match[0], "");
+                        }
+                    }
+                } while (match)
+                return string;
+            }
+
+            for (var i in this.reflect) {
+                for (var j in this.reflect[i]) {
+                    if (method.indexOf(j)) {
+                        for (var k in  this.reflect[i][j].return) {
+                            this.reflect[i][j].return[k] = apply(this.reflect[i][j].return[k], scope);
+                        }
+                        var c = apply(this.reflect[i][j].content, scope);
+                        this.reflect[i][j].content = compile(c, scope);
+                        factory[i][j] = this.reflect[i][j];
+                    }
+                }
+            }
+
+            this.reflect = factory;
+            return this.build();
         }
         inner() {
             let str = "";
@@ -25,7 +90,7 @@ module.exports = (function () {
         funcGetter() {
             let str = "";
             let d = this.funcName;
-            
+
             for (var i in this.interface.public) {
                 str += `func (${self} *${this.funcName}) get${i}()(*${this.interface.public[i]})  {\nreturn &this.${i}\n}\n`;
             }
@@ -34,7 +99,7 @@ module.exports = (function () {
         funcSetter() {
             let str = "";
             for (var i in this.interface.public) {
-               str += `func (${self} *${this.funcName}) set${i}(${i} ${this.interface.public[i]})  {\nthis.${i} = ${i}\n}\n`;
+                str += `func (${self} *${this.funcName}) set${i}(${i} ${this.interface.public[i]})  {\nthis.${i} = ${i}\n}\n`;
             }
             return str;
         }
@@ -65,8 +130,8 @@ module.exports = (function () {
                 str += `${a.name}(${a.args})(${a.return})\n`
             });
             for (var i in this.interface.public) {
-               str += `get${i}()(*${this.interface.public[i]})\n`;
-               str += `set${i}(${i} ${this.interface.public[i]})\n`;
+                str += `get${i}()(*${this.interface.public[i]})\n`;
+                str += `set${i}(${i} ${this.interface.public[i]})\n`;
             }
             str += `}\n`
             return str;

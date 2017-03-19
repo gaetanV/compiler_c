@@ -5,7 +5,7 @@ module.exports = (function () {
         export: "export[\\s]*class[\\s]*${func}[\\s]*([^\{]*)\{",
         interface: "interface[^\{]*{([^\}]*)}",
         interfaceInner : "[\r\n]*(private[\\s]*|static[\\s]*|public[\\s]*)([^\:]*):([^\;]*);",
-        reflect: "(private[\\s]*|static[\\s]*|public[\\s]*|constructor[\\s]*)([^\(]*)\\(([^\)]*)\\)([^\{]*)\{",
+        reflect: "(private[\\s]*|static[\\s]*|public[\\s]*|constructor[\\s]*)([^\(]*)\\(([^\)]*)\\)(.*)[\{]{1}",
     }
     return class Class {
         constructor(funcName, file) {

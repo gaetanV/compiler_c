@@ -45,21 +45,21 @@ module.exports = (function () {
             return new Promise((resolve, reject) => {
                 let innerClass;
                 $repertory.src($path.join(PATH.server, directory)).then((e) => {
-                    e.map((file) => {   
+                    e.map((file) => {
                         switch (this.target) {
                             case "es6":
-                                var fn = Deploy.getClassName(file.name,"js");
+                                var fn = Deploy.getClassName(file.name, "js");
                                 innerClass = new $ecma6(fn, file.content);
                                 break;
                             case "go":
-                                var fn = Deploy.getClassName(file.name,"go");
+                                var fn = Deploy.getClassName(file.name, "go");
                                 innerClass = new $go(fn, file.content);
                                 break;
                             default:
                                 throw "error";
                                 break;
                         }
-                        this.str +=  innerClass.build(namespace + file.namespace);
+                        this.str += innerClass.build(namespace + file.namespace);
                     })
 
                     resolve( );
@@ -91,16 +91,31 @@ module.exports = (function () {
                 })
             });
         }
-        class(path,name) {
+        template(path, name, scope, method) {
             var innerClass;
-            var path_file = $path.join(PATH.server, path,name)
+            var path_file = $path.join(PATH.server, path, name)
+            var file = $fs.readFileSync(path_file, 'utf8')
+            switch (this.target) {
+                case "go":
+                    innerClass = new $go(Deploy.getClassName(name, "go"), file);
+                    break;
+                default:
+                    throw "error";
+                    break;
+            }
+            this.str = innerClass.buildTemplate(scope,method);
+            this.write();
+        }
+        class(path, name) {
+            var innerClass;
+            var path_file = $path.join(PATH.server, path, name)
             var file = $fs.readFileSync(path_file, 'utf8')
             switch (this.target) {
                 case "es6":
-                    innerClass = new $ecma6(Deploy.getClassName(name,"js"), file);
+                    innerClass = new $ecma6(Deploy.getClassName(name, "js"), file);
                     break;
                 case "go":
-                    innerClass = new $go(Deploy.getClassName(name,"go"),file);
+                    innerClass = new $go(Deploy.getClassName(name, "go"), file);
                     break;
                 default:
                     throw "error";

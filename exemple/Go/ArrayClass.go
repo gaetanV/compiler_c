@@ -9,7 +9,8 @@ export class ArrayClass {
              this.ram      = make([]int ,ramLength)
         }
         public join (a string) (int){   
-            return  1
+            this.rEnd ++ 
+            return  this.rEnd
         }
         private test(a string) (int){
             return 2
