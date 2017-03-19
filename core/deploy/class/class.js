@@ -4,8 +4,8 @@ module.exports = (function () {
         import: "import[^\{]*{([^\}]*)}[^f]*from([^;]*)",
         export: "export[\\s]*class[\\s]*${func}[\\s]*([^\{]*)\{",
         interface: "interface[^\{]*{([^\}]*)}",
-        interfaceInner : "[\r\n]*([^\:]*):([^\;]*);",
-        reflect: "(private[\\s]*|static[\\s]*|public[\\s]*|constructor[\\s]*)([^\(]*)\\(([^\)]*)[^\{]*\{",
+        interfaceInner : "[\r\n]*(private[\\s]*|static[\\s]*|public[\\s]*)([^\:]*):([^\;]*);",
+        reflect: "(private[\\s]*|static[\\s]*|public[\\s]*|constructor[\\s]*)([^\(]*)\\(([^\)]*)\\)([^\{]*)\{",
     }
     return class Class {
         constructor(funcName, file) {
@@ -23,17 +23,17 @@ module.exports = (function () {
             let end = false;
             var map = [], current = [], d;
             Class.getBracket(file).map(function (a, b) {
-                if (a == 1) {
+                if (a === 1) {
                     current.push(b);
                 }
                 ;
-                if (a == -1) {
+                if (a === -1) {
                     d = current.pop();
                     if (d > (pointer) && !end) {
                         map[d - (pointer)] = b - (pointer)
                     }
                     ;
-                    pointer - 1 == d && (end = b);
+                    pointer - 1 === d && (end = b);
                 }
             });
             this.interface = Class.getInterface(file);
@@ -48,9 +48,9 @@ module.exports = (function () {
                 if (match) {
                     args = Class.parseArrayFunc(match[3]);
                     let index = {start: match.index, end: match.index + match[0].length};
-                    let type = match[1].trim();
-                
-                    let result = {type: type, content: this.content.slice(index.end, this.index[index.end - 1]).trim(), index: index, argsText: match[3], name: match[2], args: args};
+                    let type = match[1].trim();              
+                    var r = match[4].trim().replace("(","").replace(")","").split(",");
+                    let result = {type: type, return: r ,content: this.content.slice(index.end, this.index[index.end - 1]).trim(), index: index, argsText: match[3], name: match[2], args: args};
                     switch (type) {
                         case "constructor":
                             let t ={};
@@ -73,6 +73,7 @@ module.exports = (function () {
                     }
                 }
             } while (match);
+            
             return inject
         }
 
@@ -87,7 +88,7 @@ module.exports = (function () {
             let  closure = [];
             function getAllIndexes(arr, val, indexMin) {
                 let indexes = [], i = -1;
-                while ((i = arr.indexOf(val, i + 1)) != -1) {
+                while ((i = arr.indexOf(val, i + 1)) !== -1) {
                     if (i >= indexMin)
                         indexes.push(i);
                 }
@@ -112,17 +113,23 @@ module.exports = (function () {
             return inject
         }
         static  getInterface(file) {
-            var interfaces = {}, m = new RegExp(REGEX.interface, "g") , inner = new RegExp(REGEX.interfaceInner, "g") ,tmp2;
+            var interfaces = {private:{},public:{}}, m = new RegExp(REGEX.interface, "g") , inner = new RegExp(REGEX.interfaceInner, "g") ,tmp2;
             var tmp = m.exec(file);
             if (tmp) {
                do {
                    tmp2 = inner.exec(tmp[1]);
                    if(tmp2){
-                       interfaces[tmp2[1].trim()] = tmp2[2].trim();
+                       switch(tmp2[1].trim()){
+                           case "private": 
+                               interfaces.private[tmp2[2].trim()] = tmp2[3].trim();
+                               break;
+                           case "public": 
+                               interfaces.public[tmp2[2].trim()] = tmp2[3].trim();
+                               break;   
+                       }
                    }
                } while (tmp2);
             }
-    
             return interfaces;
         }
     }

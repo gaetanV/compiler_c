@@ -1,6 +1,6 @@
 interface ArrayClass {
-    rEnd: int;
-    ram: []int;
+    public  rEnd: int;
+    private ram: []int;
 }
 
 export class ArrayClass {
@@ -8,7 +8,10 @@ export class ArrayClass {
              this.rEnd     = ramLength
              this.ram      = make([]int ,ramLength)
         }
-        public join (a string) {   
-           return  
+        public join (a string) (int){   
+            return  1
+        }
+        private test(a string) (int){
+            return 2
         }
 }
