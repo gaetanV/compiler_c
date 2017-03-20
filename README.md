@@ -1,17 +1,18 @@
 ```
+@ClassFactory 
+Ecma6 | Typescript (Ecma5) |  Go
+---------------------------------
+
 (c) Gaetan Vigneron <gaetan@webworkshops.fr>
 V Alpha 0.0.19
 20/03/2017
+Thank to Typescript© for Ecma6 Inner method downgrade 
 
-*************************
-Class factory Ecma6 | Go
-*************************
+```
 
-Exemple:
-
----------------------------------
+```
 node run.js
-Ecma6 :: Boot 1 file
+Ecma5 | Ecma6 | Typescript (Ecma5) :: Boot 1 file
 ---------------------------------
 @Contenair 
 - Isolate import by container - injection
@@ -23,9 +24,9 @@ Ecma6 :: Boot 1 file
 
 @Register
 - /core/register/ecma6/
+```
 
-
----------------------------------
+```
 node unity.js
 Go :: Write to natif
 ---------------------------------
@@ -34,9 +35,9 @@ Go :: Write to natif
 
 @Experimental
 - Add sercurity, private static public
+```
 
-
----------------------------------
+```
 node template.js
 Ecma6 
 Go

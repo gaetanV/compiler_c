@@ -9,5 +9,8 @@ export class inject {
         constructor(String value,int integer) {
              console.log("Func /bundle/Controller/inject");
         }
-        private superbe(a,v){ console.log("superbe private");}
+        private superbe(a,v){
+            console.log("superbe private");
+            let test = "ecma5";
+        }
 }

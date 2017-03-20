@@ -32,7 +32,7 @@ module.exports = (function () {
             return className[1];
         }
 
-        template(path, output, name, scope, method) {
+        template(path, name, output, scope, method) {
             var innerClass;
             var path_file =  PATH.server + path + name;
             var file = $fs.readFileSync(path_file, 'utf8')
@@ -47,7 +47,7 @@ module.exports = (function () {
             this.write(innerClass.buildTemplate(scope, method),output);
         }
         
-        class(path, output, name) {
+        class(path, name, output) {
             var innerClass;
             var path_file = PATH.server + path + name;
             var file = $fs.readFileSync(path_file, 'utf8')

@@ -5,6 +5,7 @@ module.exports = (function () {
     const $fs           = require('fs');
     const $go           = require('./../class/lang/go.js');
     const $ecma6        = require('./../class/lang/ecma6.js');
+    const $ecma5        = require('./../class/lang/ecma5.js');
     const $services     = require('./bootstrap/services/lang/ecma6.js');
     const $containers   = require('./bootstrap/containers/lang/ecma6.js');
     const $deamons      = require('./bootstrap/deamons/lang/ecma6.js');
@@ -49,12 +50,19 @@ module.exports = (function () {
                             case "es6":
                                 var fn = Deploy.getClassName(file.name, "js");
                                 innerClass = new $ecma6(fn, file.content);
+                                this.str += `register('${namespace}').class('${innerClass.funcName}', class {\n${innerClass.inner()}}\n,${JSON.stringify(innerClass.reflect.constructor.args)});\n`;
+                                break;
+                             case "es5":
+                                var fn = Deploy.getClassName(file.name, "js");
+                                innerClass = new $ecma5(fn, file.content);
+                                this.str += `register('${namespace}').class('${innerClass.funcName}', function(){\n${innerClass.inner()}\n return ${innerClass.funcName} \n;}(),${JSON.stringify(innerClass.reflect.constructor.args)});\n`;
                                 break;
                             default:
                                 throw "error";
                                 break;
                         }
-                        this.str += `register('${namespace}').class('${innerClass.funcName}', class {\n${innerClass.inner()}}\n,${JSON.stringify(innerClass.reflect.constructor.args)});\n`;
+                      
+                        
                     })
 
                     resolve( );

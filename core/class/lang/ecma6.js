@@ -7,7 +7,7 @@ module.exports = (function () {
             super(funcName, file);
         }
 
-        build(namespace) {
+        build() {
             return `class ${this.funcName}{\n${this.inner()}\n};\n`;
         }
 
