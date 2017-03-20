@@ -2,27 +2,26 @@ module.exports = (function () {
 'use strict'
 class Class {
     constructor(fn, inject ,type) {
-        
         this.fn = fn;
         this.inject = inject;
         this.type = type?type:"class";
-
     }
 }
 class Injection {
+    
     constructor(space) {
         this.fn = space.fn;
         this.imports = [];
         this.inject = space.inject;
         this.type = space.type;
     }
+    
     build(args) {
         for (var i in args) {
             if (this.inject[i]) {
                 var type = this.inject[i];
-                
                 try {
-                    if (type[0] != "/") {
+                    if (type[0] !== "/") {
                         this.typeValidator(args[i], type);
                     } else {
                         this.classValidator(args[i], type);
@@ -31,8 +30,6 @@ class Injection {
                 } catch (err) {
                     console.log(err);
                     return false;
-                  
-                    
                 }
             }
         }
@@ -47,6 +44,7 @@ class Injection {
         }
         return  new this.fn(args);
     }
+    
     typeValidator(a, type) {
         switch (type) {
             default:
@@ -81,8 +79,8 @@ class Injection {
                 break;
         }
         return true;
-
     }
+    
     classValidator(a, namespace) {   
         let thatspace = this.imports[namespace];
         if (!thatspace) {
@@ -94,7 +92,6 @@ class Injection {
         }
         return true;
     }
-
 }
 class Namespace {
     constructor() {

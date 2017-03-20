@@ -5,10 +5,8 @@ module.exports = (function () {
         constructor(hook) {
             super(hook);
         }
-        build() {
-           
+        build() { 
         }
-    
     }
 
 })();

@@ -1,17 +1,6 @@
 {
-  "name": "framework",
-  "version": "0.1.1",
-  "author": "(c) Gaetan Vigneron <gaetan@webworkshops.fr>",
-  "date": "04/02/2017",
-  "description": "Framework javascript",
-  "main": "run.js",
   "dependencies": {
     "fs": "0.0.1-security",
-    "node-watch": "^0.4.1",
-    "path": "^0.12.7"
-  },
-  "scripts": {
-    "start": "run.js"
-  },
-  "devDependencies": {}
+    "node-watch": "^0.4.1"
+  }
 }

@@ -1,18 +1,16 @@
 'use strict'
 module.exports = (function () {
     const $fs = require('fs');
-    const $path = require('path');
 
     return class {
         constructor() { }
         src(path, restrict) {
             let parseNamespace = (directory, namespace) => {
-                let result = [];
+                var result = [];
                 directory = directory.replace(/\\/g, "/");
                 const repertory_path = directory ; 
                 return new Promise((resolve, reject) => {
                     $fs.readdir(repertory_path, function (err, files) {
-                        
                         if (!files) {
                             resolve([]);
                         }
@@ -25,14 +23,14 @@ module.exports = (function () {
                         }
                         let iterator = thread();
                         files.forEach(function (file) {
-                            let path_file = $path.join(repertory_path, file);
+                            var path_file = repertory_path + file;
                             if (!$fs.lstatSync(path_file).isDirectory()) {
                                 result.push({namespace: namespace, name: file, content: $fs.readFileSync(path_file, 'utf8')});
-                                iterator.next().done == 1 && (resolve(result));
+                                iterator.next().done === true && (resolve(result));
                             } else {
-                                parseNamespace($path.join(directory, file, "/"), $path.join(namespace, file)).then((valeur) => {
+                                parseNamespace(directory + file + "/", namespace + file).then((valeur) => {
                                     result = result.concat(valeur);
-                                    iterator.next().done == 1 && (resolve(result));
+                                    iterator.next().done === true && (resolve(result));
                                 })
                             }
                         })

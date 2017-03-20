@@ -1,10 +1,9 @@
-(function () {
-    'use strict'
-    const $path = require('path');
-    const $deploy = require($path.join(__dirname, 'core', 'deploy', 'deploy.js'));
-    var deploy = new $deploy("go",$path.join(__dirname, "./app/assembly.go"));
-    deploy.template("./exemple/Go/","TemplateClass.go",{
-        type:"string",
-        strategy: true
-    },["join"]);
-})();
+'use strict'
+
+const $build = require("./core/class/Build.js");
+var build = new $build("go");
+
+build.template("./exemple/Go/", "./app/assembly.go", "TemplateClass.go", {
+    type: "string",
+    strategy: true
+}, ["join"]);

@@ -1,23 +1,22 @@
 module.exports = (function () {
     'use strict'
-    const $watch = require('node-watch');
-    const $path = require('path');
-    const $fs = require('fs');
-    require($path.join(__dirname, '..', 'tools', 'string.js'));
 
-    const $go = require($path.join(__dirname, 'class', 'lang', 'go.js'));
-    const $ecma6 = require($path.join(__dirname, 'class', 'lang', 'ecma6.js'));
-    const $services = require($path.join(__dirname, 'bootstrap', 'services', 'lang', 'ecma6.js'));
-    const $containers = require($path.join(__dirname, 'bootstrap', 'containers', 'lang', 'ecma6.js'));
-    const $deamons = require($path.join(__dirname, 'bootstrap', 'deamons', 'lang', 'ecma6.js'));
-
-    const $repertory = new (require($path.join(__dirname, '..', 'tools', 'files.js')))();
-
+    const $watch        = require('node-watch');
+    const $fs           = require('fs');
+    const $go           = require('./../class/lang/go.js');
+    const $ecma6        = require('./../class/lang/ecma6.js');
+    const $services     = require('./bootstrap/services/lang/ecma6.js');
+    const $containers   = require('./bootstrap/containers/lang/ecma6.js');
+    const $deamons      = require('./bootstrap/deamons/lang/ecma6.js');
+    const $repertory    = new (require('./../tools/files.js'))();
+    
+    require('./../tools/string.js');
 
     const PATH = {
-        server: $path.join(__dirname, "..", "..", "/"),
-        root_dir: $path.join(__dirname, "..", "/"),
+        server  : __dirname + "/../../",
+        root_dir: __dirname + "/../",
     }
+    
     const REGEX = {
         js: "^(.*).js$",
         go: "^(.*).go",
@@ -44,22 +43,18 @@ module.exports = (function () {
             namespace = "/" + namespace.replace(/\\/g, "_").replace(/\\\\/g, "_").trim() + "/";
             return new Promise((resolve, reject) => {
                 let innerClass;
-                $repertory.src($path.join(PATH.server, directory)).then((e) => {
+                $repertory.src(PATH.server + directory).then((e) => {
                     e.map((file) => {
                         switch (this.target) {
                             case "es6":
                                 var fn = Deploy.getClassName(file.name, "js");
                                 innerClass = new $ecma6(fn, file.content);
                                 break;
-                            case "go":
-                                var fn = Deploy.getClassName(file.name, "go");
-                                innerClass = new $go(fn, file.content);
-                                break;
                             default:
                                 throw "error";
                                 break;
                         }
-                        this.str += innerClass.build(namespace + file.namespace);
+                        this.str += `register('${namespace}').class('${innerClass.funcName}', class {\n${innerClass.inner()}}\n,${JSON.stringify(innerClass.reflect.constructor.args)});\n`;
                     })
 
                     resolve( );
@@ -68,10 +63,11 @@ module.exports = (function () {
 
         }
         build(mapping) {
-            let containers = new $containers(mapping);
-            let services = new $services(mapping);
-            let deamons = new $deamons(mapping);
-            let cycle = [];
+
+            var containers = new $containers(mapping);
+            var services   = new $services(mapping);
+            var deamons    = new $deamons(mapping);
+            var cycle = [];
 
             for (var i in containers.container) {
                 cycle.push(containers.container[i]);
@@ -84,6 +80,7 @@ module.exports = (function () {
             }
 
             this.cycle = cycle;
+
             containers.build().then((value) => {
                 this.str = value;
                 this.compile().then(() => {
@@ -91,39 +88,7 @@ module.exports = (function () {
                 })
             });
         }
-        template(path, name, scope, method) {
-            var innerClass;
-            var path_file = $path.join(PATH.server, path, name)
-            var file = $fs.readFileSync(path_file, 'utf8')
-            switch (this.target) {
-                case "go":
-                    innerClass = new $go(Deploy.getClassName(name, "go"), file);
-                    break;
-                default:
-                    throw "error";
-                    break;
-            }
-            this.str = innerClass.buildTemplate(scope,method);
-            this.write();
-        }
-        class(path, name) {
-            var innerClass;
-            var path_file = $path.join(PATH.server, path, name)
-            var file = $fs.readFileSync(path_file, 'utf8')
-            switch (this.target) {
-                case "es6":
-                    innerClass = new $ecma6(Deploy.getClassName(name, "js"), file);
-                    break;
-                case "go":
-                    innerClass = new $go(Deploy.getClassName(name, "go"), file);
-                    break;
-                default:
-                    throw "error";
-                    break;
-            }
-            this.str = innerClass.build();
-            this.write();
-        }
+ 
         compile() {
             let limit = this.cycle.length;
             function* thread() {
@@ -135,17 +100,17 @@ module.exports = (function () {
             let iterator = thread();
             return new Promise((resolve, reject) => {
                 for (var index in this.cycle) {
-                    this.autoload(this.cycle[index]).then((value) => {
-                        iterator.next().done == 1 && (resolve());
+                    this.autoload(this.cycle[index]).then(() => {
+                        iterator.next().done === true && (resolve());
                     })
                 }
             });
         }
 
         write() {
-            $fs.writeFile($path.join(this.bootstrap), this.str, function (error) {
+            $fs.writeFile(this.bootstrap, this.str, function (error) {
                 if (error) {
-                    console.error("write error:  " + error.message);
+                    console.log("write error:  " + error.message);
                 } else {
                     console.log("completed");
                 }
@@ -156,7 +121,7 @@ module.exports = (function () {
         watch() {
             for (var i in this.cycle) {
                 var watcher = $watch('./' + this.cycle[i].src);
-                watcher.on('change', (file) => {
+                watcher.on('change', () => {
                     this.compile();
                 });
             }

@@ -11,7 +11,7 @@ module.exports = (function () {
             let bootstrap ="";
             bootstrap += `let bootstrap = (function () {\n`;
             bootstrap += `'use strict'\n`;
-            bootstrap += `class Key {constructor(){}}`;
+            bootstrap += `class Key {constructor(){}};\n`;
             bootstrap += `let key = new Key({ method: "strict", role: "root" });\n`;
             bootstrap += `register.containers({\n`;
             function* thread() {
@@ -27,19 +27,15 @@ module.exports = (function () {
                     let container = this.container[i];
 
                     bootstrap += `"${container.name}":[${container.imports.map((a)=>{return "'"+a+"'"}).join(",")}],\n`;
-                       if (iterator.next().done == 1) {
-                          bootstrap += "},key);\n";
-                          bootstrap += this.kernel();
-                                         
-                          bootstrap += "})();\n";
-                          resolve(bootstrap); 
-       
-                       }
+                    if (iterator.next().done === true) {
+                        bootstrap += `},key);\n${this.kernel()}\n})();\n`;
+                        resolve(bootstrap); 
+                     }
                 }
             });
         }
         kernel(){
-            let bootstrap ="";
+            var bootstrap ="";
             bootstrap +=`return class{`;
             bootstrap +=`   constructor(){`;
             bootstrap +=`       let $ = register.deploy(key);`;

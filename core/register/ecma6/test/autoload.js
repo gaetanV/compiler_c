@@ -1,6 +1,5 @@
 'use strict'
-const $path = require('path');
-const register = require($path.join(__dirname, "..", 'register.js'));
+const register = require("./../register.js");
 
 let bootstrap = (function () {
     'use strict'
@@ -19,7 +18,7 @@ let bootstrap = (function () {
             $('/bundle/Controller/inject')({string: "string", integer: 5});
         }
     }
-    
+
 })();
 
 register('/route/').class('test', class {
