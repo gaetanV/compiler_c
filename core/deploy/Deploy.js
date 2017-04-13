@@ -13,19 +13,15 @@ module.exports = (function () {
     
     require('./../tools/string.js');
 
-    const PATH = {
-        server  : __dirname + "/../../",
-        root_dir: __dirname + "/../",
-    }
-    
     const REGEX = {
         js: "^(.*).js$",
         go: "^(.*).go",
     }
 
     return class Deploy {
-        constructor(target, bootstrap) {
+        constructor(target, bootstrap,path) {
             this.bootstrap = bootstrap;
+            this.path = path;
             this.target = target;
             this.str = "";
             this.cycle = [];
@@ -44,7 +40,7 @@ module.exports = (function () {
             namespace = "/" + namespace.replace(/\\/g, "_").replace(/\\\\/g, "_").trim() + "/";
             return new Promise((resolve, reject) => {
                 let innerClass;
-                $repertory.src(PATH.server + directory).then((e) => {
+                $repertory.src(this.path +"/"+ directory).then((e) => {
                     e.map((file) => {
                         switch (this.target) {
                             case "es6":

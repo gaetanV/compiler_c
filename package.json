@@ -3,5 +3,33 @@
     "fs": "0.0.1-security",
     "node-watch": "^0.4.1",
     "typescript": "^2.2.1"
-  }
+  },
+  "name": "typebootstrap",
+  "description": "type bootstrap container",
+  "version": "0.0.2",
+  "main": "core/deploy/deploy.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaetanV/compiler_javascript.git"
+  },
+  "keywords": [
+    "type",
+    "bootstrap",
+    "container",
+    "module",
+    "javascript"
+  ],
+  "author": "gaetan vigneron",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gaetanV/compiler_javascript/issues"
+  },
+  "homepage": "https://github.com/gaetanV/compiler_javascript#readme"
 }

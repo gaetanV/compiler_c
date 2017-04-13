@@ -7,6 +7,7 @@ Ecma6 | Typescript (Ecma5) |  Go
 V Alpha 0.0.19
 20/03/2017
 Thank to Typescript© for Ecma6 Inner method downgrade 
+You can downgrade methods contents but types are not preserved 
 
 ```
 
