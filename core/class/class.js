@@ -14,11 +14,15 @@ module.exports = (function () {
     return class Class {
         
         constructor(funcName, file) {
-            var match = new RegExp(REGEX.export.apply({func: funcName}), "g").exec(file);
+          
+            var format = REGEX.export.replace("${func}",funcName);
+         
+            var match = new RegExp(format, "g").exec(file);
             if (!match) throw "ERROR " + this.funcName + " CLASS IS NOT CORRECTLY DEFINED";
             
             var pointer = match.index + match[0].length;
             var map = [], current = [], end = false, d;
+            
             Class.getBracket(file).map(function (a, b) {
                 switch (a) {
                     case 1: 
@@ -40,6 +44,7 @@ module.exports = (function () {
             this.index = map;
             this.inject  = Class.getImport(file);
             this.reflect = this.getReflect(this.content);
+        
         }
         
         buildTemplate(scope, method) {
