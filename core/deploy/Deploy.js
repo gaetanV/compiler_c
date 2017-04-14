@@ -1,16 +1,16 @@
 module.exports = (function () {
     'use strict'
 
-    const $watch        = require('node-watch');
-    const $fs           = require('fs');
-    const $go           = require('./../class/lang/go.js');
-    const $ecma6        = require('./../class/lang/ecma6.js');
-    const $ecma5        = require('./../class/lang/ecma5.js');
-    const $services     = require('./bootstrap/services/lang/ecma6.js');
-    const $containers   = require('./bootstrap/containers/lang/ecma6.js');
-    const $deamons      = require('./bootstrap/deamons/lang/ecma6.js');
-    const $repertory    = new (require('./../tools/files.js'))();
-    
+    const $watch = require('node-watch');
+    const $fs = require('fs');
+    const $go = require('./../class/lang/go.js');
+    const $ecma6 = require('./../class/lang/ecma6.js');
+    const $ecma5 = require('./../class/lang/ecma5.js');
+    const $services = require('./bootstrap/services/lang/ecma6.js');
+    const $containers = require('./bootstrap/containers/lang/ecma6.js');
+    const $deamons = require('./bootstrap/deamons/lang/ecma6.js');
+    const $repertory = new (require('./../tools/files.js'))();
+
     require('./../tools/string.js');
 
     const REGEX = {
@@ -19,9 +19,33 @@ module.exports = (function () {
     }
 
     return class Deploy {
-        constructor(target, bootstrap,path) {
+        constructor(target, bootstrap) {
+            if (!target)
+                throw "1";
+            else
+            if (typeof target !== "string")
+                throw "1 type";
+            if (!bootstrap)
+                throw "2";
+            else
+            if (typeof bootstrap !== "string")
+                throw "2 type";
+            try {
+                if (!$fs.existsSync(bootstrap.slice(0, bootstrap.lastIndexOf("/") + 1))) {
+                    throw("path is not found");
+                }
+            } catch (err) {
+                throw err;
+            }
+            switch (target) {
+                case "es6":
+                    break;
+                case "es5":
+                    break;
+                default:
+                    throw ("error type " + target + " is not in charge");
+            }
             this.bootstrap = bootstrap;
-            this.path = path;
             this.target = target;
             this.str = "";
             this.cycle = [];
@@ -40,7 +64,7 @@ module.exports = (function () {
             namespace = "/" + namespace.replace(/\\/g, "_").replace(/\\\\/g, "_").trim() + "/";
             return new Promise((resolve, reject) => {
                 let innerClass;
-                $repertory.src(this.path +"/"+ directory).then((e) => {
+                $repertory.src(this.path + "/" + directory).then((e) => {
                     e.map((file) => {
                         switch (this.target) {
                             case "es6":
@@ -48,7 +72,7 @@ module.exports = (function () {
                                 innerClass = new $ecma6(fn, file.content);
                                 this.str += `register('${namespace}').class('${innerClass.funcName}', class {\n${innerClass.inner()}}\n,${JSON.stringify(innerClass.reflect.constructor.args)});\n`;
                                 break;
-                             case "es5":
+                            case "es5":
                                 var fn = Deploy.getClassName(file.name, "js");
                                 innerClass = new $ecma5(fn, file.content);
                                 this.str += `register('${namespace}').class('${innerClass.funcName}', function(){\n${innerClass.inner()}\n return ${innerClass.funcName} \n;}(),${JSON.stringify(innerClass.reflect.constructor.args)});\n`;
@@ -57,8 +81,8 @@ module.exports = (function () {
                                 throw "error";
                                 break;
                         }
-                      
-                        
+
+
                     })
 
                     resolve( );
@@ -66,11 +90,11 @@ module.exports = (function () {
             })
 
         }
-        build(mapping) {
+        build(path,mapping) {
 
             var containers = new $containers(mapping);
-            var services   = new $services(mapping);
-            var deamons    = new $deamons(mapping);
+            var services = new $services(mapping);
+            var deamons = new $deamons(mapping);
             var cycle = [];
 
             for (var i in containers.container) {
@@ -82,17 +106,20 @@ module.exports = (function () {
             for (var i in deamons.deamon) {
                 cycle.push(deamons.deamon[i]);
             }
-
+            
+            this.path = path;
+            
             this.cycle = cycle;
-
-            containers.build().then((value) => {
-                this.str = value;
-                this.compile().then(() => {
-                    this.write();
-                })
+            return new Promise((resolve, reject) => {
+                containers.build().then((value) => {
+                    this.str = value;
+                    this.compile().then(() => {
+                        resolve(this.write());
+                    })
+                });
             });
         }
- 
+
         compile() {
             let limit = this.cycle.length;
             function* thread() {
