@@ -8,6 +8,7 @@ class Injection {
     }
     
     build(args) {
+        !args && (args =[]);
         for (var i in args) {
             if (this.inject[i]) {
                 var type = this.inject[i];
