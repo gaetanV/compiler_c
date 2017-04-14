@@ -1,3 +1,4 @@
+
 module.exports = (function () {
     'use strict'
     const REGEX = {
@@ -182,6 +183,8 @@ module.exports = (function () {
             do {
                 tmp = m.exec(file);
                 if (tmp) {
+                    tmp[1] = tmp[1].replace(new RegExp(`['|"]`, 'g'),"").trim();
+                    tmp[2] = tmp[2].replace(new RegExp(`['|"]`, 'g'),"").trim();
                     inject.push({name: tmp[1], space: tmp[2]});
                 }
             } while (tmp);
