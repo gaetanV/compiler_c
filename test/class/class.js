@@ -37,28 +37,35 @@ describe('Class.getImport (static)', () => {
 describe('Class.reflect ', () => {
 
     var file = `
-        import { a } from '/Bundle/ert';
         export class inject {
-
-            constructor(String value,int integer) {
-                 console.log("Func /bundle/Controller/inject");
-            }
-            private superbe(a,v){
-                console.log("superbe private");
-                let test = "ecma5";
-            }
+            constructor(String value,int integer) {}
+            public p1(){}
+            public p2(){}
+            static s1(){}
+            static s2(){}
+            private superbe(a,v){}
         }
     `;
     var A = new $ecma6("inject", file);
+    
     it('Class.reflect private', () => {
         assert.equal(A.reflect.private.length, 1);
         assert.equal(A.reflect.private[0].args.length, 2);
     });
 
-    it('Class.reflect constructor', () => {
-        assert.equal(A.reflect.constructor.args.value, "String");
+    it('Class.reflect static', () => {
+        assert.equal(A.reflect.static.length, 2);    
     });
 
+    it('Class.reflect public', () => {
+        assert.equal(A.reflect.public.length, 2);    
+    });
+
+
+    it('Class.reflect constructor', () => {
+        assert.equal(A.reflect.constructor.args.value, "String");
+        assert.equal(A.reflect.constructor.args.integer, "int");
+    });
 
 });
 

@@ -147,7 +147,6 @@ module.exports = (function () {
         self(namespace) {
             if (!this.isdeploy && this.lock) {
                 var n = namespace.split("/").slice(1, -1);
-                console.log(this.namespace);
                 var namespace = this.namespace.getNamespace(n);
                 if (namespace) {
 

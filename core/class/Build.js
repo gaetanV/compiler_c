@@ -69,14 +69,17 @@ module.exports = (function () {
         }
 
         write(str, output) {
-            $fs.writeFile(output, str, function (error) {
-                if (error) {
-                    console.log("write error:  " + error.message);
-                } else {
-                    console.log("completed");
-                }
-            })
-            this.str = "";
+            return new Promise((resolve, reject) => {
+                $fs.writeFile(output, str, function (error) {
+                    if (error) {
+                        
+                       reject("write error:  " + error.message);
+                    } else {
+                        resolve("completed");
+                    }
+                })
+                this.str = "";
+            });
         }
 
         

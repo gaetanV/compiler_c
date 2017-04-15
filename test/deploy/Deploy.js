@@ -9,6 +9,7 @@ var assert = chai.assert;
 var Deploy = require('./../../core/deploy/Deploy');
 const $hook = require("./../../mock/hook.js");
 
+        
 describe('Deploy.build  Args',  ()  =>{
     it('Deploy.write function', () => {
         assert.isFunction(Deploy);
@@ -55,11 +56,14 @@ describe('Deploy.build Coherent', () => {
 });
 
 describe('Deploy.write', () => {
+    
+    var path = __dirname + "/../../trash/bootstrap2.js";
+    
     it('Deploy.write file', (done) => {
-        var A = new Deploy("es5", __dirname + "/../../trash/bootstrap2.js");
+        var A = new Deploy("es5", path);
         A.write().then(() => {
-            assert.isTrue($fs.existsSync(__dirname + "/../../trash/bootstrap2.js"));
-            assert.equal($fs.readFileSync(__dirname + "/../../trash/bootstrap2.js", 'utf8'), "");
+            assert.isTrue($fs.existsSync(path));
+            assert.equal($fs.readFileSync(path, 'utf8'), "");
             done();
         });
     });
@@ -86,11 +90,13 @@ describe('Deploy.getClassName(static)',  ()=> {
 
 
 describe('Deploy.build cycle complet', () => {
+    var path = __dirname + "/../../trash/bootstrap.js";
+    
     it('Deploy.build cycle complet', (done) => {
-        var A = new Deploy("es5", __dirname + "/../../trash/bootstrap.js");
+        var A = new Deploy("es5", path);
        
         A.build(__dirname + "/../../mock/", $hook).then(() => {
-            assert.isTrue($fs.existsSync(__dirname + "/../../trash/bootstrap.js"));
+            assert.isTrue($fs.existsSync(path));
             done();
         });
     });

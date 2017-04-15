@@ -21,9 +21,6 @@ describe('Register  Args', () => {
     });
     it('Register.containers class', () => {
         assert.isFunction($register('/bundle/Controller/').class);
-        
-        // All spaces is accept but can't be deploy
-     
         $register('/bundle/Controller/').class('inject', class {
             constructor(){
                 this.id = "fake injection";
