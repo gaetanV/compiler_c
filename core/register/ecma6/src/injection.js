@@ -28,7 +28,7 @@ class Injection {
         args.import  = (namespace) => {
             if(this.imports[namespace]){
               return (args) => {
-                this.imports[namespace].build(args);
+                return this.imports[namespace].build(args);
               }
             }else{
                 console.log("error import not exist");

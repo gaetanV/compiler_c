@@ -1,51 +1,65 @@
-```
-@ClassFactory 
-Ecma6 | Typescript (Ecma5) |  Go
----------------------------------
+# Typebootstrap 
 
-(c) Gaetan Vigneron <gaetan@webworkshops.fr>
-V Alpha 0.0.19
-20/03/2017
-Thank to Typescript© for Ecma6 Inner method downgrade 
-You can downgrade methods contents but types are not preserved 
+V Alpha 0.0.19 - 18/04/2017
+
+## Install
 
 ```
+npm install typebootstrap
+```
+
+## Deploy 1 Bootfile 
 
 ```
-node run.js
-Ecma5 | Ecma6 | Typescript (Ecma5) :: Boot 1 file
----------------------------------
+Ecma5 - Ecma6 - Typescript(Ecma5) 
+```
+
 @Contenair 
-- Isolate import by container - injection
+- Isolate import by container 
+- Decoration injection
+- Imports injection
 - Add live type, not compile type
-- Add real reflection of class
+- Optionals for accelerate
+
+@Class
+- Type
+- Decoration
+- Reflection 
+- Imports
 
 @Experimental
-- Add sercurity, private static public
+- sercurity method 
+- sercurity attribut 
 
 @Register
 - /core/register/ecma6/
-```
+
+
+## Compose Class  
 
 ```
-node unity.js
-Go :: Write to natif
----------------------------------
-@Write your Go structure with ecma6
-- Downgrade your class to go natif
-
-@Experimental
-- Add sercurity, private static public
+Ecma6 - Go
 ```
 
-```
-node template.js
-Ecma6 
-Go
----------------------------------
-@Compose 
+@Experimental 
 - Compose your class methodes
-- Inject a scope for reusability (like type)
+- Inject a scope for reusability 
 - Create a model templating with conditional
+- Downgrade your class structure to Go natif
+- Add sercurity to Go prototype
+
+## License
 
 ```
+Typebootstrap is licensed under the [MIT License] 
+```
+ 
+
+Optionnal Typescript (c) Microsoft if you downgrade methods contents types are not preserved 
+
+Special thanks to :
+
+- Chai         http://chaijs.com/
+- Node         https://nodejs.org/en/
+- Node-watch   https://www.npmjs.com/package/node-watch
+
