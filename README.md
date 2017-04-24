@@ -1,6 +1,6 @@
 # Typebootstrap 
 
-V Alpha 0.0.19 - 18/04/2017
+V Alpha 0.0.19 
 
 ## Install
 
