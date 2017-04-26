@@ -7,7 +7,7 @@ var expect = chai.expect;
 var assert = chai.assert;
 
 var Deploy = require('./../../core/deploy/Deploy');
-const $hook = require("./../../mock/hook.js");
+const $hook = require("./../../demo/hook.js");
 
         
 describe('Deploy.build  Args',  ()  =>{
@@ -95,7 +95,7 @@ describe('Deploy.build cycle complet', () => {
     it('Deploy.build cycle complet', (done) => {
         var A = new Deploy("es5", path);
        
-        A.build(__dirname + "/../../mock/", $hook).then(() => {
+        A.build(__dirname + "/../../demo/", $hook).then(() => {
             assert.isTrue($fs.existsSync(path));
             done();
         });
