@@ -1,38 +1,22 @@
 #include <stdio.h>
 
-
-
-int newImport(struct sequenceRegex * this) {
+int RegexImport(struct sequenceRegex * this) {
 
     // REGEX IMPORT Start at 105
-    if (!nextCharInline(this)) {
+    
+    if (!nextCharIs(this,109)) {
         return 0;
     }
-    if (currentChar(this) != 109) {
+    if (!nextCharIs(this,112)) {
         return 0;
     }
-    if (!nextCharInline(this)) {
+    if (!nextCharIs(this,111)) {
         return 0;
     }
-    if (currentChar(this) != 112) {
+    if (!nextCharIs(this,114)) {
         return 0;
     }
-    if (!nextCharInline(this)) {
-        return 0;
-    }
-    if (currentChar(this) != 111) {
-        return 0;
-    }
-    if (!nextCharInline(this)) {
-        return 0;
-    }
-    if (currentChar(this) != 114) {
-        return 0;
-    }
-    if (!nextCharInline(this)) {
-        return 0;
-    }
-    if (currentChar(this) != 116) {
+    if (!nextCharIs(this,116)) {
         return 0;
     }
     ///////////
@@ -53,29 +37,20 @@ int newImport(struct sequenceRegex * this) {
         return 0;
     }
     // REGEX FROM
+    
+    if (this->ch != 102) {
+        return 0;
+    }
+    if (!nextCharIs(this,114)) {
+        return 0;
+    }
+    if (!nextCharIs(this,111)) {
+        return 0;
+    }
+    if (!nextCharIs(this,109)) {
+        return 0;
+    }
 
-    if (currentChar(this) != 102) {
-        return 0;
-    }
-    if (!nextCharInline(this)) {
-        return 0;
-    }
-    if (currentChar(this) != 114) {
-        return 0;
-    }
-
-    if (!nextCharInline(this)) {
-        return 0;
-    }
-    if (currentChar(this) != 111) {
-        return 0;
-    }
-    if (!nextCharInline(this)) {
-        return 0;
-    }
-    if (currentChar(this) != 109) {
-        return 0;
-    }
     ///////////
     
 
@@ -93,11 +68,11 @@ int newImport(struct sequenceRegex * this) {
         return 0;
     }
 
-    if (currentChar(this) != 59) {
+    if (this->ch != 59) {
         if (!_Regex(this, RegexEndOfLine)) {
             return 0;
         }
     }
-    printf("seq import complete \n");
+
     return 1;
 }
