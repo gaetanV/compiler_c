@@ -1,5 +1,8 @@
-#include <stdio.h>
+
+#include "parse/regex/sequenceRegex.c"
 #include "parse/header.c"
+#include "parse/module.c"
+
 
 int parseFile(char *arg) {
 
@@ -14,10 +17,10 @@ int parseFile(char *arg) {
     } else {
         
         if(parseHeader(fp)){
-            while ((ch = fgetc(fp)) != EOF ) {
-                printf("-- %c\n", ch);
-            }
             
+            if(parseModule(fp)){
+                  printf("Module done.\n");
+            }
         }else{
             return 0;
         }
