@@ -1,86 +1,83 @@
-int RegexSpace(int pos, char ch) {
-    switch (ch) {
-        case 32:
-            return 3;
-        case 10:
-            return 0;
-        default:
-            return 2;
-    }
-}
 
-int RegexNotSpace(int pos, char ch) {
-    switch (ch) {
-        case 32:
-            return 2;
-        case 10:
-            return 0;
-        default:
-            return 3;
-    }
-}
-
-
-int RegexEndOfLine(int pos, char ch) {
-    switch (ch) {
-        case 59:
-            return 2;
-        case 32:
+int RegexJumpSpace(struct sequenceRegex * this) {
+    while (1) {
+        if (!nextCharIs(this, 32)) {
             return 1;
-        default:
-            return 0;
+        }
+    };
+}
+
+int RegexNotSpaceInline(struct sequenceRegex * this) {
+    while (1) {
+         this->ch = fgetc(this->fp);
+         switch (this->ch) {
+            case EOF:
+                return 0;
+            case 10:
+                return 0;
+            case 59:
+                return 0;   
+            case 32:
+                return 1;      
+        }
     }
 }
 
-int RegexNotSpaceOrEndOfLine(int pos, char ch) {
-    switch (ch) {
-        case 59:
-            return 2;
-        case 32:
-            return 2;
-        case 10:
-            return 0;
-        default:
-            return 3;
+int RegexEndOfScriptLine(struct sequenceRegex * this) {
+    while (1) {
+         switch (fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 10:
+                return 0;
+            case 59:
+                return 1;   
+        }
     }
 }
 
-int RegexNotSpaceOrParenthesize(int pos, char ch) {
-     switch (ch) {
-        case 40:
-            return 2;
-        case 32:
-            return 2;
-        case 10:
-            return 0;
-        default:
-            return 3;
+int RegexNotSpaceOEndOfScriptLine(struct sequenceRegex * this) {
+    while (1) {
+         switch (fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 32:
+                return 1;  
+            case 10:
+                return 0;
+            case 59:
+                return 2;   
+        }
     }
 }
 
-int RegexStartParenthesize(int pos, char ch) {
-    switch (ch) {
-        case 40:
-            return 2;
-        case 32:
-            return 1;
-        case 23:
-            return 0;
-        default:
-            return 3;
+int RegexNotSpaceOrParenthesize(struct sequenceRegex * this) {
+     while (1) {
+         switch (fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 40:
+                return 2;  
+            case 10:
+                return 0;
+            case 32:
+                return 1;   
+        }
     }
 }
 
-int RegexEndParenthesize(int pos, char ch){
-     switch (ch) {
-        case 41:
-            return 2;
-        case 32:
-            return 1;
-        case 23:
-            return 0;
-        default:
-            return 3;
+int RegexStartParenthesize(struct sequenceRegex * this) {
+    while (1) {
+        switch (fgetc(this->fp)) {
+            default:
+                return 0;
+            case 32:
+                break;
+            case 40:
+                return 1;   
+        }
     }
 }
+
+
 

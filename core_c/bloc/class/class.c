@@ -22,22 +22,23 @@ int parseClass(struct sequenceRegex * this, int(constructor) (struct sequenceReg
     }
     ///////////
 
-    if (!nextCharInline(this)) {
-        return 0;
-    }
-    if (!_Regex(this, RegexSpace)) {
+
+   if (!RegexJumpSpace(this)) {
         return 0;
     }
 
-    if (!_Regex(this, RegexNotSpace)) {
+    if (!RegexNotSpaceInline(this)) {
         return 0;
     }
+    
     if (!nextCharInline(this)) {
         return 0;
     }
-    if (!_Regex(this, RegexFuncStart)) {
+    
+    if (RegexFuncStart(this)) {
         return 0;
     }
+    
     while (nextChar(this)) {
         switch (this->ch) {
             case 99:

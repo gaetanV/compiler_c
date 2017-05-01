@@ -20,12 +20,7 @@ int RegexExport(struct sequenceRegex * this) {
     }
     ///////////
     
-   
-    if (!nextCharInline(this)) {
-        return 0;
-    }
-
-    if (!_Regex(this, RegexSpace)) {
+    if (!RegexJumpSpace(this)) {
         return 0;
     }
 

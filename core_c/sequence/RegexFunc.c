@@ -1,17 +1,20 @@
 #include <stdio.h>
 
-int RegexFuncStart(int pos, char ch) {
-    switch (ch) {
-        case 123:
-            return 2;
-        case 32:
-            return 3; 
-        case 23:
-            return 3;
-        default:
-            return 0;
+int RegexFuncStart(struct sequenceRegex * this) {
+      while (1) {
+         switch (fgetc(this->fp)) {
+            case 32:
+                break; 
+            case 23:
+                break;   
+            case 123:
+                return 1;  
+            default:
+                return 0;
+        }
     }
 }
+
 
 int RegexFuncArgs(struct sequenceRegex * this) {
     this->c = 1;
@@ -77,9 +80,11 @@ int RegexFuncTypeArgs(struct sequenceRegex * this) {
 }
 
 int RegexFuncInner(struct sequenceRegex * this) {
-    if (!_Regex(this, RegexFuncStart)) {
+
+    if (!RegexFuncStart(this)) {
         return 0;
     }
+
     this->c = 1;
     do {
         if (!nextChar(this)) {
@@ -99,32 +104,31 @@ int RegexFuncInner(struct sequenceRegex * this) {
     
 
 int RegexFuncNameArgs(struct sequenceRegex * this) {
-    if (!_Regex(this, RegexSpace)) {
+    if (!RegexJumpSpace(this)) {
         return 0;
-    }
-    if (!_Regex(this, RegexNotSpaceOrParenthesize)) {
-        return 0;
-    }
-     if (this->ch != 40) {
-        if (!_Regex(this, RegexStartParenthesize)) {
-            return 0;
-        }
     }
     
+    switch(RegexNotSpaceOrParenthesize(this)){
+        case 0:
+            return 0;
+            break;
+        case 1:
+            if (!RegexStartParenthesize(this)) {
+                return 0;
+            }
+            break;  
+    }
+
     if (!RegexFuncArgs(this)) {
         return 0;
     }
 
-    if (!nextCharInline(this)) {
-        return 0;
-    }
-   
     return RegexFuncInner(this);
 }
 
 
 int RegexFuncArgsType(struct sequenceRegex * this) {
-    if (!_Regex(this, RegexStartParenthesize)) {
+    if (!RegexStartParenthesize(this)) {
             return 0;
     }
     
@@ -132,9 +136,6 @@ int RegexFuncArgsType(struct sequenceRegex * this) {
         return 0;
     }
 
-    if (!nextCharInline(this)) {
-        return 0;
-    }
    
     return RegexFuncInner(this);
 }
