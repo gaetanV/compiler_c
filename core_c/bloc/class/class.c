@@ -4,7 +4,8 @@
 #include "./regex/RegexStatic.c"
 #include "./regex/RegexP_.c"
 
-int parseClass(struct sequenceRegex * this, int(constructor) (struct sequenceRegex *), int(function) (struct sequenceRegex *)) {
+
+int parseClass(struct sequenceRegex * this, int(constructor) (struct sequenceRegex *), int(function) (struct sequenceRegex *), int(extends) (struct sequenceRegex *)) {
 
     // REGEX Class start at 99
 
@@ -23,23 +24,22 @@ int parseClass(struct sequenceRegex * this, int(constructor) (struct sequenceReg
     ///////////
 
 
-   if (!RegexJumpSpace(this)) {
+    if (!RegexJumpSpace(this)) {
         return 0;
     }
 
     if (!RegexNotSpaceInline(this)) {
         return 0;
     }
-    
-    if (!nextCharInline(this)) {
+
+    if(!extends(this)){
         return 0;
     }
-    
-    if (RegexFuncStart(this)) {
-        return 0;
-    }
-    
+   
+
+
     while (nextChar(this)) {
+
         switch (this->ch) {
             case 99:
                 printf(">----------------------------- \n");

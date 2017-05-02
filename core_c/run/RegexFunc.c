@@ -15,6 +15,24 @@ int RegexFuncStart(struct sequenceRegex * this) {
     }
 }
 
+int RegexNotSpaceInlineOrFuncStart(struct sequenceRegex * this) {
+    while (1) {
+         switch (fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 10:
+                return 0;
+            case 59:
+                return 0;   
+            case 32:
+                return 1; 
+            case 123:
+                return 2;
+        }
+    }
+}
+
+
 
 int RegexFuncArgs(struct sequenceRegex * this) {
     this->c = 1;
@@ -135,10 +153,8 @@ int RegexFuncArgsType(struct sequenceRegex * this) {
     if (!RegexFuncTypeArgs(this)) {
         return 0;
     }
-
    
     return RegexFuncInner(this);
 }
-
 
 
