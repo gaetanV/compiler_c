@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int RegexStatic(struct sequenceRegex * this,int(f) (struct sequenceRegex *)) {
+int RegexStatic(struct sequenceRegex * this) {
 
     // REGEX STATIC Start at 115
     if (!nextCharIs(this,116)) {
@@ -19,9 +19,6 @@ int RegexStatic(struct sequenceRegex * this,int(f) (struct sequenceRegex *)) {
         return 0;
     }
     ///////////
-
-    if (!nextCharInline(this)) {
-        return 0;
-    }
-    return f(this);
+    return 1;
+  
 }

@@ -3,6 +3,7 @@
 #include "run/RegexFunc.c"
 #include "run/RegexFuncExtends.c"
 
+
 #include "bloc/header/header.c"
 #include "bloc/class/class.c"
 
@@ -19,7 +20,7 @@ int main(int argc, char *argv[]) {
         if (parseHeader(&seqRegex)) {
             switch (currentChar(&seqRegex)) {
                 case 99:
-                    if (parseClass(&seqRegex, RegexFuncArgsType, RegexFuncNameArgs , RegexExtendsImplements)) {
+                    if (parseClass(&seqRegex, ClassJs)) {
                         printf("Module done.\n");
                     } else {
                         printf("Error in Module");

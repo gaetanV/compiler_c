@@ -4,6 +4,8 @@ struct sequenceRegex {
     int c;
     char ch;
     FILE *fp;
+    char buff[255];
+;
 };
 
 int SequenceInit(struct sequenceRegex * this, char *  c) {

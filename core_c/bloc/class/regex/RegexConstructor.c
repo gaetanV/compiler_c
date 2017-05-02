@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int RegexConstructor(struct sequenceRegex * this, int(f) (struct sequenceRegex *)) {
+int RegexConstructor(struct sequenceRegex * this) {
  
     // REGEX CONSTRUCT Start at 99
 
@@ -37,7 +37,7 @@ int RegexConstructor(struct sequenceRegex * this, int(f) (struct sequenceRegex *
    
     ///////////
     
-    return f(this);
+    return 1;
     
     
 }

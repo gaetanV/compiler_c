@@ -4,6 +4,9 @@ interface TemplateClass {
 }
 
 export class TemplateClass {
+
+        
+
         constructor (ramLength int){
              this.rEnd     = ramLength
              this.ram      = make([]int ,ramLength)

@@ -3,24 +3,21 @@
 int RegexImport(struct sequenceRegex * this) {
 
     // REGEX IMPORT Start at 105
-
-    if (!nextCharIs(this, 109)) {
+    if (fgetc(this->fp) != 109) {
         return 0;
     }
-    if (!nextCharIs(this, 112)) {
+    if (fgetc(this->fp) != 112) {
         return 0;
     }
-    if (!nextCharIs(this, 111)) {
+    if (fgetc(this->fp) != 111) {
         return 0;
     }
-    if (!nextCharIs(this, 114)) {
+    if (fgetc(this->fp) != 114) {
         return 0;
     }
-    if (!nextCharIs(this, 116)) {
+    if (fgetc(this->fp) != 116) {
         return 0;
     }
-    ///////////
-
 
     if (!RegexJumpSpace(this)) {
         return 0;
@@ -38,22 +35,23 @@ int RegexImport(struct sequenceRegex * this) {
     if (this->ch != 102) {
         return 0;
     }
-    if (!nextCharIs(this, 114)) {
+    if (fgetc(this->fp) != 114) {
         return 0;
     }
-    if (!nextCharIs(this, 111)) {
+    if (fgetc(this->fp) != 111) {
         return 0;
     }
-    if (!nextCharIs(this, 109)) {
+    if (fgetc(this->fp) != 109) {
         return 0;
     }
+
 
     ///////////
 
     if (!RegexJumpSpace(this)) {
         return 0;
     }
-    switch (RegexNotSpaceOEndOfScriptLine(this)) {
+    switch (RegexNotSpaceOrEndOfScriptLine(this)) {
         case 0:
             return 0;
             break;
