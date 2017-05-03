@@ -23,9 +23,10 @@ int RegexImport(struct sequenceRegex * this) {
         return 0;
     }
 
-    if (!RegexNotSpaceInline(this)) {
+    if (!RegexMemoryNotSpaceInline(this)) {
         return 0;
     }
+
 
     if (!RegexJumpSpace(this)) {
         return 0;
@@ -45,22 +46,32 @@ int RegexImport(struct sequenceRegex * this) {
         return 0;
     }
 
-
-    ///////////
-
     if (!RegexJumpSpace(this)) {
         return 0;
     }
-    switch (RegexNotSpaceOrEndOfScriptLine(this)) {
-        case 0:
-            return 0;
-            break;
-        case 1:
-            if (!RegexEndOfScriptLine(this)) {
+
+    ///////////
+    Memory(this);
+
+
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case EOF:
                 return 0;
-            }
-            break;
+            case 10:
+                return 0;
+            case 32:
+                if (!RegexEndOfScriptLine(this)) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            case 59:
+                return 1;
+            default:
+                Memory(this);
+                break;
+        }
     }
 
-    return 1;
 }

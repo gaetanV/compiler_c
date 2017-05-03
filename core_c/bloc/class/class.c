@@ -9,9 +9,9 @@
 #include "./type/ClassUnity.c"
 
 int parseClass(
-        struct sequenceRegex * this,
-        int(classType) (struct sequenceRegex *)
-        ) {
+    struct sequenceRegex * this,
+    int(classType) (struct sequenceRegex *)
+){
     // REGEX Class start at 99
 
     if (!nextCharIs(this, 108)) {
@@ -31,10 +31,12 @@ int parseClass(
     if (!RegexJumpSpace(this)) {
         return 0;
     }
-
-    if (!RegexNotSpaceInline(this)) {
+    
+ 
+    if (!RegexMemoryNotSpaceInline(this)) {
         return 0;
     }
+   
     return classType(this);
 }
 

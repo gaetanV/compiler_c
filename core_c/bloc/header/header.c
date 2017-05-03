@@ -5,13 +5,15 @@
 
 int parseHeader(struct sequenceRegex * this) {
 
-    while (nextChar(this)) {
-        switch (this->ch) {
+    while (1) {
+        switch ( fgetc(this->fp)) {
+            case EOF:
+                return 0;
             case 105:
                 if (RegexImport(this)) {
                     if (this->ch != 10) {
                         printf("Header/End/Regex  import \n");
-                        SequenceEmptyLigne(this);
+                        RegexEmptyLigne(this);
                     }
                 }
                 break;
