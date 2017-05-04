@@ -70,7 +70,42 @@ int RegexImplements(struct sequenceRegex * this) {
     return RegexMemoryNotSpaceInlineOrFuncStart(this);
 }
 
-int RegexExtendsImplements(struct sequenceRegex * this) {
+
+int RegexExtendsStartClass(struct sequenceRegex * this) {
+    
+          switch (fgetc(this->fp)) {
+            case 32:
+                break;
+            case 23:
+                break;
+            case 101:
+                switch (RegexExtends(this)) {
+                    case 0:
+                        return 0;
+                    case 1:
+                        while (1) {
+                            switch (fgetc(this->fp)) {
+                                case 32:
+                                    break;
+                                case 23:
+                                    break;
+                                case 123:
+                                    return 1;
+                                default:
+                                    return 0;
+                            }
+                        }
+                }
+                break;
+            case 123:
+                return 1;
+            default:
+                return 0;
+        }
+}
+
+
+int RegexExtendsImplementsStartClass(struct sequenceRegex * this) {
     while (1) {
         switch (fgetc(this->fp)) {
             case 32:

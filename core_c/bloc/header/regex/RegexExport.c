@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 int RegexExport(struct sequenceRegex * this) {
 
     // REGEX EXPORT start at 101
@@ -19,7 +17,7 @@ int RegexExport(struct sequenceRegex * this) {
         return 0;
     }
 
-    ///////////
+
     if (!RegexJumpSpace(this)) {
         return 0;
     }

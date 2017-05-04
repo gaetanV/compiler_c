@@ -2,7 +2,7 @@
 
 int ClassUnity(struct sequenceRegex * this) {
 
-    if (!RegexExtendsImplements(this)) {
+    if (!RegexExtendsImplementsStartClass(this)) {
         return 0;
     }
 

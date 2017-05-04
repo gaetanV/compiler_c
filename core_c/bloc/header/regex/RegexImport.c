@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 int RegexImport(struct sequenceRegex * this) {
 
     // REGEX IMPORT Start at 105
@@ -26,7 +24,8 @@ int RegexImport(struct sequenceRegex * this) {
     if (!RegexMemoryNotSpaceInline(this)) {
         return 0;
     }
-
+    
+    MemoryMap(this);
 
     if (!RegexJumpSpace(this)) {
         return 0;
@@ -50,7 +49,6 @@ int RegexImport(struct sequenceRegex * this) {
         return 0;
     }
 
-    ///////////
     Memory(this);
 
 
@@ -64,9 +62,11 @@ int RegexImport(struct sequenceRegex * this) {
                 if (!RegexEndOfScriptLine(this)) {
                     return 0;
                 } else {
+                    MemoryMap(this);
                     return 1;
                 }
             case 59:
+                MemoryMap(this);
                 return 1;
             default:
                 Memory(this);

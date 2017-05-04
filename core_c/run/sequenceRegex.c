@@ -1,10 +1,17 @@
 #include <stdio.h>
+
 struct sequenceRegex {
     int c;
     char ch;
     FILE *fp;
+    char output[255];
+    int _output;
     char buffer[255];
     int _buffer;
+    int class[255];
+    int _class;
+    int _cmp;
+
 };
 
 int SequenceInit(struct sequenceRegex * this, char * c) {
@@ -20,11 +27,19 @@ int SequenceInit(struct sequenceRegex * this, char * c) {
 
 void SequenceFlush(struct sequenceRegex * this) {
     fclose(this->fp);
-    printf(" %s \n", this->buffer);
+
+    printf("%s\n", this->buffer);
+
+
+    for (int i = 0; i < this->_class; i++) {
+        printf(" %d \n", this->class[i]);
+
+    }
+
 }
 
 int nextCharIs(struct sequenceRegex * this, char a) {
-    printf("NextI | %c |  %d  \n", this->ch, this->ch);
+
     this->ch = fgetc(this->fp);
     if (this->ch == a) {
         return 1;

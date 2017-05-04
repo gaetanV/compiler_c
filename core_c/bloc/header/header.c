@@ -5,22 +5,30 @@
 
 int parseHeader(struct sequenceRegex * this) {
 
+    MemoryCmp(this);
     while (1) {
-        switch ( fgetc(this->fp)) {
+        switch (fgetc(this->fp)) {
             case EOF:
                 return 0;
             case 105:
-                if (RegexImport(this)) {
-                    if (this->ch != 10) {
-                        printf("Header/End/Regex  import \n");
-                        RegexEmptyLigne(this);
-                    }
+                if (!RegexImport(this)) {
+                    printf("Error in import format \n");
+                    return 0;
+                } else {
+                    MemoryCmpNext(this);
                 }
                 break;
             case 101:
-                if (RegexExport(this)) {
-                    printf("Header/End/Regex  export \n ");
+                if (!RegexExport(this)) {
+                    printf("Error in export format \n");
+                    return 0;
+                } else {
                     return 1;
+                }
+                break;
+            case 47:
+                if (!RegexComments(this)) {
+                    return 0;
                 }
                 break;
             case 32:

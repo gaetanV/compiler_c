@@ -1,11 +1,70 @@
 #include <stdio.h>
 
-int RegexFuncNameArgs(struct sequenceRegex * this) {
-   
-    if (!this->ch == 32) {
-              Memory(this);
+int RegexFuncArgsInner(struct sequenceRegex * this) {
+
+    MemoryCmp(this);
+
+step1:
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 32:
+                break;
+            case 41:
+                goto end;
+            default:
+                MemoryCmpNext(this);
+                MemoryClass(this);
+                Memory(this);
+                goto step2;
+                break;
+        }
+    }
+step2:
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 41:
+                goto end;
+            case 44:
+                goto step1;
+            case 32:
+                goto step3;
+                break;
+            default:
+                Memory(this);
+                break;
+        }
+    }
+step3:
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 41:
+                goto end;
+            case 44:
+                goto step1;
+            default:
+                printf("Error in Arguments \n");
+                return 0;
+        }
     }
 
+end:
+
+    // Args Stop
+
+    return RegexMemoryFuncInner(this);
+}
+
+int RegexFuncNameArgs(struct sequenceRegex * this) {
+
+    if (!this->ch == 32) {
+        Memory(this);
+    }
 
     /// Start NotSpace Or Parenthesize
     while (1) {
@@ -22,49 +81,38 @@ int RegexFuncNameArgs(struct sequenceRegex * this) {
                         case 32:
                             break;
                         case 40:
+                            MemoryClass(this);
                             // Parenthesize start
-                            goto end;
+                            return RegexFuncArgsInner(this);
                     }
                 }
                 break;
             case 40:
+                MemoryClass(this);
                 // Parenthesize start
-                goto end;
+                return RegexFuncArgsInner(this);
             default:
                 Memory(this);
                 break;
         }
     }
-end:
-    // Args Start
-    this->c = 1;
-    do {
-        switch (this->ch = fgetc(this->fp)) {
-            case EOF:
+
+}
+
+int RegexFuncArgs(struct sequenceRegex * this) {
+
+    while (1) {
+        switch (fgetc(this->fp)) {
+            default:
                 return 0;
-            case 41:
-                printf("End param \n");
-                break;
-            case 44:
-                printf("End param \n");
-                this->c = 1;
-                break;
             case 32:
                 break;
-            default:
-                Memory(this);
-                if (this->c == 1) {
-                    printf("Start param \n");
-                }
-                this->c = 2;
-                break;
-
+            case 40:
+                // Parenthesize start
+                return RegexFuncArgsInner(this);
         }
+    }
 
-    } while (this->ch != 41);
-    // Args Stop
-
-    return RegexMemoryFuncInner(this);
 }
 
 int RegexFuncArgsType(struct sequenceRegex * this) {
@@ -82,7 +130,8 @@ int RegexFuncArgsType(struct sequenceRegex * this) {
         }
     }
 end:
-
+    MemoryClass(this);
+    MemoryCmp(this);
     // Args Start
     this->c = 1;
     do {
@@ -110,6 +159,8 @@ end:
                 }
                 if (this->c == 3) {
                     printf("Start Param \n");
+                    MemoryCmpNext(this);
+                    MemoryClass(this);
                     this->c = 4;
                 }
                 break;

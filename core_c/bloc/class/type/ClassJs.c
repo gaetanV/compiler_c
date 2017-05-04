@@ -2,67 +2,34 @@
 
 int ClassJs(struct sequenceRegex * this) {
 
-    if (!RegexExtendsImplements(this)) {
+    if (!RegexExtendsStartClass(this)) {
+        printf("Error in class format extends \n");
         return 0;
     }
 
+    MemoryMap(this);
+    
     while (1) {
         switch (fgetc(this->fp)) {
             case 32:
                 break;
             case 10:
                 break;
+            case 47:
+                if(!RegexComments(this)){
+                    return 0;
+                }
+                break;
             case 99:
                 if (RegexConstructorOrFunc(this)) {
-                    if (!RegexFuncArgsType(this)) {
+          
+                    if (!RegexFuncArgs(this)) {
                         return 0;
                     }
                 } else {
                     if (!RegexFuncNameArgs(this)) {
                         return 0;
                     }
-                }
-                break;
-            case 112:
-                switch (fgetc(this->fp)) {
-                    case EOF:
-                        return 0;
-                    case 10:
-                        return 0;
-                    case 59:
-                        return 0;
-                    case 117:
-                        if (RegexUblicOrFunc(this)) {
-                            if (!RegexJumpSpace(this)) {
-                                return 0;
-                            }
-                            printf("Module/End/Regex public\n");
-                        } else {
-                            printf("Module/End/Regex Func\n");
-                        }
-                        if (!RegexFuncNameArgs(this)) {
-                            return 0;
-                        }
-                        break;
-                    case 114:
-                        if (RegexRivateOrFunc(this)) {
-                            if (!RegexJumpSpace(this)) {
-                                return 0;
-                            }
-                            printf("Module/End/Regex private\n");
-
-                        } else {
-                            printf("Module/End/Regex Func\n");
-                        }
-                        if (!RegexFuncNameArgs(this)) {
-                            return 0;
-                        }
-                        break;
-                    default:
-                        if (!RegexFuncNameArgs(this)) {
-                            return 0;
-                        }
-                        printf("Module/End/Regex Func\n");
                 }
                 break;
             case 115:

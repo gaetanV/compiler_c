@@ -5,32 +5,37 @@ int RegexConstructorOrFunc(struct sequenceRegex * this) {
     // REGEX CONSTRUCT Start at 99
 
     if ((this->ch = fgetc(this->fp)) != 111) {
+        MemoryClass(this);
         MemoryChar(this, 99);
         return 0;
     }
 
     if ((this->ch = fgetc(this->fp)) != 110) {
+        MemoryClass(this);
         MemoryChar(this, 99);
         MemoryChar(this, 111);
- 
+
         return 0;
     }
     if ((this->ch = fgetc(this->fp)) != 115) {
+        MemoryClass(this);
         MemoryChar(this, 99);
         MemoryChar(this, 111);
         MemoryChar(this, 110);
         return 0;
     }
-    
+
     if ((this->ch = fgetc(this->fp)) != 116) {
+        MemoryClass(this);
         MemoryChar(this, 99);
         MemoryChar(this, 111);
         MemoryChar(this, 110);
         MemoryChar(this, 115);
         return 0;
     }
-    
+
     if ((this->ch = fgetc(this->fp)) != 114) {
+        MemoryClass(this);
         MemoryChar(this, 99);
         MemoryChar(this, 111);
         MemoryChar(this, 110);
@@ -38,8 +43,9 @@ int RegexConstructorOrFunc(struct sequenceRegex * this) {
         MemoryChar(this, 116);
         return 0;
     }
-    
+
     if ((this->ch = fgetc(this->fp)) != 117) {
+        MemoryClass(this);
         MemoryChar(this, 99);
         MemoryChar(this, 111);
         MemoryChar(this, 110);
@@ -48,8 +54,9 @@ int RegexConstructorOrFunc(struct sequenceRegex * this) {
         MemoryChar(this, 114);
         return 0;
     }
-    
+
     if ((this->ch = fgetc(this->fp)) != 99) {
+        MemoryClass(this);
         MemoryChar(this, 99);
         MemoryChar(this, 111);
         MemoryChar(this, 110);
@@ -59,8 +66,9 @@ int RegexConstructorOrFunc(struct sequenceRegex * this) {
         MemoryChar(this, 117);
         return 0;
     }
-    
+
     if ((this->ch = fgetc(this->fp)) != 116) {
+        MemoryClass(this);
         MemoryChar(this, 99);
         MemoryChar(this, 111);
         MemoryChar(this, 110);
@@ -71,8 +79,9 @@ int RegexConstructorOrFunc(struct sequenceRegex * this) {
         MemoryChar(this, 99);
         return 0;
     }
-    
+
     if ((this->ch = fgetc(this->fp)) != 111) {
+        MemoryClass(this);
         MemoryChar(this, 99);
         MemoryChar(this, 111);
         MemoryChar(this, 110);
@@ -84,8 +93,9 @@ int RegexConstructorOrFunc(struct sequenceRegex * this) {
         MemoryChar(this, 116);
         return 0;
     }
-    
+
     if ((this->ch = fgetc(this->fp)) != 114) {
+        MemoryClass(this);
         MemoryChar(this, 99);
         MemoryChar(this, 111);
         MemoryChar(this, 110);
@@ -98,47 +108,45 @@ int RegexConstructorOrFunc(struct sequenceRegex * this) {
         MemoryChar(this, 111);
         return 0;
     }
-    
+
     return 1;
 }
 
-
-
 int RegexConstructor(struct sequenceRegex * this) {
- 
+
     // REGEX CONSTRUCT Start at 99
 
-    if (!nextCharIs(this,111)) {
+    if (!nextCharIs(this, 111)) {
         return 0;
     }
-    if (!nextCharIs(this,110)) {
+    if (!nextCharIs(this, 110)) {
         return 0;
     }
-    if (!nextCharIs(this,115)) {
-        return 0;
-    }   
-    if (!nextCharIs(this,116)) {
+    if (!nextCharIs(this, 115)) {
         return 0;
     }
-    if (!nextCharIs(this,114)) {
+    if (!nextCharIs(this, 116)) {
         return 0;
     }
-    if (!nextCharIs(this,117)) {
+    if (!nextCharIs(this, 114)) {
         return 0;
     }
-    if (!nextCharIs(this,99)) {
+    if (!nextCharIs(this, 117)) {
         return 0;
     }
-    if (!nextCharIs(this,116)) {
+    if (!nextCharIs(this, 99)) {
         return 0;
     }
-    if (!nextCharIs(this,111)) {
+    if (!nextCharIs(this, 116)) {
         return 0;
     }
-    if (!nextCharIs(this,114)) {
+    if (!nextCharIs(this, 111)) {
         return 0;
     }
-    
+    if (!nextCharIs(this, 114)) {
+        return 0;
+    }
+
     return 1;
-   
+
 }
