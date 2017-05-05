@@ -6,10 +6,12 @@
 #include "bloc/header/header.c"
 #include "bloc/class/class.c"
 
+
 int scanJs(struct sequenceRegex * this) {
     if (parseHeader(this)) {
         switch (this->ch) {
             case 99:
+                
                 if (parseClass(this, ClassJs)) {
                     printf("Module done.\n");
                 } else {
@@ -26,7 +28,9 @@ int scanJs(struct sequenceRegex * this) {
         return 0;
     }
     SequenceFlush(this);
-
+    OutputClassJsEcma6(this);
+    
+    
     printf("All is done nice work");
     return 1;
 }

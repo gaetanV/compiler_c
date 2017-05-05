@@ -5,20 +5,20 @@ int RegexRivateOrFunc(struct sequenceRegex * this) {
     // REGEX rivate Start at 114
 
     if ((this->ch = fgetc(this->fp)) != 105) {
-        MemoryClass(this);
+        
         MemoryChar(this, 112);
         MemoryChar(this, 114);
         return 0;
     }
     if ((this->ch = fgetc(this->fp)) != 118) {
-        MemoryClass(this);
+     
         MemoryChar(this, 112);
         MemoryChar(this, 114);
         MemoryChar(this, 105);
         return 0;
     }
     if ((this->ch = fgetc(this->fp)) != 97) {
-        MemoryClass(this);
+     
         MemoryChar(this, 112);
         MemoryChar(this, 114);
         MemoryChar(this, 105);
@@ -26,7 +26,7 @@ int RegexRivateOrFunc(struct sequenceRegex * this) {
         return 0;
     }
     if ((this->ch = fgetc(this->fp)) != 116) {
-        MemoryClass(this);
+
         MemoryChar(this, 112);
         MemoryChar(this, 114);
         MemoryChar(this, 105);
@@ -35,7 +35,7 @@ int RegexRivateOrFunc(struct sequenceRegex * this) {
         return 0;
     }
     if ((this->ch = fgetc(this->fp)) != 101) {
-        MemoryClass(this);
+     
         MemoryChar(this, 112);
         MemoryChar(this, 114);
         MemoryChar(this, 105);
@@ -54,20 +54,20 @@ int RegexUblicOrFunc(struct sequenceRegex * this) {
     // REGEX ublic Start at 117
 
     if ((this->ch = fgetc(this->fp)) != 98) {
-        MemoryClass(this);
+    
         MemoryChar(this, 112);
         MemoryChar(this, 117);
         return 0;
     }
     if ((this->ch = fgetc(this->fp)) != 108) {
-        MemoryClass(this);
+
         MemoryChar(this, 112);
         MemoryChar(this, 117);
         MemoryChar(this, 98);
         return 0;
     }
     if ((this->ch = fgetc(this->fp)) != 105) {
-        MemoryClass(this);
+
         MemoryChar(this, 112);
         MemoryChar(this, 117);
         MemoryChar(this, 98);
@@ -75,7 +75,7 @@ int RegexUblicOrFunc(struct sequenceRegex * this) {
         return 0;
     }
     if ((this->ch = fgetc(this->fp)) != 99) {
-        MemoryClass(this);
+      
         MemoryChar(this, 112);
         MemoryChar(this, 117);
         MemoryChar(this, 98);

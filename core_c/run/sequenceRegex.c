@@ -1,17 +1,30 @@
 #include <stdio.h>
+#include <string.h>
 
 struct sequenceRegex {
     int c;
     char ch;
     FILE *fp;
-    char output[255];
-    int _output;
+    int import[2];
+    int module[10];
+    int _module;
+
+    
     char buffer[255];
     int _buffer;
-    int class[255];
-    int _class;
+    int pointer[128];
+    
+    int func[20];
+    int _func;
+    
+    int funcStatic[20];
+    int _funcStatic;
+    
+    int _pointer;
+    
     int _cmp;
-
+    int _cmp2;
+    
 };
 
 int SequenceInit(struct sequenceRegex * this, char * c) {
@@ -20,23 +33,21 @@ int SequenceInit(struct sequenceRegex * this, char * c) {
         printf("File %s not found", c);
         return 0;
     }
-    this->c = 0;
+    this->_funcStatic = 0;
+    this->_func = 0;
+    this->_module = 0;
     this->_buffer = 0;
+    this->_pointer = 0;
+    this->c = 0;
+
     return 1;
 };
 
 void SequenceFlush(struct sequenceRegex * this) {
     fclose(this->fp);
-
-    printf("%s\n", this->buffer);
-
-
-    for (int i = 0; i < this->_class; i++) {
-        printf(" %d \n", this->class[i]);
-
-    }
-
 }
+
+
 
 int nextCharIs(struct sequenceRegex * this, char a) {
 

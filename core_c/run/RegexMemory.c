@@ -1,40 +1,11 @@
+
 int MemoryChar(struct sequenceRegex * this,char ch) {
     this->buffer[this->_buffer++] = ch;
 }
 
 
-int MemoryCmp(struct sequenceRegex * this) {
-    this->_cmp=this->_class++;
-    this->class[this->_cmp] = 0;
-}
-
-int MemoryCmpNext(struct sequenceRegex * this) {
-    this->class[this->_cmp]++;
-}
-
-int MemoryType(struct sequenceRegex * this,int type) {
-    this->class[this->_class++] = type;
-    this->class[this->_class++] = -1;
-}
-
-int MemoryClass(struct sequenceRegex * this) {
-    this->class[this->_class++] = this->_buffer;
-}
-
-
 int MemoryMap(struct sequenceRegex * this) {
-    this->class[this->_class++] = this->_buffer;
-}
-
-
-int MemoryExport(struct sequenceRegex * this,int type) {
-    this->class[this->_class++] = type;
-}
-
-
-
-int MemoryAddArgs(struct sequenceRegex * this,int pointer) {
-    this->class[this->_class]++;
+    this->pointer[this->_pointer++] = this->_buffer;
 }
 
 
@@ -43,7 +14,7 @@ int Memory(struct sequenceRegex * this) {
 }
 
 int RegexMemoryNotSpaceInlineOrFuncStart(struct sequenceRegex * this) {
-    
+   
     Memory(this);
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
@@ -65,6 +36,7 @@ int RegexMemoryNotSpaceInlineOrFuncStart(struct sequenceRegex * this) {
 }
 
 int RegexMemoryNotSpaceInline(struct sequenceRegex * this) {
+   
     Memory(this);
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
@@ -84,6 +56,8 @@ int RegexMemoryNotSpaceInline(struct sequenceRegex * this) {
 }
 
 int RegexMemoryFuncInner(struct sequenceRegex * this) {
+     
+    
     // Function Start
     while (1) {
         switch (fgetc(this->fp)) {

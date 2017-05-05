@@ -24,12 +24,12 @@ int ClassJsServer(struct sequenceRegex * this) {
                     if (!RegexFuncArgsType(this)) {
                         return 0;
                     }
-                    MemoryType(this,1);
+                    //MemoryType(this,1);
                 } else {
                     if (!RegexFuncNameArgs(this)) {
                         return 0;
                     }
-                    MemoryType(this,0);
+                   // MemoryType(this,0);
                 }
                 break;
             case 112:
@@ -46,10 +46,10 @@ int ClassJsServer(struct sequenceRegex * this) {
                                 return 0;
                             }
                             printf("Module/End/Regex public\n");
-                            MemoryType(this,2);
+                           // MemoryType(this,2);
                         } else {
                             printf("Module/End/Regex Func\n");
-                            MemoryType(this,0);
+                            //MemoryType(this,0);
                         }
                         if (!RegexFuncNameArgs(this)) {
                             return 0;
@@ -61,10 +61,10 @@ int ClassJsServer(struct sequenceRegex * this) {
                                 return 0;
                             }
                             printf("Module/End/Regex private\n");
-                            MemoryType(this,3);
+                            //MemoryType(this,3);
                         } else {
                             printf("Module/End/Regex Func\n");
-                            MemoryType(this,0);
+                           // MemoryType(this,0);
                         }
                         if (!RegexFuncNameArgs(this)) {
                             return 0;
@@ -74,7 +74,7 @@ int ClassJsServer(struct sequenceRegex * this) {
                         if (!RegexFuncNameArgs(this)) {
                             return 0;
                         }
-                        MemoryType(this,0);
+                       // MemoryType(this,0);
                         printf("Module/End/Regex Func\n");
                 }
                 break;
@@ -84,21 +84,21 @@ int ClassJsServer(struct sequenceRegex * this) {
                         return 0;
                     }
                     printf("Module/End/Regex static\n");
-                    MemoryType(this,2);                
+                   // MemoryType(this,2);                
                 } else {
                     printf("Module/End/Regex Func\n");
-                    MemoryType(this,0);
+                    //MemoryType(this,0);
                 }
                 if (!RegexFuncNameArgs(this)) {
                     return 0;
                 }
                 break;
             default:
-                MemoryClass(this);
+          
                 if (!RegexFuncNameArgs(this)) {
                     return 0;
                 }
-                MemoryType(this,555);
+                //MemoryType(this,555);
                 printf("Module/End/Regex Func\n");
                 break;
             case EOF:

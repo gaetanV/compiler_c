@@ -4,8 +4,13 @@
 #include "./regex/RegexExport.c"
 
 int parseHeader(struct sequenceRegex * this) {
-
-    MemoryCmp(this);
+  
+  
+    this->import[0] = this->_pointer;
+    this->import[1] = 0;
+ 
+   
+    MemoryMap(this);
     while (1) {
         switch (fgetc(this->fp)) {
             case EOF:
@@ -15,7 +20,7 @@ int parseHeader(struct sequenceRegex * this) {
                     printf("Error in import format \n");
                     return 0;
                 } else {
-                    MemoryCmpNext(this);
+                   this->import[1]++;
                 }
                 break;
             case 101:

@@ -37,8 +37,8 @@ int RegexClass( struct sequenceRegex * this){
         return 0;
     }
     
-    MemoryExport(this,-2);
-    MemoryMap(this);
+
+ 
     return 1;
 }
 
@@ -46,11 +46,20 @@ int parseClass(
         struct sequenceRegex * this,
         int(classType) (struct sequenceRegex *)
 ) {
+
+    
+    
+    // Module Memory Position
+    
+    
+    this->module[this->_module++] = this->_pointer-1;
     
     if(!RegexClass(this)){
         printf("Error in class format \n");
         return 0;
     }
+  
+    
     return classType(this);
 }
 
