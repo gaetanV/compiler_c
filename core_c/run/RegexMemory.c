@@ -10,6 +10,7 @@ int MemoryMap(struct sequenceRegex * this) {
 
 
 int Memory(struct sequenceRegex * this) {
+
     this->buffer[this->_buffer++] = this->ch;
 }
 
@@ -36,7 +37,6 @@ int RegexMemoryNotSpaceInlineOrFuncStart(struct sequenceRegex * this) {
 }
 
 int RegexMemoryNotSpaceInline(struct sequenceRegex * this) {
-   
     Memory(this);
     while (1) {
         switch (this->ch = fgetc(this->fp)) {

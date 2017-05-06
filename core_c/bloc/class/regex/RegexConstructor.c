@@ -110,8 +110,13 @@ int RegexConstructorOrFunc(struct sequenceRegex * this) {
     }
 
     return 1;
-}
+    
+    
 
+    
+    
+}
+/*
 int RegexConstructor(struct sequenceRegex * this) {
 
     // REGEX CONSTRUCT Start at 99
@@ -150,3 +155,4 @@ int RegexConstructor(struct sequenceRegex * this) {
     return 1;
 
 }
+*/

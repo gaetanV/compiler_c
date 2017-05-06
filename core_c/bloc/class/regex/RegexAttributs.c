@@ -1,3 +1,16 @@
+int RegexEndOfScriptLine(struct sequenceRegex * this) {
+    while (1) {
+        switch (fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 10:
+                return 0;
+            case 59:
+                return 1;
+        }
+    }
+}
+
 int RegexEndOfScriptLineOrDouble(struct sequenceRegex * this) {   
       while (1) {
          switch (fgetc(this->fp)) {
@@ -76,6 +89,8 @@ int parseAttribut(struct sequenceRegex * this) {
     }
     return 0;
 }
+
+
 
 
 

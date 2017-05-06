@@ -1,41 +1,30 @@
-int RegexEmptyLigne(struct sequenceRegex * this) {
+
+int RegexJumpSpace(struct sequenceRegex * this) {
     while (1) {
-        switch (this->ch = fgetc(this->fp)) {
-            case 32:
-                break;
-            case 10:
-                return 1;
-            default:
-                return 0;
+        if ((this->ch = fgetc(this->fp)) !=  32) {
+            return 1;
         }
-    }
+    };
 }
 
-
-
-int RegexForceEmptyLigne(struct sequenceRegex * this) {
-    while (1) {
-        switch (fgetc(this->fp)) {
-            case EOF:
-                return 0;
-            case 10:
-                return 1;
-        }
-    }
-}
 
 int RegexCommentBloc(struct sequenceRegex * this) {
     while (1) {
+        loop1 :
         switch (fgetc(this->fp)) {
             case EOF:
                 return 0;
             case 42:
-                end :
+                loop2 :
                 switch (fgetc(this->fp)) {
+                    case EOF:
+                        return 0;    
                     case 47:
                         return 1;
                     case 42:
-                        goto end;
+                        goto loop2;
+                    default:
+                        goto loop1;
 
                 }
                 break;
@@ -44,22 +33,13 @@ int RegexCommentBloc(struct sequenceRegex * this) {
     }
 }
 
-int RegexJumpSpace(struct sequenceRegex * this) {
-    while (1) {
-        if (!nextCharIs(this, 32)) {
-            return 1;
-        }
-    };
-}
 
-int RegexEndOfScriptLine(struct sequenceRegex * this) {
+int RegexForceEmptyLigne(struct sequenceRegex * this) {
     while (1) {
         switch (fgetc(this->fp)) {
             case EOF:
                 return 0;
             case 10:
-                return 0;
-            case 59:
                 return 1;
         }
     }
@@ -81,3 +61,4 @@ int RegexComments(struct sequenceRegex * this) {
             return 0;
     }
 }
+

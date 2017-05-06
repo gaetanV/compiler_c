@@ -1,18 +1,20 @@
 #include "run/sequenceRegex.c"
+
 #include "run/Regexcommon.c"
+#include "run/RegexStrict.c"
 #include "run/RegexMemory.c"
 #include "run/RegexFunc.c"
-#include "run/RegexFuncExtends.c"
+
 #include "bloc/header/header.c"
 #include "bloc/class/class.c"
 
 
 int scanJs(struct sequenceRegex * this) {
+
     if (parseHeader(this)) {
         switch (this->ch) {
             case 99:
-                
-                if (parseClass(this, ClassJs)) {
+                if (parseClass(this, ClassJs, ClassJsOutputEcma6 )) {
                     printf("Module done.\n");
                 } else {
                     printf("Error in Module");
@@ -27,8 +29,8 @@ int scanJs(struct sequenceRegex * this) {
         printf("Error in header");
         return 0;
     }
-    SequenceFlush(this);
-    OutputClassJsEcma6(this);
+    fclose(this->fp);
+ 
     
     
     printf("All is done nice work");
@@ -43,11 +45,8 @@ int main(int argc, char *argv[]) {
     }
 
     struct sequenceRegex seqRegex;
-    
-    if (!SequenceInit(&seqRegex, argv[1])) { 
-        return 0;
-    }
-    
+
+    SequenceInit(&seqRegex, argv[1]);
     return scanJs(&seqRegex);
   
 

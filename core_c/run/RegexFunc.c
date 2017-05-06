@@ -36,6 +36,7 @@ step2:
                 goto step3;
                 break;
             default:
+
                 Memory(this);
                 break;
         }
@@ -62,44 +63,6 @@ end:
     // Args Stop
 
     return RegexMemoryFuncInner(this);
-}
-
-int RegexFuncNameArgs(struct sequenceRegex * this) {
-
-  
-    /// Start NotSpace Or Parenthesize
-    
-    while (1) {
-        switch (this->ch) {
-            case EOF:
-                return 0;
-            case 10:
-                return 0;
-            case 32:
-                while (1) {
-                    switch (fgetc(this->fp)) {
-                        default:
-                            return 0;
-                        case 32:
-                            break;
-                        case 40:
-                            MemoryMap(this);
-                            // Parenthesize start
-                            return RegexFuncArgsInner(this);
-                    }
-                }
-                break;
-            case 40:
-                MemoryMap(this);
-                // Parenthesize start
-                return RegexFuncArgsInner(this);
-            default:
-                Memory(this);
-                break;
-        }
-        this->ch = fgetc(this->fp);
-    }
-
 }
 
 int RegexFuncArgs(struct sequenceRegex * this) {

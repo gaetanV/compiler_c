@@ -1,77 +1,83 @@
-int RegexImport(struct sequenceRegex * this) {
+void RegexStrictImport(struct sequenceRegex * this) {
 
     // REGEX IMPORT Start at 105
     if (fgetc(this->fp) != 109) {
-        return 0;
+        goto importError;
     }
     if (fgetc(this->fp) != 112) {
-        return 0;
+        goto importError;
     }
     if (fgetc(this->fp) != 111) {
-        return 0;
+        goto importError;
     }
     if (fgetc(this->fp) != 114) {
-        return 0;
+        goto importError;
     }
     if (fgetc(this->fp) != 116) {
-        return 0;
+        goto importError;
     }
 
     if (!RegexJumpSpace(this)) {
-        return 0;
+        goto importError;
     }
 
     if (!RegexMemoryNotSpaceInline(this)) {
-        return 0;
+        goto importError;
     }
-    
+
     MemoryMap(this);
 
     if (!RegexJumpSpace(this)) {
-        return 0;
+        goto importError;
     }
     // REGEX FROM
 
     if (this->ch != 102) {
-        return 0;
+        goto importError;
     }
     if (fgetc(this->fp) != 114) {
-        return 0;
+        goto importError;
     }
     if (fgetc(this->fp) != 111) {
-        return 0;
+        goto importError;
     }
     if (fgetc(this->fp) != 109) {
-        return 0;
+        goto importError;
     }
 
     if (!RegexJumpSpace(this)) {
-        return 0;
+        goto importError;
     }
 
     Memory(this);
 
-
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                return 0;
+                goto importError;
             case 10:
-                return 0;
+                goto importError;
             case 32:
-                if (!RegexEndOfScriptLine(this)) {
-                    return 0;
-                } else {
-                    MemoryMap(this);
-                    return 1;
+               // END of script line
+               while (1) {
+                    switch (fgetc(this->fp)) {
+                        default :
+                             goto importError;
+                        case 59:
+                             MemoryMap(this);
+                             return;
+                    }
                 }
             case 59:
                 MemoryMap(this);
-                return 1;
+                return;
             default:
                 Memory(this);
                 break;
         }
     }
-
+    
+importError:
+    printf("Error in Import  \n");
+    exit(0);
 }

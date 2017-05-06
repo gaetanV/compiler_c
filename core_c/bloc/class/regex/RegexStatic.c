@@ -43,7 +43,7 @@ int RegexStaticOrFunc(struct sequenceRegex * this) {
     return 1;
 
 }
-
+/*
 int RegexStatic(struct sequenceRegex * this) {
 
     // REGEX STATIC Start at 115
@@ -66,3 +66,4 @@ int RegexStatic(struct sequenceRegex * this) {
     return 1;
 
 }
+*/

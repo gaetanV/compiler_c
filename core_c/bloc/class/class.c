@@ -3,10 +3,15 @@
 #include "./regex/RegexStatic.c"
 #include "./regex/RegexP_.c"
 #include "./regex/RegexAttributs.c"
+#include "./regex/RegexFuncExtends.c"
 
-#include "./type/ClassJsServer.c"
-#include "./type/ClassJs.c"
-#include "./type/ClassUnity.c"
+#include "./ClassCollector.c"
+#include "./ClassCollectorCommon.c"
+
+#include "./type/Js/ClassJs.c"
+#include "./type/Js/ClassJsOutputEcma6.c"
+#include "./type/JsServer/ClassJsServer.c"
+#include "./type/Unity/ClassUnity.c"
 
 
 int RegexClass( struct sequenceRegex * this){
@@ -44,22 +49,30 @@ int RegexClass( struct sequenceRegex * this){
 
 int parseClass(
         struct sequenceRegex * this,
-        int(classType) (struct sequenceRegex *)
+        int(classType) (struct sequenceRegex *, struct ClassCollector * collector),
+        int(classOuputType) (struct sequenceRegex *, struct ClassCollector * collector)
 ) {
 
     
+    struct ClassCollector classCollector;
+    
+    ClassCollectorInit(&classCollector) ;
     
     // Module Memory Position
-    
-    
-    this->module[this->_module++] = this->_pointer-1;
+
+   
     
     if(!RegexClass(this)){
         printf("Error in class format \n");
         return 0;
     }
-  
-    
-    return classType(this);
+    if(classType(this,&classCollector)){
+        classOuputType(this,&classCollector);
+        return 1;
+        
+    }
+    return 0;
+ 
+ 
 }
 

@@ -1,60 +1,47 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 struct sequenceRegex {
     int c;
-    char ch;
-    FILE *fp;
-    int import[2];
-    int module[10];
-    int _module;
 
+    char ch;
     
-    char buffer[255];
+    FILE *fp;
+    int import;
+    
+    char * buffer;
     int _buffer;
-    int pointer[128];
-    
-    int func[20];
-    int _func;
-    
-    int funcStatic[20];
-    int _funcStatic;
-    
+
+    int * pointer;
     int _pointer;
     
     int _cmp;
-    int _cmp2;
+    char * output;
     
 };
 
-int SequenceInit(struct sequenceRegex * this, char * c) {
+void SequenceInit(struct sequenceRegex * this, char * c) {
     this->fp = fopen(c, "r");
     if (this->fp == NULL) {
         printf("File %s not found", c);
-        return 0;
+        exit(0);
     }
-    this->_funcStatic = 0;
-    this->_func = 0;
-    this->_module = 0;
+    
+    fseek(this->fp, 0, SEEK_END);
+    int size = ftell(this->fp); 
+    fseek(this->fp, 0, SEEK_SET);
+    
+    this->buffer  = malloc(size * sizeof(char));
+    this->pointer = malloc(size/2 * sizeof(int));
+    this->output  = malloc(size * sizeof(char));
+    this->output[0] = '\0';
+ 
     this->_buffer = 0;
     this->_pointer = 0;
     this->c = 0;
 
-    return 1;
+    return;
 };
 
-void SequenceFlush(struct sequenceRegex * this) {
-    fclose(this->fp);
-}
-
-
-
-int nextCharIs(struct sequenceRegex * this, char a) {
-
-    this->ch = fgetc(this->fp);
-    if (this->ch == a) {
-        return 1;
-    }
-    return 0;
-}
 
