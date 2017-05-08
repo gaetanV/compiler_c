@@ -1,29 +1,6 @@
-#include <stdio.h>
-
 int ClassJs(struct sequenceRegex * this, struct ClassCollector * collector) {
 
-    MemoryMap(this);
-
-    // Get the name
-    collector->module[collector->_module++] = this->_pointer - 2;
-
-    switch (RegexExtendsStartClass(this)) {
-        case 0:
-            printf("Error in class format extends \n");
-            exit(0);
-        case 1:
-            collector->module[collector->_module++] = 0;
-        case 2:
-            collector->module[collector->_module++] = 1;
-            MemoryMap(this);
-            break;
-    }
-
-    int construct = collector->_module++;
-
-    collector->module[construct] = -1;
-    collector->module[collector->_module++] = 0;
-
+    CollectorExtends(this,collector);
 
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
@@ -36,23 +13,13 @@ int ClassJs(struct sequenceRegex * this, struct ClassCollector * collector) {
                 break;
             case 99:
                 if (RegexConstructorOrFunc(this)) {
-                    if (collector->module[construct] != -1) {
-                        printf("Error Only one Constructor \n");
-                        exit(0);
-                    }
-                    collector->module[construct] = this->_pointer - 1;
-
-                    if (!RegexFuncArgs(this)) {
-                        return 0;
-                    }
-                    MemoryMap(this);
-                    collector->module[construct + 1] = this->_cmp;
+                    CollectorContructorArgs(this,collector);
                 } else {
                     CollectorFuncNameArgs(
-                            this, 
+                            this,
                             &collector->_func,
                             collector->func
-                    );
+                            );
                 }
                 break;
             case 115:

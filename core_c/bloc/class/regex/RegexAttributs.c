@@ -1,3 +1,5 @@
+#include <stdio.h>
+/*
 int RegexEndOfScriptLine(struct sequenceRegex * this) {
     while (1) {
         switch (fgetc(this->fp)) {
@@ -8,6 +10,7 @@ int RegexEndOfScriptLine(struct sequenceRegex * this) {
             case 59:
                 return 1;
         }
+
     }
 }
 
@@ -92,9 +95,6 @@ int parseAttribut(struct sequenceRegex * this) {
 
 
 
-
-
-
 int RegexAttributs(struct sequenceRegex * this, int(constructor) (struct sequenceRegex *)) {
     while (1) {
         switch (fgetc(this->fp)) {
@@ -104,14 +104,14 @@ int RegexAttributs(struct sequenceRegex * this, int(constructor) (struct sequenc
                 break;
             
             case 112:
-                /*/
+             
                 if (RegexP_(this, parseAttribut)) {
                     printf("Module/End/Regex p_\n");
                     printf("-----------------------------< \n");
                 } else {
                     return 0;
                 }
-                break;*/
+                break;
                break;
             case 40:
                 // Parenthesize start
@@ -124,3 +124,5 @@ int RegexAttributs(struct sequenceRegex * this, int(constructor) (struct sequenc
     }
     return 0;
 }
+
+*/

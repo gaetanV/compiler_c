@@ -14,7 +14,7 @@ int scanJs(struct sequenceRegex * this) {
     if (parseHeader(this)) {
         switch (this->ch) {
             case 99:
-                if (parseClass(this, ClassJs, ClassJsOutputEcma6 )) {
+                if (parseClass(this, ClassJsServer, ClassJsServerOutput )) {
                     printf("Module done.\n");
                 } else {
                     printf("Error in Module");

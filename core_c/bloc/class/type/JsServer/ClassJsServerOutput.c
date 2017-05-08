@@ -1,7 +1,8 @@
 #include <stdio.h>
 
-int ClassJsOutputEcma6(struct sequenceRegex * this, struct ClassCollector * collector) {
+int ClassJsServerOutput(struct sequenceRegex * this, struct ClassCollector * collector) {
 
+    
     printf("%s\n", this->buffer);
     
     this->buffer[this->_buffer]= '\0' ;
@@ -10,8 +11,7 @@ int ClassJsOutputEcma6(struct sequenceRegex * this, struct ClassCollector * coll
     
     ClassCollectorPrint(this,collector);
     
-    
-
+  
     for (int i = 0; i < this->import; i++) {
         /// Import 
         strncat(this->output,
@@ -54,25 +54,48 @@ int ClassJsOutputEcma6(struct sequenceRegex * this, struct ClassCollector * coll
                 (this->buffer + this->pointer[this->c]),
                 (this->pointer[(this->c + 1)] - this->pointer[this->c])
                 );
+          this->c++;
     }
+    
+    if (collector->module[2] == 1) {
 
+        /// Module Implements
+        strncat(this->output,
+                (this->buffer + this->pointer[this->c]),
+                (this->pointer[(this->c + 1)] - this->pointer[this->c])
+                );
+    }
+    
 
-
+  
     // Constructor
-    if (collector->module[2] != -1) {
+    if (collector->module[3] != -1) {
 
-        this->c = collector->module[2];
+        this->c = collector->module[3];
 
-
-        for (int j = 0; j < collector->module[3]; j++) {
+        int z = collector->module[5];
+        
+        for (int j = 0; j < collector->module[4]; j++) {
+         
+            
             /// Constructor Args
             strncat(this->output,
                     (this->buffer + this->pointer[this->c]),
                     (this->pointer[(this->c + 1)] - this->pointer[this->c])
                     );
             this->c++;
+            /// Constructor Args Type
+            z++;
+            if(collector->type[z]){
+                strncat(this->output,
+                    (this->buffer + this->pointer[this->c]),
+                    (this->pointer[(this->c + 1)] - this->pointer[this->c])
+                    );
+                this->c++;
+            }
+            
         }
-
+        
 
         /// Constructor Inner
         strncat(this->output,

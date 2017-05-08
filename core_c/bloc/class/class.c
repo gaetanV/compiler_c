@@ -9,7 +9,9 @@
 #include "./ClassCollectorCommon.c"
 
 #include "./type/Js/ClassJs.c"
-#include "./type/Js/ClassJsOutputEcma6.c"
+#include "./type/Js/ClassJsOutput.c"
+#include "./type/JsServer/ClassJsServerOutput.c"
+
 #include "./type/JsServer/ClassJsServer.c"
 #include "./type/Unity/ClassUnity.c"
 
@@ -55,12 +57,11 @@ int parseClass(
 
     
     struct ClassCollector classCollector;
-    
-    ClassCollectorInit(&classCollector) ;
+   
     
     // Module Memory Position
-
-   
+    ClassCollectorInit(&classCollector,this->_pointer - 1) ;
+    
     
     if(!RegexClass(this)){
         printf("Error in class format \n");

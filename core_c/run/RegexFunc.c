@@ -1,7 +1,7 @@
 #include <stdio.h>
+#include <stdbool.h>
 
 int RegexFuncArgsInner(struct sequenceRegex * this) {
-
 
     this->_cmp = 0;
 step1:
@@ -66,7 +66,6 @@ end:
 }
 
 int RegexFuncArgs(struct sequenceRegex * this) {
-
     while (1) {
         switch (fgetc(this->fp)) {
             default:
@@ -82,8 +81,106 @@ int RegexFuncArgs(struct sequenceRegex * this) {
 
 }
 
-int RegexFuncArgsType(struct sequenceRegex * this) {
+int RegexFuncArgsTypeInner(struct sequenceRegex * this, int * typePointer, bool * type) {
 
+    
+    this->_cmp = 0;
+
+step1:
+    this->c = 1;
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 41:
+                goto end;
+            case 32:
+                break;
+            default:
+                if (this->_cmp != 0) {
+                    MemoryMap(this);
+                }
+                this->_cmp++;
+                type[* typePointer] = 0;
+                * typePointer = * typePointer + 1;
+                Memory(this);
+                goto step2;
+                break;
+        }
+    }
+step2:
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 41:
+                goto end;
+            case 44:
+                goto step1;
+                break;
+            case 32:
+                while (1) {
+                    switch (this->ch = fgetc(this->fp)) {
+                        case EOF:
+                            return 0;
+                        case 41:
+                            goto end;
+                        case 44:
+                            goto step1;
+                        default:
+                            type[* typePointer - 1 ] = 1;
+                            MemoryMap(this);
+                            Memory(this);
+                            goto step3;
+                            break;
+
+                    }
+                }
+            default:
+                Memory(this);
+                break;
+        }
+    }
+step3:
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 41:
+                goto end;
+            case 44:
+                goto step1;
+                break;
+            case 32:
+                goto step4;
+                break;
+            default:
+                Memory(this);
+                break;
+        }
+    }
+
+step4:
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case 41:
+                goto end;
+            case 44:
+                goto step1;
+                break;
+            case 32:
+                break;
+            default:
+                return 0;
+        }
+    }
+
+end:
+    return RegexMemoryFuncInner(this);
+
+}
+
+int RegexFuncArgsType(struct sequenceRegex * this, int * typePointer, bool * type) {
 
     while (1) {
         switch (fgetc(this->fp)) {
@@ -93,49 +190,10 @@ int RegexFuncArgsType(struct sequenceRegex * this) {
                 break;
             case 40:
                 // Parenthesize start
-                goto end;
+                return RegexFuncArgsTypeInner(this,typePointer,type);
         }
     }
-end:
 
-    // MemoryCmp(this);
-    // Args Start
-    this->c = 1;
-    do {
-        switch (this->ch = fgetc(this->fp)) {
-            case EOF:
-                return 0;
-            case 41:
-                printf("End param \n");
-                break;
-            case 44:
-                printf("End param \n");
-                this->c = 1;
-                break;
-            case 32:
-                if (this->c = 2) {
-                    printf("End Type \n");
-                    this->c = 3;
-                }
-                break;
-            default:
-                Memory(this);
-                if (this->c == 1) {
-                    printf("Start Type \n");
-                    this->c = 2;
-                }
-                if (this->c == 3) {
-                    printf("Start Param \n");
-                    //   MemoryCmpNext(this);
-
-                    this->c = 4;
-                }
-                break;
-        }
-    } while (this->ch != 41);
-    // Args End
-
-    return RegexMemoryFuncInner(this);
 }
 
 

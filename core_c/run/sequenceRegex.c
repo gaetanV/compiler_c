@@ -3,21 +3,24 @@
 #include <stdlib.h>
 
 struct sequenceRegex {
-    int c;
-
+   
     char ch;
-    
+   
     FILE *fp;
-    int import;
-    
-    char * buffer;
-    int _buffer;
 
-    int * pointer;
-    int _pointer;
-    
-    int _cmp;
+    char * buffer;
     char * output;
+    
+    
+    unsigned short import;
+    
+    unsigned short _buffer;
+    unsigned short  * pointer;
+    unsigned short  _pointer;
+    
+    unsigned short _cmp;
+    unsigned short c;
+  
     
 };
 
@@ -33,7 +36,7 @@ void SequenceInit(struct sequenceRegex * this, char * c) {
     fseek(this->fp, 0, SEEK_SET);
     
     this->buffer  = malloc(size * sizeof(char));
-    this->pointer = malloc(size/2 * sizeof(int));
+    this->pointer = malloc(size/2 * sizeof(unsigned short ));
     this->output  = malloc(size * sizeof(char));
     this->output[0] = '\0';
  
