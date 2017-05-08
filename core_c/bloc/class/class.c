@@ -2,15 +2,18 @@
 #include "./regex/RegexConstructor.c"
 #include "./regex/RegexStatic.c"
 #include "./regex/RegexP_.c"
-#include "./regex/RegexAttributs.c"
 #include "./regex/RegexFuncExtends.c"
 
-#include "./ClassCollector.c"
-#include "./ClassCollectorCommon.c"
+#include "./collector/ClassCollector.c"
+#include "./collector/ClassCollectorCommon.c"
+#include "./collector/ClassCollectorOption.c"
+
 
 #include "./type/Js/ClassJs.c"
 #include "./type/Js/ClassJsOutput.c"
 #include "./type/JsServer/ClassJsServerOutput.c"
+#include "./type/Unity/ClassUnityOutput.c"
+
 
 #include "./type/JsServer/ClassJsServer.c"
 #include "./type/Unity/ClassUnity.c"
@@ -40,10 +43,25 @@ int RegexClass( struct sequenceRegex * this){
     }
 
    
-    if (!RegexMemoryNotSpaceInline(this)) {
-        return 0;
+    Memory(this);
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 10:
+                return 0;
+           case 59:
+                return 0;
+            case 123:
+                return 1;
+            case 32:
+                return 1;
+            default:
+                Memory(this);
+                break;
+        }
     }
-    
+  
 
  
     return 1;
@@ -68,6 +86,7 @@ int parseClass(
         return 0;
     }
     if(classType(this,&classCollector)){
+        
         classOuputType(this,&classCollector);
         return 1;
         

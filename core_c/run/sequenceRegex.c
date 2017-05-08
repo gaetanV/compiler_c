@@ -3,25 +3,19 @@
 #include <stdlib.h>
 
 struct sequenceRegex {
-   
-    char ch;
-   
-    FILE *fp;
 
+    FILE *fp;
+    
+    char ch;
     char * buffer;
-    char * output;
-    
-    
-    unsigned short import;
-    
     unsigned short _buffer;
+    char * output;
+    unsigned short import;
     unsigned short  * pointer;
     unsigned short  _pointer;
-    
     unsigned short _cmp;
     unsigned short c;
   
-    
 };
 
 void SequenceInit(struct sequenceRegex * this, char * c) {

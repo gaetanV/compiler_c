@@ -1,5 +1,28 @@
 #include <stdio.h>
 
+int RegexMemoryNotSpaceInlineOrFuncStart(struct sequenceRegex * this) {
+  
+    Memory(this);
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 10:
+                return 0;
+            case 59:
+                return 0;
+            case 32:
+                return 1;
+            case 123:
+                return 2;
+            default:
+                Memory(this);
+                break;     
+        }
+    }
+}
+
+
 int RegexExtends(struct sequenceRegex * this) {
 
     // REGEX Extends Start at 101

@@ -1,12 +1,14 @@
 #include <stdbool.h>
-
 struct ClassCollector {
    
     int module[6];
-
+        
+    int attrPublic[10];
+    int _attrPublic;  
     
     int attrStatic[10];
     int _attrStatic;
+    
     int attrPrivate[10];
     int _attrPrivate;  
     
@@ -26,6 +28,7 @@ struct ClassCollector {
 
 int ClassCollectorInit(struct ClassCollector * this,int pointer) {
     
+    this->_attrPublic = 0; 
     this->_attrPrivate = 0; 
     this->_attrStatic = 0;
     this->_funcPrivate = 0;

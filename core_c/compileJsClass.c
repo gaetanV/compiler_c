@@ -1,7 +1,6 @@
 #include "run/sequenceRegex.c"
 
 #include "run/Regexcommon.c"
-#include "run/RegexStrict.c"
 #include "run/RegexMemory.c"
 #include "run/RegexFunc.c"
 
@@ -14,7 +13,7 @@ int scanJs(struct sequenceRegex * this) {
     if (parseHeader(this)) {
         switch (this->ch) {
             case 99:
-                if (parseClass(this, ClassJsServer, ClassJsServerOutput )) {
+                if (parseClass(this, ClassUnity, ClassUnityOutput )) {
                     printf("Module done.\n");
                 } else {
                     printf("Error in Module");
