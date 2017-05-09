@@ -14,7 +14,7 @@ int scanJs(struct Buffer * this) {
     if (parseHeader(this)) {
         switch (this->ch) {
             case 99:
-                if (parseClass(this, ClassUnity, ClassUnityOutput )) {
+                if (parseClassUnity(this,ClassUnityOutput)) {
                     printf("Module done.\n");
                 } else {
                     printf("Error in Module");

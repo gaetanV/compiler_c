@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int ClassJsServerOutput(struct Buffer * this, struct ClassCollector * collector) {
+int ClassJsServerOutput(struct Buffer * this, struct ClassCollectorJsServer * collector) {
 
     
     printf("%s\n", this->buffer);
@@ -8,8 +8,8 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollector * collector)
     this->buffer[this->_buffer]= '\0' ;
     
     this->c = 0;
-    
-    ClassCollectorPrint(this,collector);
+    PrintClassCollectorServer(this,collector);
+   
     
   
     for (int i = 0; i < this->import; i++) {
@@ -32,7 +32,7 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollector * collector)
 
 
 
-    this->c = collector->module[0];
+    this->c = collector->startPointer;
 
 
     /// Module Name
@@ -47,7 +47,7 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollector * collector)
 
     /// Extends
 
-    if (collector->module[1] == 1) {
+    if (collector->hasExtends == 1) {
 
         /// Module Extends
         strncat(this->output,
@@ -57,7 +57,7 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollector * collector)
           this->c++;
     }
     
-    if (collector->module[2] == 1) {
+    if (collector->hasImplements == 1) {
 
         /// Module Implements
         strncat(this->output,
@@ -69,13 +69,12 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollector * collector)
 
   
     // Constructor
-    if (collector->module[3] != -1) {
+    if (collector->hasConstructor == 1) {
 
-        this->c = collector->module[3];
+        this->c = collector->constructor[0];
+        int z = collector->constructor[2];
 
-        int z = collector->module[5];
-        
-        for (int j = 0; j < collector->module[4]; j++) {
+        for (int j = 0; j < collector->constructor[1]; j++) {
          
             
             /// Constructor Args
@@ -93,7 +92,6 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollector * collector)
                     );
                 this->c++;
             }
-            
         }
         
 

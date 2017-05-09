@@ -1,8 +1,13 @@
 #include <stdio.h>
 
-int ClassUnity(struct Buffer * this, struct ClassCollector * collector) {
+int ClassUnity(
+        struct Buffer * this,
+        int(classOuputType) (struct Buffer *, struct ClassCollectorUnity * collector)
+        ) {
 
-    CollectorExtends(this, collector);
+    struct ClassCollectorUnity * collector = newClassCollectorUnity(this->_pointer - 2);
+    CollectorExtends(this, &collector->hasExtends);
+
 
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
@@ -15,7 +20,11 @@ int ClassUnity(struct Buffer * this, struct ClassCollector * collector) {
                 break;
             case 99:
                 if (RegexConstructorOrFunc(this)) {
-                    CollectorContructorArgsStrictType(this, collector);
+                    CollectorContructorArgsStrictType(
+                            this, 
+                            &collector->hasConstructor ,
+                            collector->constructor
+                            );
                 } else {
                     CollectorFuncNameArgs(
                             this,
@@ -94,6 +103,7 @@ int ClassUnity(struct Buffer * this, struct ClassCollector * collector) {
             case EOF:
                 return 0;
             case 125:
+                classOuputType(this, collector);
                 return 1;
         }
     }

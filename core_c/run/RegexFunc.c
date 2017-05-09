@@ -149,6 +149,7 @@ step1:
                 if (this->_cmp != 0) {
                     MemoryMap(this);
                 }
+                this->_cmp++;
                 type[* typePointer] = 0;
                 * typePointer = *typePointer + 1;
                 Memory(this);

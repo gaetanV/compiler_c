@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int ClassJsOutput(struct Buffer * this, struct ClassCollector * collector) {
+int ClassJsOutput(struct Buffer * this, struct ClassCollectorJs * collector) {
 
     
     printf("%s\n", this->buffer);
@@ -9,7 +9,7 @@ int ClassJsOutput(struct Buffer * this, struct ClassCollector * collector) {
     
     this->c = 0;
     
-    ClassCollectorPrint(this,collector);
+    PrintClassCollectorJs(this,collector);
     
   
     for (int i = 0; i < this->import; i++) {
@@ -32,7 +32,7 @@ int ClassJsOutput(struct Buffer * this, struct ClassCollector * collector) {
 
 
 
-    this->c = collector->module[0];
+    this->c = collector->startPointer;
 
 
     /// Module Name
@@ -47,7 +47,7 @@ int ClassJsOutput(struct Buffer * this, struct ClassCollector * collector) {
 
     /// Extends
 
-    if (collector->module[1] == 1) {
+    if (collector->hasExtends == 1) {
 
         /// Module Extends
         strncat(this->output,
@@ -60,12 +60,12 @@ int ClassJsOutput(struct Buffer * this, struct ClassCollector * collector) {
   
   
     // Constructor
-    if (collector->module[3] != -1) {
+    if (collector->hasConstructor == 1) {
 
-        this->c = collector->module[3];
+        this->c = collector->constructor[0];
 
 
-        for (int j = 0; j < collector->module[4]; j++) {
+        for (int j = 0; j < collector->constructor[1]; j++) {
             /// Constructor Args
             strncat(this->output,
                     (this->buffer + this->pointer[this->c]),

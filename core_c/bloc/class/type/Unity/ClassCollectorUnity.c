@@ -1,7 +1,13 @@
 #include <stdbool.h>
-struct ClassCollector {
-   
-    int module[6];
+
+struct ClassCollectorUnity {
+    
+    unsigned short startPointer;
+    bool hasExtends;
+    bool hasConstructor;
+    
+    unsigned short constructor [3];
+
         
     int attrPublic[10];
     int _attrPublic;  
@@ -20,48 +26,41 @@ struct ClassCollector {
     
     int funcPrivate[10];
     int _funcPrivate;
-    
-    bool type[30];
-    int _type;
+   
     
 };
 
-int ClassCollectorInit(struct ClassCollector * this,int pointer) {
-    
-    this->_attrPublic = 0; 
-    this->_attrPrivate = 0; 
-    this->_attrStatic = 0;
-    this->_funcPrivate = 0;
-    this->_funcStatic = 0;
-    this->_func = 0;
-    this->_type = 0;
 
-    this->module[0] = pointer;
-    // 0 Char pointer
-    // 1 Extends
-    // 2 Implements
-    // 3 Char pointer constructor  ???
-    this->module[3] = -1;
-    // 4 Nb arguments
-    this->module[4] = 0;
-    // 5 Type pointer
+struct ClassCollectorUnity *newClassCollectorUnity (unsigned short pointer) {
     
+    struct ClassCollectorUnity *y = malloc (sizeof (struct ClassCollectorUnity));
+    
+
+    y->_attrPublic = 0; 
+    y->_attrPrivate = 0; 
+    y->_attrStatic = 0;
+    y->_funcPrivate = 0;
+    y->_funcStatic = 0;
+    y->_func = 0;
+
+    y->startPointer = pointer;
+    
+
+    return y;   
 }
 
-int ClassCollectorPrint(struct Buffer * this, struct ClassCollector * collector) {
-    
 
+
+
+int PrintClassUnityCollector(struct Buffer * this,struct ClassCollectorUnity * collector){
+    
     printf(">>>>>>>>>>>>>\n");
     for (int i = 0; i < this->_pointer; i++) {
         printf(" %d \n", this->pointer[i]);
 
     }
 
-    printf(">>>>>>>>>>>>>\n");
-    for (int i = 0; i < 6; i++) {
-        printf(" %d \n", collector->module[i]);
-
-    }
+  
     printf("Func \n");
     for (int i = 0; i < collector->_func; i++) {
         printf(" %d \n", collector->func[i]);
@@ -87,9 +86,6 @@ int ClassCollectorPrint(struct Buffer * this, struct ClassCollector * collector)
         printf(" %d \n", collector->attrPrivate[i]);
     }
     
-    printf("Type \n");
-    for (int i = 0; i < collector->_type; i++) {
-        printf(" %d \n", collector->type[i]);
-    }
-    
+   
 }
+

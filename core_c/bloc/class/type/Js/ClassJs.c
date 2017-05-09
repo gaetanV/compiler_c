@@ -1,6 +1,13 @@
-int ClassJs(struct Buffer * this, struct ClassCollector * collector) {
 
-    CollectorExtends(this, collector);
+int ClassJs(
+        struct Buffer * this, 
+        int(classOuputType) (struct Buffer *, struct ClassCollectorJs * collector)
+ ) {
+
+    struct ClassCollectorJs * collector  =  newClassCollectorJs(this->_pointer - 2);
+    
+    CollectorExtends(this, &collector->hasExtends);
+
 
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
@@ -13,7 +20,11 @@ int ClassJs(struct Buffer * this, struct ClassCollector * collector) {
                 break;
             case 99:
                 if (RegexConstructorOrFunc(this)) {
-                    CollectorContructorArgs(this, collector);
+                    CollectorContructorArgs(
+                            this, 
+                            &collector->hasConstructor ,
+                            collector->constructor
+                            );
                 } else {
                     CollectorFuncNameArgs(
                             this,
@@ -50,6 +61,7 @@ int ClassJs(struct Buffer * this, struct ClassCollector * collector) {
             case EOF:
                 return 0;
             case 125:
+                classOuputType(this, collector);
                 return 1;
 
         }

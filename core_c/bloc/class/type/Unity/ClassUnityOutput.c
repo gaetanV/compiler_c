@@ -1,6 +1,8 @@
 #include <stdio.h>
 
-int ClassUnityOutput(struct Buffer * this, struct ClassCollector * collector) {
+
+
+int ClassUnityOutput(struct Buffer * this, struct ClassCollectorUnity * collector) {
 
 
     printf("%s\n", this->buffer);
@@ -9,7 +11,7 @@ int ClassUnityOutput(struct Buffer * this, struct ClassCollector * collector) {
 
     this->c = 0;
 
-    ClassCollectorPrint(this, collector);
+    PrintClassUnityCollector(this,collector);
 
 
     for (int i = 0; i < this->import; i++) {
@@ -32,7 +34,7 @@ int ClassUnityOutput(struct Buffer * this, struct ClassCollector * collector) {
 
 
 
-    this->c = collector->module[0];
+    this->c = collector->startPointer;
 
 
     /// Module Name
@@ -47,7 +49,7 @@ int ClassUnityOutput(struct Buffer * this, struct ClassCollector * collector) {
 
     /// Extends
 
-    if (collector->module[1] == 1) {
+    if (collector->hasExtends == 1) {
 
         /// Module Extends
         strncat(this->output,
@@ -59,13 +61,11 @@ int ClassUnityOutput(struct Buffer * this, struct ClassCollector * collector) {
 
 
     // Constructor
-    if (collector->module[3] != -1) {
+    if (collector->hasConstructor == 1) {
 
-        this->c = collector->module[3];
+        this->c = collector->constructor[0];
 
-
-
-        for (int j = 0; j < collector->module[4]; j++) {
+        for (int j = 0; j < collector->constructor[1]; j++) {
 
 
             /// Constructor Args Type

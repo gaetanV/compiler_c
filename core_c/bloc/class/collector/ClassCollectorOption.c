@@ -28,8 +28,7 @@ extendsError:
     Error(this, "class format extends");
 }
 
-
-void _Implements(struct Buffer * this, struct ClassCollector * collector) {
+void _Implements(struct Buffer * this) {
 
     // REGEX Implements Start at 105
     if (fgetc(this->fp) != 109) {
@@ -82,13 +81,13 @@ void _Implements(struct Buffer * this, struct ClassCollector * collector) {
                         case 23:
                             break;
                         case 123:
-                            goto implementsEnd;
+                            return;
                         default:
                             goto implementsError;
                     }
                 }
             case 123:
-                goto implementsEnd;
+                return;
             default:
                 Memory(this);
                 break;
@@ -99,18 +98,12 @@ void _Implements(struct Buffer * this, struct ClassCollector * collector) {
 implementsError:
     Error(this, "class format implements");
 
-implementsEnd:
-    collector->module[2] = 1;
-    MemoryMap(this);
-    return;
 
 }
 
-void CollectorExtendsImplements(struct Buffer * this, struct ClassCollector * collector) {
+void CollectorExtendsImplements(struct Buffer * this, bool * hasExtends, bool * hasImplements) {
 
     if (this->ch == 123) {
-        collector->module[1] = 0;
-        collector->module[2] = 0;
         return;
     }
     while (1) {
@@ -120,10 +113,11 @@ void CollectorExtendsImplements(struct Buffer * this, struct ClassCollector * co
             case 23:
                 break;
             case 105:
-                collector->module[1] = 0;
+                *hasExtends = 0;
                 goto implements;
             case 101:
-                  _ExtendsStart(this);
+                _ExtendsStart(this);
+                *hasExtends = 1;
                 while (1) {
                     switch (this->ch = fgetc(this->fp)) {
                         case EOF:
@@ -138,8 +132,8 @@ void CollectorExtendsImplements(struct Buffer * this, struct ClassCollector * co
                                     case 32:
                                         break;
                                     case 23:
-                                case 105:
-                                    goto implements;
+                                    case 105:
+                                        goto implements;
                                         break;
                                     case 123:
                                         goto extendsEnd;
@@ -157,8 +151,8 @@ void CollectorExtendsImplements(struct Buffer * this, struct ClassCollector * co
 
                 break;
             case 123:
-                collector->module[1] = 0;
-                collector->module[2] = 0;
+                *hasExtends = 0;
+                *hasImplements = 0;
                 return;
             default:
                 goto extendsError;
@@ -166,15 +160,17 @@ void CollectorExtendsImplements(struct Buffer * this, struct ClassCollector * co
     }
 
 implements:
-    _Implements(this, collector);
+    _Implements(this);
+    *hasImplements = 1;
+    MemoryMap(this);
     return;
 
 extendsEnd:
-    collector->module[1] = 1;
     MemoryMap(this);
     return;
+    
 endFuncFalse:
-   return;         
+    return;
 implementsError:
     Error(this, "class format implements");
 
@@ -182,11 +178,9 @@ implementsError:
 extendsError:
     Error(this, "class format extends");
 
-
-
 }
 
-void CollectorExtends(struct Buffer * this, struct ClassCollector * collector) {
+void CollectorExtends(struct Buffer * this, bool * hasExtends) {
 
     if (this->ch == 123) {
         goto endFuncFalse;
@@ -236,12 +230,12 @@ void CollectorExtends(struct Buffer * this, struct ClassCollector * collector) {
         this->ch = fgetc(this->fp);
     }
 endFuncFalse:
-    collector->module[1] = 0;
+    *hasExtends = 0;
     MemoryMap(this);
     return;
 
 extendsEnd:
-    collector->module[1] = 1;
+    *hasExtends = 1;
     MemoryMap(this);
     return;
 
