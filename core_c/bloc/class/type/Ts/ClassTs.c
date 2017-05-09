@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int ClassTs(struct sequenceRegex * this) {
+int ClassTs(struct Buffer * this) {
 
     return 0;
 }

@@ -1,9 +1,7 @@
-int ClassJsServer(struct sequenceRegex * this, struct ClassCollector * collector) {
+int ClassJsServer(struct Buffer * this, struct ClassCollector * collector) {
 
+    CollectorExtendsImplements(this, collector);
 
-    CollectorExtendsImplements(this,collector);
-  
-            
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case 32:
@@ -15,8 +13,8 @@ int ClassJsServer(struct sequenceRegex * this, struct ClassCollector * collector
                 break;
             case 99:
                 if (RegexConstructorOrFunc(this)) {
-                   CollectorContructorArgsType(this,collector);
-                   
+                    CollectorContructorArgsType(this, collector);
+
                 } else {
                     CollectorFuncNameArgs(
                             this,
@@ -27,10 +25,7 @@ int ClassJsServer(struct sequenceRegex * this, struct ClassCollector * collector
                 break;
             case 115:
                 if (RegexStaticOrFunc(this)) {
-                    if (!RegexJumpSpace(this)) {
-                        return 0;
-                    }
-
+                    RegexStrictSpaces(this);
                     CollectorFuncNameArgsOrAttr(
                             this,
                             &collector->_funcStatic,
@@ -52,10 +47,7 @@ int ClassJsServer(struct sequenceRegex * this, struct ClassCollector * collector
                 switch (fgetc(this->fp)) {
                     case 117:
                         if (RegexUblicOrFunc(this)) {
-                            if (!RegexJumpSpace(this)) {
-                                printf("error in public function");
-                                exit(0);
-                            }
+                            RegexStrictSpaces(this);
                         }
                         CollectorFuncNameArgs(
                                 this,
@@ -65,10 +57,7 @@ int ClassJsServer(struct sequenceRegex * this, struct ClassCollector * collector
                         break;
                     case 114:
                         if (RegexRivateOrFunc(this)) {
-                            if (!RegexJumpSpace(this)) {
-                                printf("error in private function");
-                                exit(0);
-                            }
+                            RegexStrictSpaces(this);
                             CollectorFuncNameArgsOrAttr(
                                     this,
                                     &collector->_funcPrivate,
@@ -95,7 +84,8 @@ int ClassJsServer(struct sequenceRegex * this, struct ClassCollector * collector
                 break;
             default:
                 CollectorFuncNameArgs(
-                        this, &collector->_func,
+                        this, 
+                        &collector->_func,
                         collector->func
                         );
                 break;

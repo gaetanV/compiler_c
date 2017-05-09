@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int RegexConstructorOrFunc(struct sequenceRegex * this) {
+int RegexConstructorOrFunc(struct Buffer * this) {
 
     // REGEX CONSTRUCT Start at 99
 

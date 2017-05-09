@@ -1,4 +1,4 @@
-int RegexRivateOrFunc(struct sequenceRegex * this) {
+int RegexRivateOrFunc(struct Buffer * this) {
 
     // REGEX rivate Start at 114
 
@@ -47,7 +47,7 @@ int RegexRivateOrFunc(struct sequenceRegex * this) {
 
 }
 
-int RegexUblicOrFunc(struct sequenceRegex * this) {
+int RegexUblicOrFunc(struct Buffer * this) {
 
     // REGEX ublic Start at 117
 

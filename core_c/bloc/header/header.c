@@ -3,7 +3,7 @@
 #include "./regex/RegexImport.c"
 #include "./regex/RegexExport.c"
 
-int parseHeader(struct sequenceRegex * this) {
+int parseHeader(struct Buffer * this) {
     this->import = 0;
     MemoryMap(this);
     while (1) {

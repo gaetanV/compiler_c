@@ -1,14 +1,15 @@
-#include "run/sequenceRegex.c"
+#include "run/Buffer.c"
+#include "run/Error.c"
+#include "run/Memory.c"
 
 #include "run/Regexcommon.c"
-#include "run/RegexMemory.c"
 #include "run/RegexFunc.c"
 
 #include "bloc/header/header.c"
 #include "bloc/class/class.c"
 
 
-int scanJs(struct sequenceRegex * this) {
+int scanJs(struct Buffer * this) {
 
     if (parseHeader(this)) {
         switch (this->ch) {
@@ -43,7 +44,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    struct sequenceRegex seqRegex;
+    struct Buffer seqRegex;
 
     SequenceInit(&seqRegex, argv[1]);
     return scanJs(&seqRegex);

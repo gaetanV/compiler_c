@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int ClassJsOutput(struct sequenceRegex * this, struct ClassCollector * collector) {
+int ClassJsOutput(struct Buffer * this, struct ClassCollector * collector) {
 
     
     printf("%s\n", this->buffer);

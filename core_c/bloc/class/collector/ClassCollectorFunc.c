@@ -1,48 +1,4 @@
-
-void CollectorContructorArgsStrictType(struct sequenceRegex * this, struct ClassCollector * collector) {
-
-    if (collector->module[3] != -1) {
-        printf("Error Only one Constructor \n");
-        exit(0);
-    }
-    collector->module[3] = this->_pointer - 1;
-
-    RegexFuncArgsStrictType(this);
-    MemoryMap(this);
-    collector->module[4] = this->_cmp;
-
-}
-
-void CollectorContructorArgsType(struct sequenceRegex * this, struct ClassCollector * collector) {
-
-    if (collector->module[3] != -1) {
-        printf("Error Only one Constructor \n");
-        exit(0);
-    }
-    collector->module[3] = this->_pointer - 1;
-    collector->module[5] = collector->_type;
-
-    RegexFuncArgsType(this, &collector->_type, collector->type);
-    MemoryMap(this);
-    collector->module[4] = this->_cmp;
-}
-
-void CollectorContructorArgs(struct sequenceRegex * this, struct ClassCollector * collector) {
-
-    if (collector->module[3] != -1) {
-        printf("Error Only one Constructor \n");
-        exit(0);
-    }
-    collector->module[3] = this->_pointer - 1;
-
-    RegexFuncArgs(this);
-
-    MemoryMap(this);
-
-    collector->module[4] = this->_cmp;
-}
-
-void CollectorFuncNameArgs(struct sequenceRegex * this, int * funcPointer, int * funcType) {
+void CollectorFuncNameArgs(struct Buffer * this, int * funcPointer, int * funcType) {
 
     while (1) {
         switch (this->ch) {
@@ -54,6 +10,7 @@ void CollectorFuncNameArgs(struct sequenceRegex * this, int * funcPointer, int *
                 goto endError;
             case 32:
                 while (1) {
+
                     switch (fgetc(this->fp)) {
                         default:
                             goto endError;
@@ -63,16 +20,17 @@ void CollectorFuncNameArgs(struct sequenceRegex * this, int * funcPointer, int *
                             funcType[*funcPointer] = this->_pointer - 1;
                             MemoryMap(this);
                             // Parenthesize start
-                            RegexFuncArgs(this);
+                            RegexFuncArgsInner(this);
                             goto endFunc;
                     }
                 }
                 break;
             case 40:
+
                 funcType[*funcPointer] = this->_pointer - 1;
                 MemoryMap(this);
                 // Parenthesize start
-                RegexFuncArgs(this);
+                RegexFuncArgsInner(this);
                 goto endFunc;
 
                 break;
@@ -91,11 +49,11 @@ endFunc:
     return;
 
 endError:
-    printf("Error in class format function \n");
-    exit(0);
+    Error(this, "class format function");
+
 }
 
-void CollectorFuncNameArgsOrAttr(struct sequenceRegex * this, int * funcPointer, int * funcType, int * attrPointer, int * attrType) {
+void CollectorFuncNameArgsOrAttr(struct Buffer * this, int * funcPointer, int * funcType, int * attrPointer, int * attrType) {
     while (1) {
         switch (this->ch) {
             case EOF:
@@ -159,12 +117,11 @@ endFuncAttr:
     }
 
 endError:
-    printf("Error in class format function \n");
-    exit(0);
+    Error(this, "class format function");
 
 }
 
-void CollectorFuncNameArgsOrAttrStrictType(struct sequenceRegex * this, int * funcPointer, int * funcType, int * attrPointer, int * attrType) {
+void CollectorFuncNameArgsOrAttrStrictType(struct Buffer * this, int * funcPointer, int * funcType, int * attrPointer, int * attrType) {
     while (1) {
         switch (this->ch) {
             case EOF:
@@ -282,11 +239,10 @@ endFuncAttr3:
     }
 
 endError:
-    printf("Error in class format function \n");
-    exit(0);
+    Error(this, "class format function");
+
 endFuncAttrError:
-    printf("Error in class attribute function \n");
-    exit(0);
+    Error(this, "class format attribute function");
 }
 
 

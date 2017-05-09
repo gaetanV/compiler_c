@@ -1,4 +1,4 @@
-void RegexStrictImport(struct sequenceRegex * this) {
+void RegexStrictImport(struct Buffer * this) {
 
     // REGEX IMPORT Start at 105
     if (fgetc(this->fp) != 109) {
@@ -17,19 +17,32 @@ void RegexStrictImport(struct sequenceRegex * this) {
         goto importError;
     }
 
-    if (!RegexJumpSpace(this)) {
-        goto importError;
-    }
+    RegexStrictSpaces(this);
 
-    if (!RegexMemoryNotSpaceInline(this)) {
-        goto importError;
+    // REGEX NotSpaceInline
+    Memory(this);
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case EOF:
+                goto importError;
+            case 10:
+                goto importError;
+            case 59:
+                goto importError;
+            case 32:
+                goto step2;
+            default:
+                Memory(this);
+                break;
+        }
     }
-
+    
+step2:
+                
     MemoryMap(this);
 
-    if (!RegexJumpSpace(this)) {
-        goto importError;
-    }
+    RegexJumpSpace(this);
+    
     // REGEX FROM
 
     if (this->ch != 102) {
@@ -45,9 +58,7 @@ void RegexStrictImport(struct sequenceRegex * this) {
         goto importError;
     }
 
-    if (!RegexJumpSpace(this)) {
-        goto importError;
-    }
+    RegexStrictSpaces(this);
 
     Memory(this);
 
@@ -78,6 +89,5 @@ void RegexStrictImport(struct sequenceRegex * this) {
     }
     
 importError:
-    printf("Error in Import  \n");
-    exit(0);
+    Error(this,"import");
 }

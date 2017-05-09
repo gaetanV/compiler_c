@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int ClassUnity(struct sequenceRegex * this, struct ClassCollector * collector) {
+int ClassUnity(struct Buffer * this, struct ClassCollector * collector) {
 
     CollectorExtends(this, collector);
 
@@ -28,37 +28,19 @@ int ClassUnity(struct sequenceRegex * this, struct ClassCollector * collector) {
                 switch (fgetc(this->fp)) {
                     case 117:
                         if (RegexUblicOrFunc(this)) {
-                            if (!RegexJumpSpace(this)) {
-                                printf("error in public function");
-                                exit(0);
-                            }
-                            CollectorFuncNameArgsOrAttrStrictType(
-                                    this,
-                                    &collector->_func,
-                                    collector->func,
-                                    &collector->_attrPublic,
-                                    collector->attrPublic
-                                    );
-
-                        } else {
-                          
-                            CollectorFuncNameArgsOrAttrStrictType(
-                                    this,
-                                    &collector->_func,
-                                    collector->func,
-                                    &collector->_attrPublic,
-                                    collector->attrPublic
-                                    );
-
-
+                            RegexStrictSpaces(this);
                         }
+                        CollectorFuncNameArgsOrAttrStrictType(
+                                this,
+                                &collector->_func,
+                                collector->func,
+                                &collector->_attrPublic,
+                                collector->attrPublic
+                                );
                         break;
                     case 114:
                         if (RegexRivateOrFunc(this)) {
-                            if (!RegexJumpSpace(this)) {
-                                printf("error in private function");
-                                exit(0);
-                            }
+                            RegexStrictSpaces(this);
                             CollectorFuncNameArgsOrAttrStrictType(
                                     this,
                                     &collector->_funcPrivate,
@@ -90,43 +72,30 @@ int ClassUnity(struct sequenceRegex * this, struct ClassCollector * collector) {
                 break;
             case 115:
                 if (RegexStaticOrFunc(this)) {
-                    if (!RegexJumpSpace(this)) {
-                        return 0;
-                    }
-                    CollectorFuncNameArgsOrAttrStrictType(
-                            this,
-                            &collector->_funcStatic,
-                            collector->funcStatic,
-                            &collector->_attrStatic,
-                            collector->attrStatic
-                            );
-
-                } else {
-                    CollectorFuncNameArgsOrAttrStrictType(
-                            this,
-                            &collector->_func,
-                            collector->func,
-                            &collector->_attrStatic,
-                            collector->attrStatic
-                            );
+                    RegexStrictSpaces(this);
                 }
+                CollectorFuncNameArgsOrAttrStrictType(
+                        this,
+                        &collector->_funcStatic,
+                        collector->funcStatic,
+                        &collector->_attrStatic,
+                        collector->attrStatic
+                        );
                 break;
             default:
                 CollectorFuncNameArgsOrAttrStrictType(
-                                this,
-                                &collector->_func,
-                                collector->func,
-                                &collector->_attrPublic,
-                                collector->attrPublic
-                                );
-                        break;
+                        this,
+                        &collector->_func,
+                        collector->func,
+                        &collector->_attrPublic,
+                        collector->attrPublic
+                        );
+                break;
             case EOF:
                 return 0;
             case 125:
                 return 1;
-
         }
     }
     return 0;
-
 }

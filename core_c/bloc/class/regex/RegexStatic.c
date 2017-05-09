@@ -1,4 +1,4 @@
-int RegexStaticOrFunc(struct sequenceRegex * this) {
+int RegexStaticOrFunc(struct Buffer * this) {
 
     // REGEX ublic Start at 115
 

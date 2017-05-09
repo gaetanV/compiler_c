@@ -1,6 +1,6 @@
 #include <stdbool.h>
 
-int RegexMemoryFuncInner(struct sequenceRegex * this) {
+int RegexMemoryFuncInner(struct Buffer * this) {
 
     // Function Start
     while (1) {
@@ -60,14 +60,14 @@ End:
 
 }
 
-void RegexFuncArgsInner(struct sequenceRegex * this) {
+void RegexFuncArgsInner(struct Buffer * this) {
 
     this->_cmp = 0;
 step1:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                  goto errorFuncInner;
+                goto errorFuncInner;
             case 32:
                 break;
             case 41:
@@ -86,7 +86,7 @@ step2:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                  goto errorFuncInner;
+                goto errorFuncInner;
             case 41:
                 goto end;
             case 44:
@@ -104,14 +104,13 @@ step3:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                  goto errorFuncInner;
+                goto errorFuncInner;
             case 41:
                 goto end;
             case 44:
                 goto step1;
             default:
-                printf("Error in Arguments \n");
-                  goto errorFuncInner;
+                goto errorFuncInner;
         }
     }
 
@@ -120,44 +119,23 @@ end:
         MemoryMap(this);
     }
     // Args Stop
-    if(!RegexMemoryFuncInner(this)){
+    if (!RegexMemoryFuncInner(this)) {
         goto errorFuncInner;
     }
-    return ;
-    
+    return;
+
 errorFuncInner:
-    printf("error in Args");
-    exit(0); 
-    
-}
-
-void RegexFuncArgs(struct sequenceRegex * this) {
-
-    while (1) {
-        switch (fgetc(this->fp)) {
-            default:
-                goto errorArgs;
-            case 32:
-                break;
-            case 40:
-                
-               RegexFuncArgsInner(this);
-                // Parenthesize start
-                return;
-        }
-    }
-
-errorArgs:
-    printf("error in Args");
-    exit(0);
+    Error(this, "function arguments ");
 
 }
 
-int RegexFuncArgsTypeInner(struct sequenceRegex * this, int * typePointer, bool * type) {
+
+int RegexFuncArgsTypeInner(struct Buffer * this, int * typePointer, bool * type) {
 
     this->_cmp = 0;
 
 step1:
+                
     this->c = 1;
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
@@ -250,30 +228,9 @@ end:
 
 }
 
-void RegexFuncArgsType(struct sequenceRegex * this, int * typePointer, bool * type) {
 
-    while (1) {
-        switch (fgetc(this->fp)) {
-            default:
-                goto errorArgs;
-            case 32:
-                break;
-            case 40:
-                // Parenthesize start
-                if (!RegexFuncArgsTypeInner(this, typePointer, type)) {
-                    goto errorArgs;
-                }
-                return;
-        }
-    }
 
-errorArgs:
-    printf("error in arguments type");
-    exit(0);
-
-}
-
-void RegexFuncArgsStrictTypeInner(struct sequenceRegex * this) {
+void RegexFuncArgsStrictTypeInner(struct Buffer * this) {
 
     this->_cmp = 0;
 
@@ -372,30 +329,10 @@ end:
 
     return;
 errorArgs:
-    printf("error in function arguments type");
-    exit(0);
+    Error(this, "function arguments type");
 
 errorName:
-    printf("error in function name");
-    exit(0);
+    Error(this, "function name");
+
 }
 
-void RegexFuncArgsStrictType(struct sequenceRegex * this) {
-    while (1) {
-        switch (fgetc(this->fp)) {
-            default:
-                goto errorArgsType;
-            case 32:
-                break;
-            case 40:
-                // Parenthesize start
-                RegexFuncArgsStrictTypeInner(this);
-
-
-                return;
-        }
-    }
-errorArgsType:
-    printf("error in arguments type");
-    exit(0);
-}

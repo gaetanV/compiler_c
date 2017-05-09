@@ -1,33 +1,27 @@
-void RegexStrictExport(struct sequenceRegex * this) {
+void RegexStrictExport(struct Buffer * this) {
 
     // REGEX EXPORT start at 101
     if (fgetc(this->fp) != 120) {
-         goto exportError;
+        goto exportError;
     }
     if (fgetc(this->fp) != 112) {
-         goto exportError;
+        goto exportError;
     }
     if (fgetc(this->fp) != 111) {
-         goto exportError;
+        goto exportError;
     }
     if (fgetc(this->fp) != 114) {
-         goto exportError;
+        goto exportError;
     }
     if (fgetc(this->fp) != 116) {
-         goto exportError;
+        goto exportError;
     }
 
-
-    if (!RegexJumpSpace(this)) {
-         goto exportError;
-    }
+    RegexStrictSpaces(this);
 
 
     return;
-    
+
 exportError:
-    printf("Error in export \n");
-    exit(0);
-    
-    
+    Error(this, "export");
 }

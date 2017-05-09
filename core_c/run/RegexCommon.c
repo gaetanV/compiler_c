@@ -1,14 +1,35 @@
-int RegexJumpSpace(struct sequenceRegex * this) {
+void RegexJumpSpace(struct Buffer * this) {
     while (1) {
-        if ((this->ch = fgetc(this->fp)) !=  32) {
-            return 1;
+        if ((this->ch = fgetc(this->fp)) != 32) {
+            return;
+        }
+    };
+}
+int RegexForceEmptyLigne(struct Buffer * this) {
+    while (1) {
+        switch (fgetc(this->fp)) {
+            case EOF:
+                return 0;
+            case 10:
+                return 1;
+        }
+    }
+}
+
+void RegexStrictSpaces(struct Buffer * this) {
+    if (fgetc(this->fp) != 32) {
+        Error(this, "spaces");
+    }
+    while (1) {
+        if ((this->ch = fgetc(this->fp)) != 32) {
+            return;
         }
     };
 }
 
-int RegexCommentBloc(struct sequenceRegex * this) {
+int RegexCommentBloc(struct Buffer * this) {
     while (1) {
-        loop1 :
+loop1:
         switch (fgetc(this->fp)) {
             case EOF:
                 return 0;
@@ -16,7 +37,7 @@ int RegexCommentBloc(struct sequenceRegex * this) {
                 loop2 :
                 switch (fgetc(this->fp)) {
                     case EOF:
-                        return 0;    
+                        return 0;
                     case 47:
                         return 1;
                     case 42:
@@ -31,36 +52,7 @@ int RegexCommentBloc(struct sequenceRegex * this) {
 }
 
 
-int RegexForceEmptyLigne(struct sequenceRegex * this) {
-    while (1) {
-        switch (fgetc(this->fp)) {
-            case EOF:
-                return 0;
-            case 10:
-                return 1;
-        }
-    }
-}
-
-int RegexComments(struct sequenceRegex * this) {
-    switch (fgetc(this->fp)) {
-        case 47:
-            if (!RegexForceEmptyLigne(this)) {
-                return 0;
-            }
-            break;
-        case 42:
-            if (!RegexCommentBloc(this)) {
-                return 0;
-            }
-            break;
-        default:
-            return 0;
-    }
-}
-
-
-void RegexStrictComments(struct sequenceRegex * this) {
+void RegexStrictComments(struct Buffer * this) {
     switch (fgetc(this->fp)) {
         case 47:
             if (!RegexForceEmptyLigne(this)) {
@@ -78,6 +70,7 @@ void RegexStrictComments(struct sequenceRegex * this) {
             goto errorComments;
     }
 errorComments:
-    printf("error in comments");
-    exit(0);
+    Error(this, "comments");
 }
+
+

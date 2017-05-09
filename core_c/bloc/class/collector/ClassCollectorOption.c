@@ -1,11 +1,118 @@
-void CollectorExtendsImplements(struct sequenceRegex * this, struct ClassCollector * collector) {
-    
+
+void _ExtendsStart(struct Buffer * this) {
+
+    // REGEX Extends Start at 101
+    if (fgetc(this->fp) != 120) {
+        goto extendsError;
+    }
+    if (fgetc(this->fp) != 116) {
+        goto extendsError;
+    }
+    if (fgetc(this->fp) != 101) {
+        goto extendsError;
+    }
+    if (fgetc(this->fp) != 110) {
+        goto extendsError;
+    }
+    if (fgetc(this->fp) != 100) {
+        goto extendsError;
+    }
+    if (fgetc(this->fp) != 115) {
+        goto extendsError;
+    }
+    RegexStrictSpaces(this);
+
+    Memory(this);
+    return;
+extendsError:
+    Error(this, "class format extends");
+}
+
+
+void _Implements(struct Buffer * this, struct ClassCollector * collector) {
+
+    // REGEX Implements Start at 105
+    if (fgetc(this->fp) != 109) {
+        goto implementsError;
+    }
+    if (fgetc(this->fp) != 112) {
+        goto implementsError;
+    }
+    if (fgetc(this->fp) != 108) {
+        goto implementsError;
+    }
+    if (fgetc(this->fp) != 101) {
+        goto implementsError;
+    }
+    if (fgetc(this->fp) != 109) {
+        goto implementsError;
+    }
+    if (fgetc(this->fp) != 101) {
+        goto implementsError;
+    }
+
+    if (fgetc(this->fp) != 110) {
+        goto implementsError;
+    }
+    if (fgetc(this->fp) != 116) {
+        goto implementsError;
+    }
+    if (fgetc(this->fp) != 115) {
+        goto implementsError;
+    }
+
+    RegexStrictSpaces(this);
+
+    /// NotSpaceInlineOrFuncStart
+    Memory(this);
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case EOF:
+                goto implementsError;
+            case 10:
+                goto implementsError;
+            case 59:
+                goto implementsError;
+            case 32:
+                while (1) {
+                    // Function start
+                    switch (fgetc(this->fp)) {
+                        case 32:
+                            break;
+                        case 23:
+                            break;
+                        case 123:
+                            goto implementsEnd;
+                        default:
+                            goto implementsError;
+                    }
+                }
+            case 123:
+                goto implementsEnd;
+            default:
+                Memory(this);
+                break;
+        }
+    }
+
+
+implementsError:
+    Error(this, "class format implements");
+
+implementsEnd:
+    collector->module[2] = 1;
+    MemoryMap(this);
+    return;
+
+}
+
+void CollectorExtendsImplements(struct Buffer * this, struct ClassCollector * collector) {
+
     if (this->ch == 123) {
         collector->module[1] = 0;
         collector->module[2] = 0;
         return;
     }
-
     while (1) {
         switch (fgetc(this->fp)) {
             case 32:
@@ -16,28 +123,38 @@ void CollectorExtendsImplements(struct sequenceRegex * this, struct ClassCollect
                 collector->module[1] = 0;
                 goto implements;
             case 101:
-                switch (RegexExtends(this)) {
-                    case 0:
-                        goto extendsError;
-                    case 1:
-                        collector->module[1] = 1;
-                        MemoryMap(this);
-                        while (1) {
-                            switch (fgetc(this->fp)) {
-                                case 32:
-                                    break;
-                                case 23:
-                                    break;
+                  _ExtendsStart(this);
+                while (1) {
+                    switch (this->ch = fgetc(this->fp)) {
+                        case EOF:
+                            goto extendsError;
+                        case 10:
+                            goto extendsError;
+                        case 59:
+                            goto extendsError;
+                        case 32:
+                            while (1) {
+                                switch (fgetc(this->fp)) {
+                                    case 32:
+                                        break;
+                                    case 23:
                                 case 105:
                                     goto implements;
-                                case 123:
-                                    collector->module[2] = 0;
-                                    return;
-                                default:
-                                    goto extendsError;
+                                        break;
+                                    case 123:
+                                        goto extendsEnd;
+                                    default:
+                                        goto extendsError;
+                                }
                             }
-                        }
+                        case 123:
+                            goto endFuncFalse;
+                        default:
+                            Memory(this);
+                            break;
+                    }
                 }
+
                 break;
             case 123:
                 collector->module[1] = 0;
@@ -49,44 +166,32 @@ void CollectorExtendsImplements(struct sequenceRegex * this, struct ClassCollect
     }
 
 implements:
-    switch (RegexImplements(this)) {
-        case 0:
-            goto implementsError;
-        case 1:
-            while (1) {
-                // Function start
-                switch (fgetc(this->fp)) {
-                    case 32:
-                        break;
-                    case 23:
-                        break;
-                    case 123:
-                        collector->module[2] = 1;
-                        MemoryMap(this);
-                        return;
-                    default:
-                        goto implementsError;
-                }
-            }
-    }
+    _Implements(this, collector);
+    return;
 
-
-
+extendsEnd:
+    collector->module[1] = 1;
+    MemoryMap(this);
+    return;
+endFuncFalse:
+   return;         
 implementsError:
-    printf("Error in class format implements \n");
-    exit(0);
+    Error(this, "class format implements");
+
 
 extendsError:
-    printf("Error in class format extends  \n");
-    exit(0);
+    Error(this, "class format extends");
+
 
 
 }
 
-void CollectorExtends(struct sequenceRegex * this, struct ClassCollector * collector) {
+void CollectorExtends(struct Buffer * this, struct ClassCollector * collector) {
+
     if (this->ch == 123) {
         goto endFuncFalse;
     }
+
     while (1) {
         switch (fgetc(this->fp)) {
             case 32:
@@ -94,44 +199,54 @@ void CollectorExtends(struct sequenceRegex * this, struct ClassCollector * colle
             case 23:
                 break;
             case 101:
-                switch (RegexExtends(this)) {
-                    case 0:
-                        goto endError;
-                    case 1:
-                        while (1) {
-                            switch (fgetc(this->fp)) {
-                                case 32:
-                                    break;
-                                case 23:
-                                    break;
-                                case 123:
-                                    goto endFuncTrue;
-                                default:
-                                    goto endError;
+                _ExtendsStart(this);
+                while (1) {
+                    switch (this->ch = fgetc(this->fp)) {
+                        case EOF:
+                            goto extendsError;
+                        case 10:
+                            goto extendsError;
+                        case 59:
+                            goto extendsError;
+                        case 32:
+                            while (1) {
+                                switch (fgetc(this->fp)) {
+                                    case 32:
+                                        break;
+                                    case 23:
+                                        break;
+                                    case 123:
+                                        goto extendsEnd;
+                                    default:
+                                        goto extendsError;
+                                }
                             }
-                        }
+                        case 123:
+                            goto extendsEnd;
+                        default:
+                            Memory(this);
+                            break;
+                    }
                 }
-                break;
             case 123:
                 goto endFuncFalse;
             default:
-                goto endError;
+                goto extendsEnd;
         }
         this->ch = fgetc(this->fp);
     }
-
 endFuncFalse:
     collector->module[1] = 0;
     MemoryMap(this);
     return;
 
-endFuncTrue:
+extendsEnd:
     collector->module[1] = 1;
     MemoryMap(this);
     return;
 
-endError:
-    printf("Error in class format extends \n");
-    exit(0);
+extendsError:
+    Error(this, "class format extends");
+
 
 }

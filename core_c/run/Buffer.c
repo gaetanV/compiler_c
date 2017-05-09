@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct sequenceRegex {
+struct Buffer {
 
     FILE *fp;
     
@@ -18,7 +18,7 @@ struct sequenceRegex {
   
 };
 
-void SequenceInit(struct sequenceRegex * this, char * c) {
+void SequenceInit(struct Buffer * this, char * c) {
     this->fp = fopen(c, "r");
     if (this->fp == NULL) {
         printf("File %s not found", c);

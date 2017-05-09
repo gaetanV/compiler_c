@@ -48,7 +48,7 @@ int ClassCollectorInit(struct ClassCollector * this,int pointer) {
     
 }
 
-int ClassCollectorPrint(struct sequenceRegex * this, struct ClassCollector * collector) {
+int ClassCollectorPrint(struct Buffer * this, struct ClassCollector * collector) {
     
 
     printf(">>>>>>>>>>>>>\n");

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int ClassUnityOutput(struct sequenceRegex * this, struct ClassCollector * collector) {
+int ClassUnityOutput(struct Buffer * this, struct ClassCollector * collector) {
 
 
     printf("%s\n", this->buffer);
