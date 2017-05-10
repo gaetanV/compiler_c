@@ -8,13 +8,15 @@
 #include "bloc/header/header.c"
 #include "bloc/class/class.c"
 
-
-int scanJs(struct Buffer * this) {
+/**
+@TOOLS
+ */
+int _scanJs(struct Buffer * this) {
 
     if (parseHeader(this)) {
         switch (this->ch) {
             case 99:
-                if (parseClassUnity(this,ClassUnityOutput)) {
+                if (parseClassUnity(this, ClassUnityOutput)) {
                     printf("Module done.\n");
                 } else {
                     printf("Error in Module");
@@ -30,13 +32,16 @@ int scanJs(struct Buffer * this) {
         return 0;
     }
     fclose(this->fp);
- 
-    
-    
+
+
+
     printf("All is done nice work");
     return 1;
 }
 
+/**
+@MAIN
+ */
 int main(int argc, char *argv[]) {
 
     if (!argv[1]) {
@@ -47,7 +52,7 @@ int main(int argc, char *argv[]) {
     struct Buffer seqRegex;
 
     SequenceInit(&seqRegex, argv[1]);
-    return scanJs(&seqRegex);
-  
+    return _scanJs(&seqRegex);
+
 
 }

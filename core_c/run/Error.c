@@ -6,7 +6,7 @@ void Error(struct Buffer * this, char * message) {
     int tmp;
 step1:
     while (1) {
-        switch(fgetc(this->fp)){
+        switch (fgetc(this->fp)) {
             case 10:
                 cmp++;
                 fgetc(this->fp);
@@ -37,5 +37,5 @@ step2:
                 break;
         }
     }
-
 }
+

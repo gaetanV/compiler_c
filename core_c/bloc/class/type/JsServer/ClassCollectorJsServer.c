@@ -1,9 +1,8 @@
 #include <stdbool.h>
 
 struct ClassCollectorJsServer {
-    
     unsigned short startPointer;
-    
+
     bool hasConstructor;
     bool hasExtends;
     bool hasImplements;
@@ -33,6 +32,9 @@ struct ClassCollectorJsServer {
 
 };
 
+/**
+@CONSTRUCTOR
+ */
 struct ClassCollectorJsServer *newClassCollectorJsServer(unsigned short pointer) {
 
     struct ClassCollectorJsServer *y = malloc(sizeof (struct ClassCollectorJsServer));

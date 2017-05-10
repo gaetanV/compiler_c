@@ -1,5 +1,23 @@
 #include <stdbool.h>
 
+/**
+@ERROR
+ */
+void ErrorFuncArgs(struct Buffer * this) {
+    Error(this, "Function arguments ");
+}
+
+void ErrorFuncArgsType(struct Buffer * this) {
+    Error(this, "Function arguments type");
+}
+
+void ErrorFunc(struct Buffer * this) {
+    Error(this, "Function format");
+}
+
+/**
+@@@@@@@
+ */
 int RegexMemoryFuncInner(struct Buffer * this) {
 
     // Function Start
@@ -67,7 +85,7 @@ step1:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                goto errorFuncInner;
+                ErrorFunc(this);
             case 32:
                 break;
             case 41:
@@ -86,7 +104,7 @@ step2:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                goto errorFuncInner;
+                ErrorFuncArgs(this);
             case 41:
                 goto end;
             case 44:
@@ -95,7 +113,6 @@ step2:
                 goto step3;
                 break;
             default:
-
                 Memory(this);
                 break;
         }
@@ -104,13 +121,13 @@ step3:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                goto errorFuncInner;
+                ErrorFuncArgs(this);
             case 41:
                 goto end;
             case 44:
                 goto step1;
             default:
-                goto errorFuncInner;
+                ErrorFuncArgs(this);
         }
     }
 
@@ -120,27 +137,24 @@ end:
     }
     // Args Stop
     if (!RegexMemoryFuncInner(this)) {
-        goto errorFuncInner;
+        ErrorFuncArgs(this);
     }
     return;
 
-errorFuncInner:
-    Error(this, "function arguments ");
 
 }
 
-
-int RegexFuncArgsTypeInner(struct Buffer * this, int * typePointer, bool * type) {
+void RegexFuncArgsTypeInner(struct Buffer * this, int * typePointer, bool * type) {
 
     this->_cmp = 0;
 
 step1:
-                
+
     this->c = 1;
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                return 0;
+                ErrorFunc(this);
             case 41:
                 goto end;
             case 32:
@@ -161,7 +175,7 @@ step2:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                return 0;
+                ErrorFuncArgsType(this);
             case 41:
                 goto end;
             case 44:
@@ -171,7 +185,7 @@ step2:
                 while (1) {
                     switch (this->ch = fgetc(this->fp)) {
                         case EOF:
-                            return 0;
+                            ErrorFuncArgsType(this);
                         case 41:
                             goto end;
                         case 44:
@@ -194,7 +208,7 @@ step3:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                return 0;
+                ErrorFuncArgsType(this);
             case 41:
                 goto end;
             case 44:
@@ -220,16 +234,17 @@ step4:
             case 32:
                 break;
             default:
-                return 0;
+                ErrorFuncArgsType(this);
         }
     }
 
 end:
-    return RegexMemoryFuncInner(this);
+    if (!RegexMemoryFuncInner(this)) {
+        ErrorFuncArgsType(this);
+    }
+
 
 }
-
-
 
 void RegexFuncArgsStrictTypeInner(struct Buffer * this) {
 
@@ -240,7 +255,7 @@ step1:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                goto errorName;
+                ErrorFunc(this);
             case 41:
                 goto end;
             case 32:
@@ -261,21 +276,21 @@ step2:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                goto errorArgs;
+                ErrorFuncArgsType(this);
             case 41:
-                goto errorArgs;
+                ErrorFuncArgsType(this);
             case 44:
-                goto errorArgs;
+                ErrorFuncArgsType(this);
                 break;
             case 32:
                 while (1) {
                     switch (this->ch = fgetc(this->fp)) {
                         case EOF:
-                            goto errorArgs;
+                            ErrorFuncArgsType(this);
                         case 41:
-                            goto errorArgs;
+                            ErrorFuncArgsType(this);
                         case 44:
-                            goto errorArgs;
+                            ErrorFuncArgsType(this);
                         default:
                             MemoryMap(this);
                             Memory(this);
@@ -293,7 +308,7 @@ step3:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                goto errorArgs;
+                ErrorFuncArgsType(this);
             case 41:
                 goto end;
             case 44:
@@ -319,21 +334,17 @@ step4:
             case 32:
                 break;
             default:
-                goto errorArgs;
+                ErrorFuncArgsType(this);
         }
     }
 
 end:
     if (!RegexMemoryFuncInner(this)) {
-        goto errorArgs;
+        ErrorFuncArgsType(this);
     }
 
     return;
-errorArgs:
-    Error(this, "function arguments type");
 
-errorName:
-    Error(this, "function name");
 
 }
 

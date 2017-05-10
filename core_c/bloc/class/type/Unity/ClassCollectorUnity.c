@@ -6,31 +6,33 @@ struct ClassCollectorUnity {
     bool hasExtends;
     bool hasConstructor;
     
-    unsigned short constructor [3];
+    unsigned short constructor [2];
 
         
-    int attrPublic[10];
+    int attrPublic[20];
     int _attrPublic;  
     
-    int attrStatic[10];
+    int attrStatic[20];
     int _attrStatic;
     
-    int attrPrivate[10];
+    int attrPrivate[20];
     int _attrPrivate;  
     
     int func[20];
     int _func;
     
-    int funcStatic[10];
+    int funcStatic[20];
     int _funcStatic;
     
-    int funcPrivate[10];
+    int funcPrivate[20];
     int _funcPrivate;
    
     
 };
 
-
+/**
+@CONSTRUCTOR
+*/
 struct ClassCollectorUnity *newClassCollectorUnity (unsigned short pointer) {
     
     struct ClassCollectorUnity *y = malloc (sizeof (struct ClassCollectorUnity));

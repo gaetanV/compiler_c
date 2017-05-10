@@ -1,18 +1,37 @@
+/**
+@ERROR
+ */
+void ErrorCollectorConstructorOnlyOne(struct Buffer * this) {
+    Error(this, "Error Only one Constructor");
+}
 
-void CollectorContructorArgsStrictType(struct Buffer * this, bool * hasConstructor, unsigned short * constructor) {
+void ErrorCollectorConstructorArgs(struct Buffer * this) {
+    Error(this, "Contructor arguments type");
+}
 
+/**
+@TOOLS
+ */
+void _CollectorConstructorOnlyOne(struct Buffer * this, bool * hasConstructor) {
     if (*hasConstructor == 1) {
-        printf("Error Only one Constructor \n");
-        exit(0);
+        ErrorCollectorConstructorOnlyOne(this);
     } else {
         *hasConstructor = 1;
     }
+}
+
+/**
+@@@@@@@
+ */
+void CollectorContructorArgsStrictType(struct Buffer * this, bool * hasConstructor, unsigned short * constructor) {
+
+    _CollectorConstructorOnlyOne(this, hasConstructor);
     constructor[0] = this->_pointer - 1;
 
     while (1) {
         switch (fgetc(this->fp)) {
             default:
-                goto errorArgsType;
+                ErrorCollectorConstructorArgs(this);
             case 32:
                 break;
             case 40:
@@ -23,10 +42,6 @@ void CollectorContructorArgsStrictType(struct Buffer * this, bool * hasConstruct
                 return;
         }
     }
-
-errorArgsType:
-    Error(this, "Contructor arguments type");
-
 }
 
 void CollectorContructorArgsType(
@@ -37,52 +52,36 @@ void CollectorContructorArgsType(
         bool * funcType
         ) {
 
-    if (*hasConstructor == 1) {
-        printf("Error Only one Constructor \n");
-        exit(0);
-    } else {
-        *hasConstructor = 1;
-    }
+    _CollectorConstructorOnlyOne(this, hasConstructor);
 
     constructor[0] = this->_pointer - 1;
     constructor[2] = *typePointer;
 
-
     while (1) {
         switch (fgetc(this->fp)) {
             default:
-                goto errorArgs;
+                ErrorCollectorConstructorArgs(this);
             case 32:
                 break;
             case 40:
                 // Parenthesize start
-                if (!RegexFuncArgsTypeInner(this, typePointer, funcType)) {
-                    goto errorArgs;
-                }
+                RegexFuncArgsTypeInner(this, typePointer, funcType);
                 MemoryMap(this);
                 constructor[1] = this->_cmp;
                 return;
         }
     }
-errorArgs:
-    Error(this, "Contructor arguments type");
-
 }
 
 void CollectorContructorArgs(struct Buffer * this, bool * hasConstructor, unsigned short * constructor) {
 
-    if (*hasConstructor == 1) {
-        printf("Error Only one Constructor \n");
-        exit(0);
-    } else {
-        *hasConstructor = 1;
-    }
+    _CollectorConstructorOnlyOne(this, hasConstructor);
     constructor[0] = this->_pointer - 1;
 
     while (1) {
         switch (fgetc(this->fp)) {
             default:
-                goto errorArgs;
+                ErrorCollectorConstructorArgs(this);
             case 32:
                 break;
             case 40:
@@ -94,8 +93,4 @@ void CollectorContructorArgs(struct Buffer * this, bool * hasConstructor, unsign
         }
 
     }
-
-errorArgs:
-    Error(this, "Contructor arguments type");
-
 }

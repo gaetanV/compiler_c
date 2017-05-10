@@ -1,20 +1,30 @@
+/**
+@ERROR
+*/
+void ErrorHeaderExport(struct Buffer * this) {
+    Error(this, "Contructor arguments type");
+}
+
+/**
+@@@@@@@
+*/
 void RegexStrictExport(struct Buffer * this) {
 
     // REGEX EXPORT start at 101
     if (fgetc(this->fp) != 120) {
-        goto exportError;
+        ErrorHeaderExport(this);
     }
     if (fgetc(this->fp) != 112) {
-        goto exportError;
+        ErrorHeaderExport(this);
     }
     if (fgetc(this->fp) != 111) {
-        goto exportError;
+        ErrorHeaderExport(this);
     }
     if (fgetc(this->fp) != 114) {
-        goto exportError;
+        ErrorHeaderExport(this);
     }
     if (fgetc(this->fp) != 116) {
-        goto exportError;
+        ErrorHeaderExport(this);
     }
 
     RegexStrictSpaces(this);
@@ -22,6 +32,4 @@ void RegexStrictExport(struct Buffer * this) {
 
     return;
 
-exportError:
-    Error(this, "export");
 }

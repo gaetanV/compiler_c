@@ -1,12 +1,6 @@
 # Typebootstrap 
 
-V Alpha 0.0.19 
-
-## Install
-
-```
-npm install typebootstrap
-```
+V Alpha 
 
 ## Deploy 1 Bootfile 
 

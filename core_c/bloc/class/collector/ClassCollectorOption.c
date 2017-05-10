@@ -1,63 +1,79 @@
+/**
+@ERROR
+*/
+void ErrorCollectorExtends(struct Buffer * this) {
+    Error(this, "Class format extends");
+}
 
+void ErrorCollectorImplements(struct Buffer * this) {
+    Error(this, "Class format implements");
+}
+
+void ErrorCollectorClass(struct Buffer * this) {
+    Error(this, "Class format");
+}
+
+
+/**
+@TOOLS
+*/
 void _ExtendsStart(struct Buffer * this) {
 
     // REGEX Extends Start at 101
     if (fgetc(this->fp) != 120) {
-        goto extendsError;
+        ErrorCollectorExtends(this);
     }
     if (fgetc(this->fp) != 116) {
-        goto extendsError;
+        ErrorCollectorExtends(this);
     }
     if (fgetc(this->fp) != 101) {
-        goto extendsError;
+        ErrorCollectorExtends(this);
     }
     if (fgetc(this->fp) != 110) {
-        goto extendsError;
+        ErrorCollectorExtends(this);
     }
     if (fgetc(this->fp) != 100) {
-        goto extendsError;
+        ErrorCollectorExtends(this);
     }
     if (fgetc(this->fp) != 115) {
-        goto extendsError;
+        ErrorCollectorExtends(this);
     }
     RegexStrictSpaces(this);
 
     Memory(this);
     return;
-extendsError:
-    Error(this, "class format extends");
 }
 
 void _Implements(struct Buffer * this) {
 
     // REGEX Implements Start at 105
     if (fgetc(this->fp) != 109) {
-        goto implementsError;
+        ErrorCollectorImplements(this);
     }
     if (fgetc(this->fp) != 112) {
-        goto implementsError;
+        ErrorCollectorImplements(this);
     }
     if (fgetc(this->fp) != 108) {
-        goto implementsError;
+        ErrorCollectorImplements(this);
     }
     if (fgetc(this->fp) != 101) {
-        goto implementsError;
+        ErrorCollectorImplements(this);
     }
     if (fgetc(this->fp) != 109) {
-        goto implementsError;
+        ErrorCollectorImplements(this);
     }
     if (fgetc(this->fp) != 101) {
-        goto implementsError;
+        ErrorCollectorImplements(this);
     }
 
     if (fgetc(this->fp) != 110) {
-        goto implementsError;
+        ErrorCollectorImplements(this);
     }
     if (fgetc(this->fp) != 116) {
-        goto implementsError;
+        ErrorCollectorImplements(this);
     }
     if (fgetc(this->fp) != 115) {
-        goto implementsError;
+        ErrorCollectorImplements(this);
     }
 
     RegexStrictSpaces(this);
@@ -67,11 +83,11 @@ void _Implements(struct Buffer * this) {
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                goto implementsError;
+                ErrorCollectorImplements(this);
             case 10:
-                goto implementsError;
+                ErrorCollectorImplements(this);
             case 59:
-                goto implementsError;
+                ErrorCollectorImplements(this);
             case 32:
                 while (1) {
                     // Function start
@@ -83,7 +99,7 @@ void _Implements(struct Buffer * this) {
                         case 123:
                             return;
                         default:
-                            goto implementsError;
+                            ErrorCollectorImplements(this);
                     }
                 }
             case 123:
@@ -94,13 +110,11 @@ void _Implements(struct Buffer * this) {
         }
     }
 
-
-implementsError:
-    Error(this, "class format implements");
-
-
 }
 
+/**
+@@@@@@@
+*/
 void CollectorExtendsImplements(struct Buffer * this, bool * hasExtends, bool * hasImplements) {
 
     if (this->ch == 123) {
@@ -121,11 +135,11 @@ void CollectorExtendsImplements(struct Buffer * this, bool * hasExtends, bool * 
                 while (1) {
                     switch (this->ch = fgetc(this->fp)) {
                         case EOF:
-                            goto extendsError;
+                            ErrorCollectorExtends(this);
                         case 10:
-                            goto extendsError;
+                            ErrorCollectorExtends(this);
                         case 59:
-                            goto extendsError;
+                            ErrorCollectorExtends(this);
                         case 32:
                             while (1) {
                                 switch (fgetc(this->fp)) {
@@ -136,13 +150,14 @@ void CollectorExtendsImplements(struct Buffer * this, bool * hasExtends, bool * 
                                         goto implements;
                                         break;
                                     case 123:
-                                        goto extendsEnd;
+                                        MemoryMap(this);
+                                        return;
                                     default:
-                                        goto extendsError;
+                                        ErrorCollectorExtends(this);
                                 }
                             }
                         case 123:
-                            goto endFuncFalse;
+                            return;
                         default:
                             Memory(this);
                             break;
@@ -155,7 +170,7 @@ void CollectorExtendsImplements(struct Buffer * this, bool * hasExtends, bool * 
                 *hasImplements = 0;
                 return;
             default:
-                goto extendsError;
+                ErrorCollectorClass(this);
         }
     }
 
@@ -164,19 +179,6 @@ implements:
     *hasImplements = 1;
     MemoryMap(this);
     return;
-
-extendsEnd:
-    MemoryMap(this);
-    return;
-    
-endFuncFalse:
-    return;
-implementsError:
-    Error(this, "class format implements");
-
-
-extendsError:
-    Error(this, "class format extends");
 
 }
 
@@ -197,11 +199,11 @@ void CollectorExtends(struct Buffer * this, bool * hasExtends) {
                 while (1) {
                     switch (this->ch = fgetc(this->fp)) {
                         case EOF:
-                            goto extendsError;
+                            ErrorCollectorExtends(this);
                         case 10:
-                            goto extendsError;
+                            ErrorCollectorExtends(this);
                         case 59:
-                            goto extendsError;
+                            ErrorCollectorExtends(this);
                         case 32:
                             while (1) {
                                 switch (fgetc(this->fp)) {
@@ -212,7 +214,7 @@ void CollectorExtends(struct Buffer * this, bool * hasExtends) {
                                     case 123:
                                         goto extendsEnd;
                                     default:
-                                        goto extendsError;
+                                        ErrorCollectorExtends(this);
                                 }
                             }
                         case 123:
@@ -225,7 +227,7 @@ void CollectorExtends(struct Buffer * this, bool * hasExtends) {
             case 123:
                 goto endFuncFalse;
             default:
-                goto extendsEnd;
+                ErrorCollectorClass(this);
         }
         this->ch = fgetc(this->fp);
     }
@@ -239,8 +241,6 @@ extendsEnd:
     MemoryMap(this);
     return;
 
-extendsError:
-    Error(this, "class format extends");
 
 
 }

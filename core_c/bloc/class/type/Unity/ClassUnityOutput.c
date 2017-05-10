@@ -1,7 +1,5 @@
 #include <stdio.h>
 
-
-
 int ClassUnityOutput(struct Buffer * this, struct ClassCollectorUnity * collector) {
 
 

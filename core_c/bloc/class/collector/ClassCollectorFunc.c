@@ -1,19 +1,32 @@
-void CollectorFuncNameArgs(struct Buffer * this, int * funcPointer, int * funcType) {
+/**
+@ERROR
+*/
+void ErrorCollectorFunc(struct Buffer * this) {
+    Error(this, "Class function");
+}
 
+void ErrorCollectorAttr(struct Buffer * this) {
+    Error(this, "Class function attributes");
+}
+
+
+/**
+@@@@@@@
+*/
+void CollectorFuncNameArgs(struct Buffer * this, int * funcPointer, int * funcType) {
     while (1) {
         switch (this->ch) {
             case EOF:
-                goto endError;
+                ErrorCollectorFunc(this);
             case 10:
-                goto endError;
+                ErrorCollectorFunc(this);
             case 59:
-                goto endError;
+                ErrorCollectorFunc(this);
             case 32:
                 while (1) {
-
                     switch (fgetc(this->fp)) {
                         default:
-                            goto endError;
+                            ErrorCollectorFunc(this);
                         case 32:
                             break;
                         case 40:
@@ -26,13 +39,11 @@ void CollectorFuncNameArgs(struct Buffer * this, int * funcPointer, int * funcTy
                 }
                 break;
             case 40:
-
                 funcType[*funcPointer] = this->_pointer - 1;
                 MemoryMap(this);
                 // Parenthesize start
                 RegexFuncArgsInner(this);
-                goto endFunc;
-
+                ErrorCollectorFunc(this);
                 break;
             default:
                 Memory(this);
@@ -48,8 +59,6 @@ endFunc:
     MemoryMap(this);
     return;
 
-endError:
-    Error(this, "class format function");
 
 }
 
@@ -57,9 +66,9 @@ void CollectorFuncNameArgsOrAttr(struct Buffer * this, int * funcPointer, int * 
     while (1) {
         switch (this->ch) {
             case EOF:
-                goto endError;
+                ErrorCollectorFunc(this);
             case 10:
-                goto endError;
+                ErrorCollectorFunc(this);
             case 59:
                 goto endFuncAttr;
             case 32:
@@ -111,13 +120,11 @@ endFuncAttr:
                 MemoryMap(this);
                 return;
             default:
-                goto endError;
+                ErrorCollectorFunc(this);
         }
 
     }
 
-endError:
-    Error(this, "class format function");
 
 }
 
@@ -125,18 +132,18 @@ void CollectorFuncNameArgsOrAttrStrictType(struct Buffer * this, int * funcPoint
     while (1) {
         switch (this->ch) {
             case EOF:
-                goto endError;
+                ErrorCollectorFunc(this);
             case 10:
-                goto endError;
+                  ErrorCollectorFunc(this);
             case 59:
-                goto endError;
+                ErrorCollectorFunc(this);
             case 58:
                 goto endFuncAttr;
             case 32:
                 while (1) {
                     switch (fgetc(this->fp)) {
                         default:
-                            goto endError;
+                  ErrorCollectorFunc(this);
                         case 58:
                             goto endFuncAttr;
                         case 32:
@@ -202,7 +209,7 @@ endFuncAttr:
                 Memory(this);
                 break;
             case 58:
-                goto endFuncAttrError;
+                ErrorCollectorAttr(this);
                 return;
         }
 
@@ -220,7 +227,7 @@ endFuncAttr2:
                 Memory(this);
                 break;
             case 58:
-                goto endFuncAttrError;
+                ErrorCollectorAttr(this);
                 return;
         }
     }
@@ -233,16 +240,13 @@ endFuncAttr3:
                 MemoryMap(this);
                 return;
             default:
-                goto endFuncAttrError;
+                ErrorCollectorAttr(this);
                 return;
         }
     }
 
-endError:
-    Error(this, "class format function");
 
-endFuncAttrError:
-    Error(this, "class format attribute function");
+
 }
 
 

@@ -1,20 +1,31 @@
+/**
+@ERROR
+*/
+void ErrorHeaderImport(struct Buffer * this) {
+    Error(this, "Error Only one Constructor");
+}
+
+
+/**
+@@@@@@@
+*/
 void RegexStrictImport(struct Buffer * this) {
 
     // REGEX IMPORT Start at 105
     if (fgetc(this->fp) != 109) {
-        goto importError;
+        ErrorHeaderImport(this);
     }
     if (fgetc(this->fp) != 112) {
-        goto importError;
+        ErrorHeaderImport(this);
     }
     if (fgetc(this->fp) != 111) {
-        goto importError;
+        ErrorHeaderImport(this);
     }
     if (fgetc(this->fp) != 114) {
-        goto importError;
+        ErrorHeaderImport(this);
     }
     if (fgetc(this->fp) != 116) {
-        goto importError;
+        ErrorHeaderImport(this);
     }
 
     RegexStrictSpaces(this);
@@ -24,11 +35,11 @@ void RegexStrictImport(struct Buffer * this) {
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                goto importError;
+                ErrorHeaderImport(this);
             case 10:
-                goto importError;
+                ErrorHeaderImport(this);
             case 59:
-                goto importError;
+                ErrorHeaderImport(this);
             case 32:
                 goto step2;
             default:
@@ -36,26 +47,26 @@ void RegexStrictImport(struct Buffer * this) {
                 break;
         }
     }
-    
+
 step2:
-                
+
     MemoryMap(this);
 
     RegexJumpSpace(this);
-    
+
     // REGEX FROM
 
     if (this->ch != 102) {
-        goto importError;
+        ErrorHeaderImport(this);
     }
     if (fgetc(this->fp) != 114) {
-        goto importError;
+        ErrorHeaderImport(this);
     }
     if (fgetc(this->fp) != 111) {
-        goto importError;
+        ErrorHeaderImport(this);
     }
     if (fgetc(this->fp) != 109) {
-        goto importError;
+        ErrorHeaderImport(this);
     }
 
     RegexStrictSpaces(this);
@@ -65,18 +76,18 @@ step2:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                goto importError;
+                ErrorHeaderImport(this);
             case 10:
-                goto importError;
+                ErrorHeaderImport(this);
             case 32:
-               // END of script line
-               while (1) {
+                // END of script line
+                while (1) {
                     switch (fgetc(this->fp)) {
-                        default :
-                             goto importError;
+                        default:
+                            ErrorHeaderImport(this);
                         case 59:
-                             MemoryMap(this);
-                             return;
+                            MemoryMap(this);
+                            return;
                     }
                 }
             case 59:
@@ -87,7 +98,6 @@ step2:
                 break;
         }
     }
-    
-importError:
-    Error(this,"import");
+
+
 }

@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 int RegexConstructorOrFunc(struct Buffer * this) {
 
     // REGEX CONSTRUCT Start at 99

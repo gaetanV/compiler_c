@@ -1,3 +1,17 @@
+/**
+@ERROR
+*/
+void ErrorComment(struct Buffer * this) {
+    Error(this, "Comment");
+}
+
+void ErrorSpace(struct Buffer * this) {
+    Error(this, "Spaces");
+}
+
+/**
+@@@@@@@
+*/
 void RegexJumpSpace(struct Buffer * this) {
     while (1) {
         if ((this->ch = fgetc(this->fp)) != 32) {
@@ -5,6 +19,7 @@ void RegexJumpSpace(struct Buffer * this) {
         }
     };
 }
+
 int RegexForceEmptyLigne(struct Buffer * this) {
     while (1) {
         switch (fgetc(this->fp)) {
@@ -18,7 +33,7 @@ int RegexForceEmptyLigne(struct Buffer * this) {
 
 void RegexStrictSpaces(struct Buffer * this) {
     if (fgetc(this->fp) != 32) {
-        Error(this, "spaces");
+        ErrorSpace(this);
     }
     while (1) {
         if ((this->ch = fgetc(this->fp)) != 32) {
@@ -51,26 +66,24 @@ loop1:
     }
 }
 
-
 void RegexStrictComments(struct Buffer * this) {
     switch (fgetc(this->fp)) {
         case 47:
             if (!RegexForceEmptyLigne(this)) {
-                goto errorComments;
+                ErrorComment(this);
             }
             return;
             break;
         case 42:
             if (!RegexCommentBloc(this)) {
-                goto errorComments;
+                ErrorComment(this);
             }
             return;
             break;
         default:
-            goto errorComments;
+            ErrorComment(this);
     }
-errorComments:
-    Error(this, "comments");
+
 }
 
 
