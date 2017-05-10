@@ -10,15 +10,15 @@ void ErrorCollectorConstructorArgs(struct Buffer * this) {
 }
 
 /**
-@TOOLS
+@DEFINE
  */
-void _CollectorConstructorOnlyOne(struct Buffer * this, bool * hasConstructor) {
-    if (*hasConstructor == 1) {
-        ErrorCollectorConstructorOnlyOne(this);
-    } else {
-        *hasConstructor = 1;
-    }
-}
+#define _CollectorConstructorOnlyOne(this,hasConstructor) \
+    if (*hasConstructor == 1) {\
+        ErrorCollectorConstructorOnlyOne(this);\
+    } else {\
+        *hasConstructor = 1;\
+    }\
+
 
 /**
 @@@@@@@

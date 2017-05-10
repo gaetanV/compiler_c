@@ -1,6 +1,6 @@
 /**
 @ERROR
-*/
+ */
 void ErrorCollectorExtends(struct Buffer * this) {
     Error(this, "Class format extends");
 }
@@ -13,104 +13,34 @@ void ErrorCollectorClass(struct Buffer * this) {
     Error(this, "Class format");
 }
 
-
 /**
-@TOOLS
-*/
-void _ExtendsStart(struct Buffer * this) {
+@DEFINE
+ */
+// REGEX Extends Start at 101
+#define _ExtendsStart(this)\
+    if (fgetc(this->fp) != 120) { ErrorCollectorExtends(this); }\
+    if (fgetc(this->fp) != 116) { ErrorCollectorExtends(this); }\
+    if (fgetc(this->fp) != 101) { ErrorCollectorExtends(this); }\
+    if (fgetc(this->fp) != 110) { ErrorCollectorExtends(this); }\
+    if (fgetc(this->fp) != 100) { ErrorCollectorExtends(this); }\
+    if (fgetc(this->fp) != 115) { ErrorCollectorExtends(this); }\
+    RegexStrictSpaces(this);\
+    Memory(this);\
 
-    // REGEX Extends Start at 101
-    if (fgetc(this->fp) != 120) {
-        ErrorCollectorExtends(this);
-    }
-    if (fgetc(this->fp) != 116) {
-        ErrorCollectorExtends(this);
-    }
-    if (fgetc(this->fp) != 101) {
-        ErrorCollectorExtends(this);
-    }
-    if (fgetc(this->fp) != 110) {
-        ErrorCollectorExtends(this);
-    }
-    if (fgetc(this->fp) != 100) {
-        ErrorCollectorExtends(this);
-    }
-    if (fgetc(this->fp) != 115) {
-        ErrorCollectorExtends(this);
-    }
-    RegexStrictSpaces(this);
 
-    Memory(this);
-    return;
-}
-
-void _Implements(struct Buffer * this) {
-
-    // REGEX Implements Start at 105
-    if (fgetc(this->fp) != 109) {
-        ErrorCollectorImplements(this);
-    }
-    if (fgetc(this->fp) != 112) {
-        ErrorCollectorImplements(this);
-    }
-    if (fgetc(this->fp) != 108) {
-        ErrorCollectorImplements(this);
-    }
-    if (fgetc(this->fp) != 101) {
-        ErrorCollectorImplements(this);
-    }
-    if (fgetc(this->fp) != 109) {
-        ErrorCollectorImplements(this);
-    }
-    if (fgetc(this->fp) != 101) {
-        ErrorCollectorImplements(this);
-    }
-
-    if (fgetc(this->fp) != 110) {
-        ErrorCollectorImplements(this);
-    }
-    if (fgetc(this->fp) != 116) {
-        ErrorCollectorImplements(this);
-    }
-    if (fgetc(this->fp) != 115) {
-        ErrorCollectorImplements(this);
-    }
-
-    RegexStrictSpaces(this);
-
-    /// NotSpaceInlineOrFuncStart
-    Memory(this);
-    while (1) {
-        switch (this->ch = fgetc(this->fp)) {
-            case EOF:
-                ErrorCollectorImplements(this);
-            case 10:
-                ErrorCollectorImplements(this);
-            case 59:
-                ErrorCollectorImplements(this);
-            case 32:
-                while (1) {
-                    // Function start
-                    switch (fgetc(this->fp)) {
-                        case 32:
-                            break;
-                        case 23:
-                            break;
-                        case 123:
-                            return;
-                        default:
-                            ErrorCollectorImplements(this);
-                    }
-                }
-            case 123:
-                return;
-            default:
-                Memory(this);
-                break;
-        }
-    }
-
-}
+ // REGEX Implements Start at 105
+#define _ImplementsStart(this) \
+    if (fgetc(this->fp) != 109) { ErrorCollectorImplements(this); }\
+    if (fgetc(this->fp) != 112) { ErrorCollectorImplements(this); }\
+    if (fgetc(this->fp) != 108) { ErrorCollectorImplements(this); }\
+    if (fgetc(this->fp) != 101) { ErrorCollectorImplements(this); }\
+    if (fgetc(this->fp) != 109) { ErrorCollectorImplements(this); }\
+    if (fgetc(this->fp) != 101) { ErrorCollectorImplements(this); }\
+    if (fgetc(this->fp) != 110) { ErrorCollectorImplements(this); }\
+    if (fgetc(this->fp) != 116) { ErrorCollectorImplements(this); }\
+    if (fgetc(this->fp) != 115) { ErrorCollectorImplements(this); }\
+    RegexStrictSpaces(this);\
+    MemoryMap(this);\
 
 /**
 @@@@@@@
@@ -175,10 +105,39 @@ void CollectorExtendsImplements(struct Buffer * this, bool * hasExtends, bool * 
     }
 
 implements:
-    _Implements(this);
+    _ImplementsStart(this);
     *hasImplements = 1;
-    MemoryMap(this);
-    return;
+    while (1) {
+        switch (this->ch = fgetc(this->fp)) {
+            case EOF:
+                ErrorCollectorImplements(this);
+            case 10:
+                ErrorCollectorImplements(this);
+            case 59:
+                ErrorCollectorImplements(this);
+            case 32:
+                while (1) {
+                    // Function start
+                    switch (fgetc(this->fp)) {
+                        case 32:
+                            break;
+                        case 23:
+                            break;
+                        case 123:
+                     return;
+                        default:
+                            ErrorCollectorImplements(this);
+                    }
+                }
+            case 123:
+                 return;
+            default:
+                Memory(this);
+                break;
+        }
+    }
+
+    
 
 }
 

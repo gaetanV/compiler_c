@@ -1,6 +1,5 @@
 #include "run/Buffer.c"
 #include "run/Error.c"
-#include "run/Memory.c"
 
 #include "run/Regexcommon.c"
 #include "run/RegexFunc.c"
@@ -11,6 +10,7 @@
 /**
 @TOOLS
  */
+
 int _scanJs(struct Buffer * this) {
 
     if (parseHeader(this)) {
@@ -32,7 +32,6 @@ int _scanJs(struct Buffer * this) {
         return 0;
     }
     fclose(this->fp);
-
 
 
     printf("All is done nice work");

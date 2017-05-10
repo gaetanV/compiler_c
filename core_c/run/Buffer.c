@@ -4,7 +4,7 @@
 
 struct Buffer {
     FILE *fp;
-
+    
     char ch;
     char * buffer;
     unsigned short _buffer;
@@ -16,6 +16,11 @@ struct Buffer {
     unsigned short c;
 
 };
+
+//Memory
+#define MemoryChar(this,ch)this->buffer[this->_buffer++]=ch;
+#define MemoryMap(this)this->pointer[this->_pointer++]=this->_buffer;
+#define Memory(this)this->buffer[this->_buffer++]=this->ch;
 
 void SequenceInit(struct Buffer * this, char * c) {
     this->fp = fopen(c, "r");

@@ -15,10 +15,14 @@ void ErrorFunc(struct Buffer * this) {
     Error(this, "Function format");
 }
 
+void ErrorFuncInner(struct Buffer * this) {
+    Error(this, "Function inner");
+}
+
 /**
 @@@@@@@
  */
-int RegexMemoryFuncInner(struct Buffer * this) {
+void RegexMemoryFuncInner(struct Buffer * this) {
 
     // Function Start
     while (1) {
@@ -30,7 +34,7 @@ int RegexMemoryFuncInner(struct Buffer * this) {
             case 123:
                 goto End;
             default:
-                return 0;
+                ErrorFuncInner(this);
         }
     }
 End:
@@ -38,18 +42,14 @@ End:
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
-                return 0;
+                ErrorFuncInner(this);
             case 47:
                 switch (this->ch = fgetc(this->fp)) {
                     case 47:
-                        if (!RegexForceEmptyLigne(this)) {
-                            return 0;
-                        }
+                        RegexForceEmptyLigne(this);
                         break;
                     case 42:
-                        if (!RegexCommentBloc(this)) {
-                            return 0;
-                        }
+                        RegexCommentBloc(this);
                         break;
                     default:
                         MemoryChar(this, 47);
@@ -65,7 +65,7 @@ End:
 
                 this->c--;
                 if (this->c <= 0) {
-                    return 1;
+                    return;
                 }
                 Memory(this);
                 break;
@@ -136,9 +136,7 @@ end:
         MemoryMap(this);
     }
     // Args Stop
-    if (!RegexMemoryFuncInner(this)) {
-        ErrorFuncArgs(this);
-    }
+    RegexMemoryFuncInner(this);
     return;
 
 
@@ -239,9 +237,8 @@ step4:
     }
 
 end:
-    if (!RegexMemoryFuncInner(this)) {
-        ErrorFuncArgsType(this);
-    }
+    RegexMemoryFuncInner(this);
+
 
 
 }
@@ -339,10 +336,7 @@ step4:
     }
 
 end:
-    if (!RegexMemoryFuncInner(this)) {
-        ErrorFuncArgsType(this);
-    }
-
+    RegexMemoryFuncInner(this);
     return;
 
 

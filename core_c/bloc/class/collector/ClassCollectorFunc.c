@@ -9,7 +9,6 @@ void ErrorCollectorAttr(struct Buffer * this) {
     Error(this, "Class function attributes");
 }
 
-
 /**
 @@@@@@@
 */

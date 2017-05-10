@@ -4,11 +4,11 @@ int ClassJs(
         int(classOuputType) (struct Buffer *, struct ClassCollectorJs * collector)
  ) {
 
-    struct ClassCollectorJs * collector  =  newClassCollectorJs(this->_pointer - 2);
+    struct ClassCollectorJs * collector  =  newClassCollectorJs(this->_pointer - 1);
     
     CollectorExtends(this, &collector->hasExtends);
 
-
+    
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case 32:

@@ -1,3 +1,5 @@
+// No opti ( Exit code Only )
+
 void Error(struct Buffer * this, char * message) {
     int cmp = 1;
     int pos = ftell(this->fp);
@@ -22,7 +24,7 @@ step1:
         }
     }
 step2:
-    fseek(this->fp, pointer, SEEK_SET);
+    fseek(this->fp, pointer -1 , SEEK_SET);
     printf("Fatal Error : %s \n\n", message);
     printf("Ligne %d \n", cmp);
     while (1) {
@@ -38,4 +40,6 @@ step2:
         }
     }
 }
+
+
 

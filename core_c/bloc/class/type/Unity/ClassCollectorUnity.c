@@ -8,7 +8,6 @@ struct ClassCollectorUnity {
     
     unsigned short constructor [2];
 
-        
     int attrPublic[20];
     int _attrPublic;  
     
@@ -26,28 +25,21 @@ struct ClassCollectorUnity {
     
     int funcPrivate[20];
     int _funcPrivate;
-   
     
 };
 
 /**
 @CONSTRUCTOR
 */
-struct ClassCollectorUnity *newClassCollectorUnity (unsigned short pointer) {
-    
+struct ClassCollectorUnity *newClassCollectorUnity (unsigned short pointer) {  
     struct ClassCollectorUnity *y = malloc (sizeof (struct ClassCollectorUnity));
-    
-
     y->_attrPublic = 0; 
     y->_attrPrivate = 0; 
     y->_attrStatic = 0;
     y->_funcPrivate = 0;
     y->_funcStatic = 0;
     y->_func = 0;
-
     y->startPointer = pointer;
-    
-
     return y;   
 }
 
@@ -59,10 +51,8 @@ int PrintClassUnityCollector(struct Buffer * this,struct ClassCollectorUnity * c
     printf(">>>>>>>>>>>>>\n");
     for (int i = 0; i < this->_pointer; i++) {
         printf(" %d \n", this->pointer[i]);
-
     }
 
-  
     printf("Func \n");
     for (int i = 0; i < collector->_func; i++) {
         printf(" %d \n", collector->func[i]);

@@ -1,6 +1,6 @@
 /**
 @ERROR
-*/
+ */
 void ErrorComment(struct Buffer * this) {
     Error(this, "Comment");
 }
@@ -11,50 +11,36 @@ void ErrorSpace(struct Buffer * this) {
 
 /**
 @@@@@@@
-*/
-void RegexJumpSpace(struct Buffer * this) {
-    while (1) {
-        if ((this->ch = fgetc(this->fp)) != 32) {
-            return;
-        }
-    };
-}
+ */
 
-int RegexForceEmptyLigne(struct Buffer * this) {
+//Regex
+#define RegexJumpSpace(this) do{this->ch = fgetc(this->fp);} while (this->ch == 32); 
+#define RegexStrictSpaces(this) if(fgetc(this->fp) != 32) {ErrorSpace(this);};  RegexJumpSpace(this)   ;
+
+void RegexForceEmptyLigne(struct Buffer * this) {
     while (1) {
         switch (fgetc(this->fp)) {
             case EOF:
-                return 0;
+                ErrorSpace(this);
             case 10:
-                return 1;
+                return;
         }
     }
 }
 
-void RegexStrictSpaces(struct Buffer * this) {
-    if (fgetc(this->fp) != 32) {
-        ErrorSpace(this);
-    }
-    while (1) {
-        if ((this->ch = fgetc(this->fp)) != 32) {
-            return;
-        }
-    };
-}
-
-int RegexCommentBloc(struct Buffer * this) {
+void RegexCommentBloc(struct Buffer * this) {
     while (1) {
 loop1:
         switch (fgetc(this->fp)) {
             case EOF:
-                return 0;
+                ErrorComment(this);
             case 42:
                 loop2 :
                 switch (fgetc(this->fp)) {
                     case EOF:
-                        return 0;
+                        ErrorComment(this);
                     case 47:
-                        return 1;
+                        return;
                     case 42:
                         goto loop2;
                     default:
@@ -69,17 +55,11 @@ loop1:
 void RegexStrictComments(struct Buffer * this) {
     switch (fgetc(this->fp)) {
         case 47:
-            if (!RegexForceEmptyLigne(this)) {
-                ErrorComment(this);
-            }
+            RegexForceEmptyLigne(this);
             return;
-            break;
         case 42:
-            if (!RegexCommentBloc(this)) {
-                ErrorComment(this);
-            }
+            RegexCommentBloc(this);
             return;
-            break;
         default:
             ErrorComment(this);
     }

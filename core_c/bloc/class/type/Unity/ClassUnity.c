@@ -5,7 +5,7 @@ int ClassUnity(
         int(classOuputType) (struct Buffer *, struct ClassCollectorUnity * collector)
         ) {
 
-    struct ClassCollectorUnity * collector = newClassCollectorUnity(this->_pointer - 2);
+    struct ClassCollectorUnity * collector = newClassCollectorUnity(this->_pointer - 1);
     CollectorExtends(this, &collector->hasExtends);
 
 

@@ -21,40 +21,28 @@
 #include "./type/Js/ClassJsOutput.c"
 
 /**
-@ERROR
-*/
+   @ERROR
+ */
 void ErrorClass(struct Buffer * this) {
     Error(this, "Class format");
 }
 
 /**
 @TOOLS
-*/
+ */
+// REGEX Class FROM start at 99
+#define _RegexFrom(this)\
+    if (fgetc(this->fp) != 108) { ErrorClass(this); }\
+    if (fgetc(this->fp) != 97)  { ErrorClass(this); }\
+    if (fgetc(this->fp) != 115) { ErrorClass(this); }\
+    if (fgetc(this->fp) != 115) { ErrorClass(this); }\
+    RegexJumpSpace(this);\
+    Memory(this);\
+
+
 void _RegexClassStart(struct Buffer * this) {
-
-
-
-    // REGEX Class FROM start at 99
-    if (fgetc(this->fp) != 108) {
-        ErrorClass(this);
-    }
-    if (fgetc(this->fp) != 97) {
-
-        ErrorClass(this);
-    }
-    if (fgetc(this->fp) != 115) {
-
-        ErrorClass(this);
-    }
-    if (fgetc(this->fp) != 115) {
-        ErrorClass(this);
-    }
-    ///////////
-
-    RegexJumpSpace(this);
-
-    Memory(this);
-    while (1) {
+    _RegexFrom(this);
+    while(1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
                 ErrorClass(this);
@@ -62,24 +50,21 @@ void _RegexClassStart(struct Buffer * this) {
                 ErrorClass(this);
             case 59:
                 ErrorClass(this);
+            case 32:
+                return;
             case 123:
                 Memory(this);
-                return;
-            case 32:
                 return;
             default:
                 Memory(this);
                 break;
         }
     }
-
-
 }
-
 
 /**
 @@@@@@@
-*/
+ */
 int parseClassUnity(struct Buffer * this, int(classOuputType) (struct Buffer *, struct ClassCollectorUnity * collector)) {
     _RegexClassStart(this);
     return ClassUnity(this, classOuputType);
@@ -94,4 +79,3 @@ int parseClassJsServer(struct Buffer * this, int(classOuputType) (struct Buffer 
     _RegexClassStart(this);
     return ClassJsServer(this, classOuputType);
 }
-
