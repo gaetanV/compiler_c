@@ -5,7 +5,7 @@ int ClassUnity(
         int(classOuputType) (struct Buffer *, struct ClassCollectorUnity * collector)
         ) {
 
-    struct ClassCollectorUnity * collector = newClassCollectorUnity(this->_pointer - 1);
+    struct ClassCollectorUnity * collector = newClassCollectorUnity(this->_pointer - 2);
     CollectorExtends(this, &collector->hasExtends);
 
 
@@ -21,8 +21,8 @@ int ClassUnity(
             case 99:
                 if (RegexConstructorOrFunc(this)) {
                     CollectorContructorArgsStrictType(
-                            this, 
-                            &collector->hasConstructor ,
+                            this,
+                            &collector->hasConstructor,
                             collector->constructor
                             );
                 } else {
@@ -82,14 +82,23 @@ int ClassUnity(
             case 115:
                 if (RegexStaticOrFunc(this)) {
                     RegexStrictSpaces(this);
+                    CollectorFuncNameArgsOrAttrStrictType(
+                            this,
+                            &collector->_funcStatic,
+                            collector->funcStatic,
+                            &collector->_attrStatic,
+                            collector->attrStatic
+                            );
+
+                } else {
+                    CollectorFuncNameArgsOrAttrStrictType(
+                            this,
+                            &collector->_func,
+                            collector->func,
+                            &collector->_attrPublic,
+                            collector->attrPublic
+                            );
                 }
-                CollectorFuncNameArgsOrAttrStrictType(
-                        this,
-                        &collector->_funcStatic,
-                        collector->funcStatic,
-                        &collector->_attrStatic,
-                        collector->attrStatic
-                        );
                 break;
             default:
                 CollectorFuncNameArgsOrAttrStrictType(

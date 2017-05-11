@@ -42,7 +42,7 @@ void ErrorClass(struct Buffer * this) {
 
 void _RegexClassStart(struct Buffer * this) {
     _RegexFrom(this);
-    while(1) {
+    while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
                 ErrorClass(this);
@@ -51,8 +51,10 @@ void _RegexClassStart(struct Buffer * this) {
             case 59:
                 ErrorClass(this);
             case 32:
+                MemoryMap(this);
                 return;
             case 123:
+                MemoryMap(this);
                 Memory(this);
                 return;
             default:

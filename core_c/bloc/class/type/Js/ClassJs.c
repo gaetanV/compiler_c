@@ -4,7 +4,7 @@ int ClassJs(
         int(classOuputType) (struct Buffer *, struct ClassCollectorJs * collector)
  ) {
 
-    struct ClassCollectorJs * collector  =  newClassCollectorJs(this->_pointer - 1);
+    struct ClassCollectorJs * collector  =  newClassCollectorJs(this->_pointer - 2);
     
     CollectorExtends(this, &collector->hasExtends);
 

@@ -28,7 +28,7 @@ void ErrorCollectorClass(struct Buffer * this) {
     Memory(this);\
 
 
- // REGEX Implements Start at 105
+// REGEX Implements Start at 105
 #define _ImplementsStart(this) \
     if (fgetc(this->fp) != 109) { ErrorCollectorImplements(this); }\
     if (fgetc(this->fp) != 112) { ErrorCollectorImplements(this); }\
@@ -42,9 +42,10 @@ void ErrorCollectorClass(struct Buffer * this) {
     RegexStrictSpaces(this);\
     MemoryMap(this);\
 
+
 /**
 @@@@@@@
-*/
+ */
 void CollectorExtendsImplements(struct Buffer * this, bool * hasExtends, bool * hasImplements) {
 
     if (this->ch == 123) {
@@ -87,6 +88,7 @@ void CollectorExtendsImplements(struct Buffer * this, bool * hasExtends, bool * 
                                 }
                             }
                         case 123:
+                            MemoryMap(this);
                             return;
                         default:
                             Memory(this);
@@ -105,8 +107,10 @@ void CollectorExtendsImplements(struct Buffer * this, bool * hasExtends, bool * 
     }
 
 implements:
+
     _ImplementsStart(this);
     *hasImplements = 1;
+    Memory(this);
     while (1) {
         switch (this->ch = fgetc(this->fp)) {
             case EOF:
@@ -116,6 +120,7 @@ implements:
             case 59:
                 ErrorCollectorImplements(this);
             case 32:
+
                 while (1) {
                     // Function start
                     switch (fgetc(this->fp)) {
@@ -124,20 +129,22 @@ implements:
                         case 23:
                             break;
                         case 123:
-                     return;
+                            MemoryMap(this);
+                            return;
                         default:
                             ErrorCollectorImplements(this);
                     }
                 }
             case 123:
-                 return;
+                MemoryMap(this);
+                return;
             default:
                 Memory(this);
                 break;
         }
     }
 
-    
+
 
 }
 

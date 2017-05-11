@@ -2,21 +2,21 @@
 
 int ClassJsServerOutput(struct Buffer * this, struct ClassCollectorJsServer * collector) {
 
-    
+
     printf("%s\n", this->buffer);
-    
-    this->buffer[this->_buffer]= '\0' ;
-    
+
+    this->buffer[this->_buffer] = '\0';
+
     this->c = 0;
-    PrintClassCollectorServer(this,collector);
-   
-    
-  
+    PrintClassCollectorServer(this, collector);
+
+
+
     for (int i = 0; i < this->import; i++) {
         /// Import 
         strncat(this->output,
                 (this->buffer + this->pointer[this->c]),
-                (this->pointer[(this->c + 1)] - this->pointer[this->c] )
+                (this->pointer[(this->c + 1)] - this->pointer[this->c])
                 );
         this->c++;
 
@@ -54,9 +54,9 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollectorJsServer * co
                 (this->buffer + this->pointer[this->c]),
                 (this->pointer[(this->c + 1)] - this->pointer[this->c])
                 );
-          this->c++;
+        this->c++;
     }
-    
+
     if (collector->hasImplements == 1) {
 
         /// Module Implements
@@ -65,9 +65,9 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollectorJsServer * co
                 (this->pointer[(this->c + 1)] - this->pointer[this->c])
                 );
     }
-    
 
-  
+
+
     // Constructor
     if (collector->hasConstructor == 1) {
 
@@ -75,8 +75,8 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollectorJsServer * co
         int z = collector->constructor[2];
 
         for (int j = 0; j < collector->constructor[1]; j++) {
-         
-            
+
+
             /// Constructor Args
             strncat(this->output,
                     (this->buffer + this->pointer[this->c]),
@@ -85,15 +85,15 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollectorJsServer * co
             this->c++;
             /// Constructor Args Type
             z++;
-            if(collector->type[z]){
+            if (collector->type[z] == 1) {
                 strncat(this->output,
-                    (this->buffer + this->pointer[this->c]),
-                    (this->pointer[(this->c + 1)] - this->pointer[this->c])
-                    );
+                        (this->buffer + this->pointer[this->c]),
+                        (this->pointer[(this->c + 1)] - this->pointer[this->c])
+                        );
                 this->c++;
             }
         }
-        
+
 
         /// Constructor Inner
         strncat(this->output,
@@ -103,9 +103,10 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollectorJsServer * co
 
 
     }
-    
-        for (int j = 0; j < collector->_attrStatic; j++) {
-           
+
+
+    for (int j = 0; j < collector->_attrStatic; j++) {
+
         /// Func Attribute Static
         this->c = collector->attrStatic[j];
         /// Func Attribute Static Name
@@ -116,7 +117,19 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollectorJsServer * co
 
         this->c++;
     }
-    
+    for (int j = 0; j < collector->_attrPrivate; j++) {
+
+        /// Func Attribute Static
+        this->c = collector->attrPrivate[j];
+        /// Func Attribute Static Name
+        strncat(this->output,
+                (this->buffer + this->pointer[this->c]),
+                (this->pointer[(this->c + 1)] - this->pointer[this->c])
+                );
+
+        this->c++;
+    }
+
 
     for (int j = 0; j < collector->_func; j++) {
         /// Func
@@ -149,8 +162,8 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollectorJsServer * co
     }
 
     for (int j = 0; j < collector->_funcStatic; j++) {
-        
-      
+
+
         /// Func Static
         this->c = collector->funcStatic[j];
         /// Func Static Name
@@ -179,8 +192,39 @@ int ClassJsServerOutput(struct Buffer * this, struct ClassCollectorJsServer * co
                 );
     }
     
+    for (int j = 0; j < collector->_funcPrivate; j++) {
+        /// Func Private
+        this->c = collector->funcPrivate[j];
+        /// Func Name
+        strncat(this->output,
+                (this->buffer + this->pointer[this->c]),
+                (this->pointer[(this->c + 1)] - this->pointer[this->c])
+                );
 
+        this->c++;
 
+        j++;
+  
+        for (int k = 0; k < collector->funcPrivate[j]; k++) {
+      
+            /// Func Args 
+            strncat(this->output,
+                    (this->buffer + this->pointer[this->c]),
+                    (this->pointer[(this->c + 1)] - this->pointer[this->c])
+                    );
+            this->c++;
+        }
+
+        /// Func Inner
+        strncat(this->output,
+                (this->buffer + this->pointer[this->c]),
+                (this->pointer[(this->c + 1)] - this->pointer[this->c])
+                );
+
+    }
     printf("\n%s\n", this->output);
+  
+
+
 
 }

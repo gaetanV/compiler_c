@@ -162,10 +162,18 @@ int ClassUnityOutput(struct Buffer * this, struct ClassCollectorUnity * collecto
                 );
 
         this->c++;
-
         j++;
 
+      
         for (int k = 0; k < collector->func[j]; k++) {
+
+             /// Func Type 
+            strncat(this->output,
+                    (this->buffer + this->pointer[this->c]),
+                    (this->pointer[(this->c + 1)] - this->pointer[this->c])
+                    );
+            this->c++;
+            
             /// Func Args 
             strncat(this->output,
                     (this->buffer + this->pointer[this->c]),
@@ -173,7 +181,9 @@ int ClassUnityOutput(struct Buffer * this, struct ClassCollectorUnity * collecto
                     );
             this->c++;
         }
-
+        
+        
+        
         /// Func Inner
         strncat(this->output,
                 (this->buffer + this->pointer[this->c]),
@@ -194,17 +204,25 @@ int ClassUnityOutput(struct Buffer * this, struct ClassCollectorUnity * collecto
                 );
 
         this->c++;
-
+        
         j++;
 
         for (int k = 0; k < collector->funcStatic[j]; k++) {
-            /// Func Static Args 
+            /// Func Static Type 
             strncat(this->output,
                     (this->buffer + this->pointer[this->c]),
                     (this->pointer[(this->c + 1)] - this->pointer[this->c])
                     );
             this->c++;
+              /// Func Args 
+            strncat(this->output,
+                    (this->buffer + this->pointer[this->c]),
+                    (this->pointer[(this->c + 1)] - this->pointer[this->c])
+                    );
+            this->c++;
+            
         }
+        
 
         /// Func Static Inner
         strncat(this->output,

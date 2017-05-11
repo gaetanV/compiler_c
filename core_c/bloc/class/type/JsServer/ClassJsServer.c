@@ -4,7 +4,7 @@ int ClassJsServer(
         int(classOuputType) (struct Buffer *, struct ClassCollectorJsServer * collector)
  ) {
 
-    struct ClassCollectorJsServer * collector  =  newClassCollectorJsServer(this->_pointer - 1);
+    struct ClassCollectorJsServer * collector  =  newClassCollectorJsServer(this->_pointer - 2);
 
 
     CollectorExtendsImplements(this, &collector->hasExtends, &collector->hasImplements );

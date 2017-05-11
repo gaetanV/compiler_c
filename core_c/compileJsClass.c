@@ -7,16 +7,20 @@
 #include "bloc/header/header.c"
 #include "bloc/class/class.c"
 
+#include <time.h>
+
 /**
 @TOOLS
  */
 
 int _scanJs(struct Buffer * this) {
-
+    struct timespec t1, t2;
+    clock_gettime(CLOCK_MONOTONIC, &t1);
+    
     if (parseHeader(this)) {
         switch (this->ch) {
             case 99:
-                if (parseClassUnity(this, ClassUnityOutput)) {
+                if (parseClassJsServer(this, ClassJsServerOutput)) {
                     printf("Module done.\n");
                 } else {
                     printf("Error in Module");
@@ -35,6 +39,9 @@ int _scanJs(struct Buffer * this) {
 
 
     printf("All is done nice work");
+    clock_gettime(CLOCK_MONOTONIC, &t2);
+    printf(" \t | %lu \n",  (unsigned long long) (t2.tv_nsec -  t1.tv_nsec));
+
     return 1;
 }
 
