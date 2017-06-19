@@ -1,3 +1,5 @@
+const $ejs  = require('ejs');
+
 module.exports = (function () {
     'use strict'
 
@@ -38,13 +40,13 @@ module.exports = (function () {
             var file = $fs.readFileSync(path_file, 'utf8')
             switch (this.target) {
                 case "go":
-                    innerClass = new $go(Deploy.getClassName(name, "go"), file);
+                    innerClass = new $go(Deploy.getClassName(name, "go"), $ejs.render(file, scope));
                     break;
                 default:
                     throw "error";
                     break;
             }
-            this.write(innerClass.buildTemplate(scope, method),output);
+            this.write(innerClass.buildTemplate(method),output);
         }
         
         class(path, name, output) {
