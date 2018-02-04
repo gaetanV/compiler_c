@@ -31,8 +31,9 @@ struct ClassCollectorUnity {
 /**
 @CONSTRUCTOR
 */
+
 struct ClassCollectorUnity *newClassCollectorUnity (unsigned short pointer) {  
-    struct ClassCollectorUnity *y = malloc (sizeof (struct ClassCollectorUnity));
+    struct ClassCollectorUnity *y = (ClassCollectorUnity*) malloc (sizeof (struct ClassCollectorUnity));
     y->_attrPublic = 0; 
     y->_attrPrivate = 0; 
     y->_attrStatic = 0;
@@ -43,14 +44,11 @@ struct ClassCollectorUnity *newClassCollectorUnity (unsigned short pointer) {
     return y;   
 }
 
-
-
-
-int PrintClassUnityCollector(struct Buffer * this,struct ClassCollectorUnity * collector){
+int PrintClassUnityCollector(struct Buffer * buffer,struct ClassCollectorUnity * collector){
     
     printf(">>>>>>>>>>>>>\n");
-    for (int i = 0; i < this->_pointer; i++) {
-        printf(" %d \n", this->pointer[i]);
+    for (int i = 0; i < buffer->_pointer; i++) {
+        printf(" %d \n", buffer->pointer[i]);
     }
 
     printf("Func \n");

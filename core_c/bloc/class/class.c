@@ -23,42 +23,42 @@
 /**
    @ERROR
  */
-void ErrorClass(struct Buffer * this) {
-    Error(this, "Class format");
+void ErrorClass(struct Buffer * buffer) {
+    Error(buffer, "Class format");
 }
 
 /**
 @TOOLS
  */
 // REGEX Class FROM start at 99
-#define _RegexFrom(this)\
-    if (fgetc(this->fp) != 108) { ErrorClass(this); }\
-    if (fgetc(this->fp) != 97)  { ErrorClass(this); }\
-    if (fgetc(this->fp) != 115) { ErrorClass(this); }\
-    if (fgetc(this->fp) != 115) { ErrorClass(this); }\
-    RegexJumpSpace(this);\
-    Memory(this);\
+#define _RegexFrom(buffer)\
+    if (fgetc(buffer->fp) != 108) { ErrorClass(buffer); }\
+    if (fgetc(buffer->fp) != 97)  { ErrorClass(buffer); }\
+    if (fgetc(buffer->fp) != 115) { ErrorClass(buffer); }\
+    if (fgetc(buffer->fp) != 115) { ErrorClass(buffer); }\
+    RegexJumpSpace(buffer);\
+    Memory(buffer);\
 
 
-void _RegexClassStart(struct Buffer * this) {
-    _RegexFrom(this);
+void _RegexClassStart(struct Buffer * buffer) {
+    _RegexFrom(buffer);
     while (1) {
-        switch (this->ch = fgetc(this->fp)) {
+        switch (buffer->ch = fgetc(buffer->fp)) {
             case EOF:
-                ErrorClass(this);
+                ErrorClass(buffer);
             case 10:
-                ErrorClass(this);
+                ErrorClass(buffer);
             case 59:
-                ErrorClass(this);
+                ErrorClass(buffer);
             case 32:
-                MemoryMap(this);
+                MemoryMap(buffer);
                 return;
             case 123:
-                MemoryMap(this);
-                Memory(this);
+                MemoryMap(buffer);
+                Memory(buffer);
                 return;
             default:
-                Memory(this);
+                Memory(buffer);
                 break;
         }
     }
@@ -67,17 +67,17 @@ void _RegexClassStart(struct Buffer * this) {
 /**
 @@@@@@@
  */
-int parseClassUnity(struct Buffer * this, int(classOuputType) (struct Buffer *, struct ClassCollectorUnity * collector)) {
-    _RegexClassStart(this);
-    return ClassUnity(this, classOuputType);
+int parseClassUnity(struct Buffer * buffer, int(classOuputType) (struct Buffer *, struct ClassCollectorUnity * collector)) {
+    _RegexClassStart(buffer);
+    return ClassUnity(buffer, classOuputType);
 }
 
-int parseClassJs(struct Buffer * this, int(classOuputType) (struct Buffer *, struct ClassCollectorJs * collector)) {
-    _RegexClassStart(this);
-    return ClassJs(this, classOuputType);
+int parseClassJs(struct Buffer * buffer, int(classOuputType) (struct Buffer *, struct ClassCollectorJs * collector)) {
+    _RegexClassStart(buffer);
+    return ClassJs(buffer, classOuputType);
 }
 
-int parseClassJsServer(struct Buffer * this, int(classOuputType) (struct Buffer *, struct ClassCollectorJsServer * collector)) {
-    _RegexClassStart(this);
-    return ClassJsServer(this, classOuputType);
+int parseClassJsServer(struct Buffer * buffer, int(classOuputType) (struct Buffer *, struct ClassCollectorJsServer * collector)) {
+    _RegexClassStart(buffer);
+    return ClassJsServer(buffer, classOuputType);
 }

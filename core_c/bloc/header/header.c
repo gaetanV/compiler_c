@@ -1,134 +1,134 @@
 /**
 @ERROR
  */
-void ErrorHeaderExport(struct Buffer * this) {
-    Error(this, "Contructor arguments type");
+void ErrorHeaderExport(struct Buffer * buffer) {
+    Error(buffer, "Contructor arguments type");
 }
 
-void ErrorHeaderImport(struct Buffer * this) {
-    Error(this, "Error Only one Constructor");
+void ErrorHeaderImport(struct Buffer * buffer) {
+    Error(buffer, "Error Only one Constructor");
 }
 
-int parseHeader(struct Buffer * this) {
+int parseHeader(struct Buffer * buffer) {
 
-    this->import = 0;
-    MemoryMap(this);
+    buffer->import = 0;
+    MemoryMap(buffer);
     while (1) {
-        switch (fgetc(this->fp)) {
+        switch (fgetc(buffer->fp)) {
             case EOF:
                 return 0;
             case 105:
 
                 // REGEX IMPORT Start at 105
-                if (fgetc(this->fp) != 109) {
-                    ErrorHeaderImport(this);
+                if (fgetc(buffer->fp) != 109) {
+                    ErrorHeaderImport(buffer);
                 }
-                if (fgetc(this->fp) != 112) {
-                    ErrorHeaderImport(this);
+                if (fgetc(buffer->fp) != 112) {
+                    ErrorHeaderImport(buffer);
                 }
-                if (fgetc(this->fp) != 111) {
-                    ErrorHeaderImport(this);
+                if (fgetc(buffer->fp) != 111) {
+                    ErrorHeaderImport(buffer);
                 }
-                if (fgetc(this->fp) != 114) {
-                    ErrorHeaderImport(this);
+                if (fgetc(buffer->fp) != 114) {
+                    ErrorHeaderImport(buffer);
                 }
-                if (fgetc(this->fp) != 116) {
-                    ErrorHeaderImport(this);
+                if (fgetc(buffer->fp) != 116) {
+                    ErrorHeaderImport(buffer);
                 }
 
-                RegexStrictSpaces(this);
+                RegexStrictSpaces(buffer);
 
                 // REGEX NotSpaceInline
-                Memory(this);
+                Memory(buffer);
                 while (1) {
-                    switch (this->ch = fgetc(this->fp)) {
+                    switch (buffer->ch = fgetc(buffer->fp)) {
                         case EOF:
-                            ErrorHeaderImport(this);
+                            ErrorHeaderImport(buffer);
                         case 10:
-                            ErrorHeaderImport(this);
+                            ErrorHeaderImport(buffer);
                         case 59:
-                            ErrorHeaderImport(this);
+                            ErrorHeaderImport(buffer);
                         case 32:
                             goto step2;
                         default:
-                            Memory(this);
+                            Memory(buffer);
                             break;
                     }
                 }
 step2:
-                MemoryMap(this);
-                RegexJumpSpace(this);
+                MemoryMap(buffer);
+                RegexJumpSpace(buffer);
 
                 // REGEX FROM
 
-                if (this->ch != 102) {
-                    ErrorHeaderImport(this);
+                if (buffer->ch != 102) {
+                    ErrorHeaderImport(buffer);
                 }
-                if (fgetc(this->fp) != 114) {
-                    ErrorHeaderImport(this);
+                if (fgetc(buffer->fp) != 114) {
+                    ErrorHeaderImport(buffer);
                 }
-                if (fgetc(this->fp) != 111) {
-                    ErrorHeaderImport(this);
+                if (fgetc(buffer->fp) != 111) {
+                    ErrorHeaderImport(buffer);
                 }
-                if (fgetc(this->fp) != 109) {
-                    ErrorHeaderImport(this);
+                if (fgetc(buffer->fp) != 109) {
+                    ErrorHeaderImport(buffer);
                 }
 
-                RegexStrictSpaces(this);
+                RegexStrictSpaces(buffer);
 
-                Memory(this);
+                Memory(buffer);
 
                 while (1) {
-                    switch (this->ch = fgetc(this->fp)) {
+                    switch (buffer->ch = fgetc(buffer->fp)) {
                         case EOF:
-                            ErrorHeaderImport(this);
+                            ErrorHeaderImport(buffer);
                         case 10:
-                            ErrorHeaderImport(this);
+                            ErrorHeaderImport(buffer);
                         case 32:
                             // END of script line
                             while (1) {
-                                switch (fgetc(this->fp)) {
+                                switch (fgetc(buffer->fp)) {
                                     default:
-                                        ErrorHeaderImport(this);
+                                        ErrorHeaderImport(buffer);
                                     case 59:
-                                        MemoryMap(this);
+                                        MemoryMap(buffer);
                                         goto step3;
                                 }
                             }
                         case 59:
-                            MemoryMap(this);
+                            MemoryMap(buffer);
                            goto step3;
                         default:
-                            Memory(this);
+                            Memory(buffer);
                             break;
                     }
                 }
 step3:              
-                this->import++;
+                buffer->import++;
                 break;
             case 101:
                 // REGEX EXPORT start at 101
-                if (fgetc(this->fp) != 120) {
-                    ErrorHeaderExport(this);
+                if (fgetc(buffer->fp) != 120) {
+                    ErrorHeaderExport(buffer);
                 }
-                if (fgetc(this->fp) != 112) {
-                    ErrorHeaderExport(this);
+                if (fgetc(buffer->fp) != 112) {
+                    ErrorHeaderExport(buffer);
                 }
-                if (fgetc(this->fp) != 111) {
-                    ErrorHeaderExport(this);
+                if (fgetc(buffer->fp) != 111) {
+                    ErrorHeaderExport(buffer);
                 }
-                if (fgetc(this->fp) != 114) {
-                    ErrorHeaderExport(this);
+                if (fgetc(buffer->fp) != 114) {
+                    ErrorHeaderExport(buffer);
                 }
-                if (fgetc(this->fp) != 116) {
-                    ErrorHeaderExport(this);
+                if (fgetc(buffer->fp) != 116) {
+                    ErrorHeaderExport(buffer);
                 }
 
-                RegexStrictSpaces(this);
+                RegexStrictSpaces(buffer);
 
                 return 1;
             case 47:
-                RegexStrictComments(this);
+                RegexStrictComments(buffer);
                 break;
             case 32:
                 break;

@@ -1,31 +1,31 @@
 /**
 @ERROR
  */
-void ErrorCollectorFunc(struct Buffer * this) {
-    Error(this, "Class function");
+void ErrorCollectorFunc(struct Buffer * buffer) {
+    Error(buffer, "Class function");
 }
 
-void ErrorCollectorAttr(struct Buffer * this) {
-    Error(this, "Class function attributes");
+void ErrorCollectorAttr(struct Buffer * buffer) {
+    Error(buffer, "Class function attributes");
 }
 
 /**
 @@@@@@@
  */
-void CollectorFuncNameArgs(struct Buffer * this, int * funcPointer, int * funcType) {
+void CollectorFuncNameArgs(struct Buffer * buffer, int * funcPointer, int * funcType) {
     while (1) {
-        switch (this->ch) {
+        switch (buffer->ch) {
             case EOF:
-                ErrorCollectorFunc(this);
+                ErrorCollectorFunc(buffer);
             case 10:
-                ErrorCollectorFunc(this);
+                ErrorCollectorFunc(buffer);
             case 59:
-                ErrorCollectorFunc(this);
+                ErrorCollectorFunc(buffer);
             case 32:
                 while (1) {
-                    switch (fgetc(this->fp)) {
+                    switch (fgetc(buffer->fp)) {
                         default:
-                            ErrorCollectorFunc(this);
+                            ErrorCollectorFunc(buffer);
                         case 32:
                             break;
                         case 40:
@@ -36,37 +36,37 @@ void CollectorFuncNameArgs(struct Buffer * this, int * funcPointer, int * funcTy
             case 40:
                 goto endFunc;
             default:
-                Memory(this);
+                Memory(buffer);
                 break;
         }
-        this->ch = fgetc(this->fp);
+        buffer->ch = fgetc(buffer->fp);
     }
 
 endFunc:
-    funcType[*funcPointer] = this->_pointer - 1;
-    MemoryMap(this);
+    funcType[*funcPointer] = buffer->_pointer - 1;
+    MemoryMap(buffer);
     // Parenthesize start
-    RegexFuncArgsInner(this);
+    RegexFuncArgsInner(buffer);
     *funcPointer = *funcPointer + 1;
-    funcType[*funcPointer] = this->_cmp;
+    funcType[*funcPointer] = buffer->_cmp;
     *funcPointer = *funcPointer + 1;
-    MemoryMap(this);
+    MemoryMap(buffer);
     return;
 
 }
 
-void CollectorFuncNameArgsOrAttr(struct Buffer * this, int * funcPointer, int * funcType, int * attrPointer, int * attrType) {
+void CollectorFuncNameArgsOrAttr(struct Buffer * buffer, int * funcPointer, int * funcType, int * attrPointer, int * attrType) {
     while (1) {
-        switch (this->ch) {
+        switch (buffer->ch) {
             case EOF:
-                ErrorCollectorFunc(this);
+                ErrorCollectorFunc(buffer);
             case 10:
-                ErrorCollectorFunc(this);
+                ErrorCollectorFunc(buffer);
             case 59:
                 goto endFuncAttr;
             case 32:
                 while (1) {
-                    switch (fgetc(this->fp)) {
+                    switch (fgetc(buffer->fp)) {
                         default:
                             goto endFuncAttr;
                         case 32:
@@ -79,36 +79,36 @@ void CollectorFuncNameArgsOrAttr(struct Buffer * this, int * funcPointer, int * 
             case 40:
                 goto endFunc;
             default:
-                Memory(this);
+                Memory(buffer);
                 break;
         }
-        this->ch = fgetc(this->fp);
+        buffer->ch = fgetc(buffer->fp);
     }
 
 endFunc:
-    funcType[*funcPointer] = this->_pointer - 1;
-    MemoryMap(this);
+    funcType[*funcPointer] = buffer->_pointer - 1;
+    MemoryMap(buffer);
     // Parenthesize start
-    RegexFuncArgsInner(this);
+    RegexFuncArgsInner(buffer);
     *funcPointer = *funcPointer + 1;
-    funcType[* funcPointer] = this->_cmp;
+    funcType[* funcPointer] = buffer->_cmp;
     *funcPointer = *funcPointer + 1;
-    MemoryMap(this);
+    MemoryMap(buffer);
     return;
 
 endFuncAttr:
-    attrType[*attrPointer] = this->_pointer - 1;
+    attrType[*attrPointer] = buffer->_pointer - 1;
     *attrPointer = *attrPointer + 1;
 
     while (1) {
-        switch (this->ch = fgetc(this->fp)) {
+        switch (buffer->ch = fgetc(buffer->fp)) {
             case 32:
                 break;
             case 10:
-                MemoryMap(this);
+                MemoryMap(buffer);
                 return;
             default:
-                ErrorCollectorFunc(this);
+                ErrorCollectorFunc(buffer);
         }
 
     }
@@ -116,22 +116,22 @@ endFuncAttr:
 
 }
 
-void CollectorFuncNameArgsOrAttrStrictType(struct Buffer * this, int * funcPointer, int * funcType, int * attrPointer, int * attrType) {
+void CollectorFuncNameArgsOrAttrStrictType(struct Buffer * buffer, int * funcPointer, int * funcType, int * attrPointer, int * attrType) {
     while (1) {
-        switch (this->ch) {
+        switch (buffer->ch) {
             case EOF:
-                ErrorCollectorFunc(this);
+                ErrorCollectorFunc(buffer);
             case 10:
-                ErrorCollectorFunc(this);
+                ErrorCollectorFunc(buffer);
             case 59:
-                ErrorCollectorFunc(this);
+                ErrorCollectorFunc(buffer);
             case 58:
                 goto endFuncAttr;
             case 32:
                 while (1) {
-                    switch (fgetc(this->fp)) {
+                    switch (fgetc(buffer->fp)) {
                         default:
-                            ErrorCollectorFunc(this);
+                            ErrorCollectorFunc(buffer);
                         case 58:
                             goto endFuncAttr;
                         case 32:
@@ -144,62 +144,62 @@ void CollectorFuncNameArgsOrAttrStrictType(struct Buffer * this, int * funcPoint
             case 40:
                 goto endFunc;
             default:
-                Memory(this);
+                Memory(buffer);
                 break;
         }
-        this->ch = fgetc(this->fp);
+        buffer->ch = fgetc(buffer->fp);
     }
 
 endFunc:
-    funcType[*funcPointer] = this->_pointer - 1;
-    MemoryMap(this);
+    funcType[*funcPointer] = buffer->_pointer - 1;
+    MemoryMap(buffer);
     // Parenthesize start
-    RegexFuncArgsStrictTypeInner(this);
+    RegexFuncArgsStrictTypeInner(buffer);
     *funcPointer = *funcPointer + 1;
-    funcType[* funcPointer] = this->_cmp;
+    funcType[* funcPointer] = buffer->_cmp;
     *funcPointer = *funcPointer + 1;
-    MemoryMap(this);
+    MemoryMap(buffer);
     return;
 
 endFuncAttr:
-    attrType[*attrPointer] = this->_pointer - 1;
+    attrType[*attrPointer] = buffer->_pointer - 1;
     *attrPointer = *attrPointer + 1;
-    MemoryMap(this);
+    MemoryMap(buffer);
     while (1) {
-        switch (this->ch = fgetc(this->fp)) {
+        switch (buffer->ch = fgetc(buffer->fp)) {
             case 32:
                 while (1) {
-                    switch (this->ch = fgetc(this->fp)) {
+                    switch (buffer->ch = fgetc(buffer->fp)) {
                         default:
-                            Memory(this);
+                            Memory(buffer);
                             while (1) {
-                                switch (this->ch = fgetc(this->fp)) {
+                                switch (buffer->ch = fgetc(buffer->fp)) {
                                     case 10:
                                     case 32:
                                         while (1) {
-                                            switch (this->ch = fgetc(this->fp)) {
+                                            switch (buffer->ch = fgetc(buffer->fp)) {
                                                 case 32:
                                                     break;
                                                 case 59:
-                                                    MemoryMap(this);
+                                                    MemoryMap(buffer);
                                                     return;
                                                 default:
-                                                    ErrorCollectorAttr(this);
+                                                    ErrorCollectorAttr(buffer);
                                             }
                                         }
                                     case 59:
-                                        MemoryMap(this);
+                                        MemoryMap(buffer);
                                         return;
                                     default:
-                                        Memory(this);
+                                        Memory(buffer);
                                         break;
                                     case 58:
-                                        ErrorCollectorAttr(this);
+                                        ErrorCollectorAttr(buffer);
                                 }
                             }
                         case 10:
                         case 59:
-                            MemoryMap(this);
+                            MemoryMap(buffer);
                             return;
                         case 32:
                             break;
@@ -208,13 +208,13 @@ endFuncAttr:
                 break;
             case 10:
             case 59:
-                MemoryMap(this);
+                MemoryMap(buffer);
                 return;
             default:
-                Memory(this);
+                Memory(buffer);
                 break;
             case 58:
-                ErrorCollectorAttr(this);
+                ErrorCollectorAttr(buffer);
         }
 
     }

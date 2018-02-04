@@ -13,20 +13,22 @@
 @TOOLS
  */
 
-int _scanJs(struct Buffer * this) {
-    struct timespec t1, t2;
-    clock_gettime(CLOCK_MONOTONIC, &t1);
+int _scanJs(struct Buffer * buffer) {
+    //struct timespec t1, t2;
+    //clock_gettime(CLOCK_MONOTONIC, &t1);
     
-    if (parseHeader(this)) {
-        switch (this->ch) {
+    if (parseHeader(buffer)) {
+        switch (buffer->ch) {
             case 99:
-                if (parseClassJsServer(this, ClassJsServerOutput)) {
+         
+                if (parseClassJsServer(buffer, ClassJsServerOutput)) {
                     printf("Module done.\n");
                 } else {
                     printf("Error in Module");
                     return 0;
                 }
                 break;
+           
             default:
                 printf("Only export class.\n");
                 return 0;
@@ -35,12 +37,12 @@ int _scanJs(struct Buffer * this) {
         printf("Error in header");
         return 0;
     }
-    fclose(this->fp);
+    fclose(buffer->fp);
 
 
     printf("All is done nice work");
-    clock_gettime(CLOCK_MONOTONIC, &t2);
-    printf(" \t | %lu \n",  (unsigned long long) (t2.tv_nsec -  t1.tv_nsec));
+    //clock_gettime(CLOCK_MONOTONIC, &t2);
+    //printf(" \t | %lu \n",  (unsigned long long) (t2.tv_nsec -  t1.tv_nsec));
 
     return 1;
 }

@@ -19,9 +19,10 @@ struct ClassCollectorJs {
 /**
 @CONSTRUCTOR
  */
+
 struct ClassCollectorJs *newClassCollectorJs(unsigned short pointer) {
 
-    struct ClassCollectorJs *y = malloc(sizeof (struct ClassCollectorJs));
+    struct ClassCollectorJs *y = (ClassCollectorJs*) malloc(sizeof (struct ClassCollectorJs));
 
     y->hasConstructor = 0;
     y->_attrStatic = 0;
@@ -33,13 +34,13 @@ struct ClassCollectorJs *newClassCollectorJs(unsigned short pointer) {
     return y;
 }
 
-int PrintClassCollectorJs(struct Buffer * this, struct ClassCollectorJs * collector) {
+int PrintClassCollectorJs(struct Buffer * buffer, struct ClassCollectorJs * collector) {
 
 
 
     printf(">>>>>>>>>>>>>\n");
-    for (int i = 0; i < this->_pointer; i++) {
-        printf(" %d \n", this->pointer[i]);
+    for (int i = 0; i < buffer->_pointer; i++) {
+        printf(" %d \n", buffer->pointer[i]);
 
     }
 

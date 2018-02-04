@@ -1,3 +1,4 @@
 /node_modules/
 /trash/
 /core_c/*.exe
+/core_c/build/

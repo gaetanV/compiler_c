@@ -1,27 +1,27 @@
 
 int ClassJsServer(
-        struct Buffer * this, 
+        struct Buffer * buffer, 
         int(classOuputType) (struct Buffer *, struct ClassCollectorJsServer * collector)
  ) {
 
-    struct ClassCollectorJsServer * collector  =  newClassCollectorJsServer(this->_pointer - 2);
+    struct ClassCollectorJsServer * collector  =  newClassCollectorJsServer(buffer->_pointer - 2);
 
 
-    CollectorExtendsImplements(this, &collector->hasExtends, &collector->hasImplements );
+    CollectorExtendsImplements(buffer, &collector->hasExtends, &collector->hasImplements );
 
     while (1) {
-        switch (this->ch = fgetc(this->fp)) {
+        switch (buffer->ch = fgetc(buffer->fp)) {
             case 32:
                 break;
             case 10:
                 break;
             case 47:
-                RegexStrictComments(this);
+                RegexStrictComments(buffer);
                 break;
             case 99:
-                if (RegexConstructorOrFunc(this)) {
+                if (RegexConstructorOrFunc(buffer)) {
                     CollectorContructorArgsType(
-                            this, 
+                            buffer, 
                             collector->constructor,
                             &collector->hasConstructor ,
                             &collector->_type , 
@@ -29,17 +29,17 @@ int ClassJsServer(
 
                 } else {
                     CollectorFuncNameArgs(
-                            this,
+                            buffer,
                             &collector->_func,
                             collector->func
                             );
                 }
                 break;
             case 115:
-                if (RegexStaticOrFunc(this)) {
-                    RegexStrictSpaces(this);
+                if (RegexStaticOrFunc(buffer)) {
+                    RegexStrictSpaces(buffer);
                     CollectorFuncNameArgsOrAttr(
-                            this,
+                            buffer,
                             &collector->_funcStatic,
                             collector->funcStatic,
                             &collector->_attrStatic,
@@ -49,29 +49,29 @@ int ClassJsServer(
                 } else {
 
                     CollectorFuncNameArgs(
-                            this,
+                            buffer,
                             &collector->_func,
                             collector->func
                             );
                 }
                 break;
             case 112:
-                switch (fgetc(this->fp)) {
+                switch (fgetc(buffer->fp)) {
                     case 117:
-                        if (RegexUblicOrFunc(this)) {
-                            RegexStrictSpaces(this);
+                        if (RegexUblicOrFunc(buffer)) {
+                            RegexStrictSpaces(buffer);
                         }
                         CollectorFuncNameArgs(
-                                this,
+                                buffer,
                                 &collector->_func,
                                 collector->func
                                 );
                         break;
                     case 114:
-                        if (RegexRivateOrFunc(this)) {
-                            RegexStrictSpaces(this);
+                        if (RegexRivateOrFunc(buffer)) {
+                            RegexStrictSpaces(buffer);
                             CollectorFuncNameArgsOrAttr(
-                                    this,
+                                    buffer,
                                     &collector->_funcPrivate,
                                     collector->funcPrivate,
                                     &collector->_attrPrivate,
@@ -79,7 +79,7 @@ int ClassJsServer(
                                     );
                         } else {
                             CollectorFuncNameArgs(
-                                    this,
+                                    buffer,
                                     &collector->_func,
                                     collector->func
                                     );
@@ -88,7 +88,7 @@ int ClassJsServer(
                         break;
                     default:
                         CollectorFuncNameArgs(
-                                this, &collector->_func,
+                                buffer, &collector->_func,
                                 collector->func
                                 );
                         break;
@@ -96,7 +96,7 @@ int ClassJsServer(
                 break;
             default:
                 CollectorFuncNameArgs(
-                        this, 
+                        buffer, 
                         &collector->_func,
                         collector->func
                         );
@@ -105,7 +105,7 @@ int ClassJsServer(
             case EOF:
                 return 0;
             case 125:
-                classOuputType(this, collector);
+                classOuputType(buffer, collector);
                 return 1;
 
         }

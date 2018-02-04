@@ -1,22 +1,22 @@
 // No opti ( Exit code Only )
 
-void Error(struct Buffer * this, char * message) {
+void Error(struct Buffer * buffer, char * message) {
     int cmp = 1;
-    int pos = ftell(this->fp);
-    fseek(this->fp, 0, SEEK_SET);
+    int pos = ftell(buffer->fp);
+    fseek(buffer->fp, 0, SEEK_SET);
     int pointer;
     int tmp;
-step1:
+
     while (1) {
-        switch (fgetc(this->fp)) {
+        switch (fgetc(buffer->fp)) {
             case 10:
                 cmp++;
-                fgetc(this->fp);
-                tmp = ftell(this->fp);
+                fgetc(buffer->fp);
+                tmp = ftell(buffer->fp);
                 pointer = tmp;
                 break;
             default:
-                tmp = ftell(this->fp);
+                tmp = ftell(buffer->fp);
                 break;
         }
         if (tmp >= pos) {
@@ -24,18 +24,18 @@ step1:
         }
     }
 step2:
-    fseek(this->fp, pointer -1 , SEEK_SET);
+    fseek(buffer->fp, pointer -1 , SEEK_SET);
     printf("Fatal Error : %s \n\n", message);
     printf("Ligne %d \n", cmp);
     while (1) {
-        switch (this->ch = fgetc(this->fp)) {
+        switch (buffer->ch = fgetc(buffer->fp)) {
             case 10:
             case EOF:
-                printf("\n", cmp);
+                printf("\n");
                 exit(0);
                 break;
             default:
-                printf("%c", this->ch);
+                printf("%c", buffer->ch);
                 break;
         }
     }

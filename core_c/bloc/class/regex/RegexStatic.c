@@ -1,40 +1,40 @@
-int RegexStaticOrFunc(struct Buffer * this) {
+int RegexStaticOrFunc(struct Buffer * buffer) {
 
     // REGEX ublic Start at 115
 
-    if ((this->ch = fgetc(this->fp)) != 116) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 116) {
   
-        MemoryChar(this, 115);
+        MemoryChar(buffer, 115);
         return 0;
     }
-    if ((this->ch = fgetc(this->fp)) != 97) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 97) {
 
-        MemoryChar(this, 115);
-        MemoryChar(this, 116);
+        MemoryChar(buffer, 115);
+        MemoryChar(buffer, 116);
         return 0;
     }
-    if ((this->ch = fgetc(this->fp)) != 116) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 116) {
 
-        MemoryChar(this, 115);
-        MemoryChar(this, 116);
-        MemoryChar(this, 97);
+        MemoryChar(buffer, 115);
+        MemoryChar(buffer, 116);
+        MemoryChar(buffer, 97);
         return 0;
     }
-    if ((this->ch = fgetc(this->fp)) != 105) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 105) {
  
-        MemoryChar(this, 115);
-        MemoryChar(this, 116);
-        MemoryChar(this, 97);
-        MemoryChar(this, 116);
+        MemoryChar(buffer, 115);
+        MemoryChar(buffer, 116);
+        MemoryChar(buffer, 97);
+        MemoryChar(buffer, 116);
         return 0;
     }
-    if ((this->ch = fgetc(this->fp)) != 99) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 99) {
      
-        MemoryChar(this, 115);
-        MemoryChar(this, 116);
-        MemoryChar(this, 97);
-        MemoryChar(this, 116);
-        MemoryChar(this, 105);
+        MemoryChar(buffer, 115);
+        MemoryChar(buffer, 116);
+        MemoryChar(buffer, 97);
+        MemoryChar(buffer, 116);
+        MemoryChar(buffer, 105);
         return 0;
     }
 

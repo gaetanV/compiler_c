@@ -1,45 +1,45 @@
-int RegexRivateOrFunc(struct Buffer * this) {
+int RegexRivateOrFunc(struct Buffer * buffer) {
 
     // REGEX rivate Start at 114
 
-    if ((this->ch = fgetc(this->fp)) != 105) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 105) {
         
-        MemoryChar(this, 112);
-        MemoryChar(this, 114);
+        MemoryChar(buffer, 112);
+        MemoryChar(buffer, 114);
         return 0;
     }
-    if ((this->ch = fgetc(this->fp)) != 118) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 118) {
      
-        MemoryChar(this, 112);
-        MemoryChar(this, 114);
-        MemoryChar(this, 105);
+        MemoryChar(buffer, 112);
+        MemoryChar(buffer, 114);
+        MemoryChar(buffer, 105);
         return 0;
     }
-    if ((this->ch = fgetc(this->fp)) != 97) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 97) {
      
-        MemoryChar(this, 112);
-        MemoryChar(this, 114);
-        MemoryChar(this, 105);
-        MemoryChar(this, 118);
+        MemoryChar(buffer, 112);
+        MemoryChar(buffer, 114);
+        MemoryChar(buffer, 105);
+        MemoryChar(buffer, 118);
         return 0;
     }
-    if ((this->ch = fgetc(this->fp)) != 116) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 116) {
 
-        MemoryChar(this, 112);
-        MemoryChar(this, 114);
-        MemoryChar(this, 105);
-        MemoryChar(this, 118);
-        MemoryChar(this, 97);
+        MemoryChar(buffer, 112);
+        MemoryChar(buffer, 114);
+        MemoryChar(buffer, 105);
+        MemoryChar(buffer, 118);
+        MemoryChar(buffer, 97);
         return 0;
     }
-    if ((this->ch = fgetc(this->fp)) != 101) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 101) {
      
-        MemoryChar(this, 112);
-        MemoryChar(this, 114);
-        MemoryChar(this, 105);
-        MemoryChar(this, 118);
-        MemoryChar(this, 97);
-        MemoryChar(this, 116);
+        MemoryChar(buffer, 112);
+        MemoryChar(buffer, 114);
+        MemoryChar(buffer, 105);
+        MemoryChar(buffer, 118);
+        MemoryChar(buffer, 97);
+        MemoryChar(buffer, 116);
         return 0;
     }
 
@@ -47,38 +47,38 @@ int RegexRivateOrFunc(struct Buffer * this) {
 
 }
 
-int RegexUblicOrFunc(struct Buffer * this) {
+int RegexUblicOrFunc(struct Buffer * buffer) {
 
     // REGEX ublic Start at 117
 
-    if ((this->ch = fgetc(this->fp)) != 98) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 98) {
     
-        MemoryChar(this, 112);
-        MemoryChar(this, 117);
+        MemoryChar(buffer, 112);
+        MemoryChar(buffer, 117);
         return 0;
     }
-    if ((this->ch = fgetc(this->fp)) != 108) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 108) {
 
-        MemoryChar(this, 112);
-        MemoryChar(this, 117);
-        MemoryChar(this, 98);
+        MemoryChar(buffer, 112);
+        MemoryChar(buffer, 117);
+        MemoryChar(buffer, 98);
         return 0;
     }
-    if ((this->ch = fgetc(this->fp)) != 105) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 105) {
 
-        MemoryChar(this, 112);
-        MemoryChar(this, 117);
-        MemoryChar(this, 98);
-        MemoryChar(this, 108);
+        MemoryChar(buffer, 112);
+        MemoryChar(buffer, 117);
+        MemoryChar(buffer, 98);
+        MemoryChar(buffer, 108);
         return 0;
     }
-    if ((this->ch = fgetc(this->fp)) != 99) {
+    if ((buffer->ch = fgetc(buffer->fp)) != 99) {
       
-        MemoryChar(this, 112);
-        MemoryChar(this, 117);
-        MemoryChar(this, 98);
-        MemoryChar(this, 108);
-        MemoryChar(this, 105);
+        MemoryChar(buffer, 112);
+        MemoryChar(buffer, 117);
+        MemoryChar(buffer, 98);
+        MemoryChar(buffer, 108);
+        MemoryChar(buffer, 105);
         return 0;
     }
     return 1;

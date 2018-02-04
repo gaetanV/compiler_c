@@ -1,12 +1,12 @@
 /**
 @ERROR
  */
-void ErrorComment(struct Buffer * this) {
-    Error(this, "Comment");
+void ErrorComment(struct Buffer * buffer) {
+    Error(buffer, "Comment");
 }
 
-void ErrorSpace(struct Buffer * this) {
-    Error(this, "Spaces");
+void ErrorSpace(struct Buffer * buffer) {
+    Error(buffer, "Spaces");
 }
 
 /**
@@ -17,28 +17,28 @@ void ErrorSpace(struct Buffer * this) {
 #define RegexJumpSpace(this) do{this->ch = fgetc(this->fp);} while (this->ch == 32); 
 #define RegexStrictSpaces(this) if(fgetc(this->fp) != 32) {ErrorSpace(this);};  RegexJumpSpace(this)   ;
 
-void RegexForceEmptyLigne(struct Buffer * this) {
+void RegexForceEmptyLigne(struct Buffer * buffer) {
     while (1) {
-        switch (fgetc(this->fp)) {
+        switch (fgetc(buffer->fp)) {
             case EOF:
-                ErrorSpace(this);
+                ErrorSpace(buffer);
             case 10:
                 return;
         }
     }
 }
 
-void RegexCommentBloc(struct Buffer * this) {
+void RegexCommentBloc(struct Buffer * buffer) {
     while (1) {
 loop1:
-        switch (fgetc(this->fp)) {
+        switch (fgetc(buffer->fp)) {
             case EOF:
-                ErrorComment(this);
+                ErrorComment(buffer);
             case 42:
                 loop2 :
-                switch (fgetc(this->fp)) {
+                switch (fgetc(buffer->fp)) {
                     case EOF:
-                        ErrorComment(this);
+                        ErrorComment(buffer);
                     case 47:
                         return;
                     case 42:
@@ -52,16 +52,16 @@ loop1:
     }
 }
 
-void RegexStrictComments(struct Buffer * this) {
-    switch (fgetc(this->fp)) {
+void RegexStrictComments(struct Buffer * buffer) {
+    switch (fgetc(buffer->fp)) {
         case 47:
-            RegexForceEmptyLigne(this);
+            RegexForceEmptyLigne(buffer);
             return;
         case 42:
-            RegexCommentBloc(this);
+            RegexCommentBloc(buffer);
             return;
         default:
-            ErrorComment(this);
+            ErrorComment(buffer);
     }
 
 }

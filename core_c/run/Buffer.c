@@ -18,29 +18,29 @@ struct Buffer {
 };
 
 //Memory
-#define MemoryChar(this,ch)this->buffer[this->_buffer++]=ch;
-#define MemoryMap(this)this->pointer[this->_pointer++]=this->_buffer;
-#define Memory(this)this->buffer[this->_buffer++]=this->ch;
+#define MemoryChar(buffer,ch)buffer->buffer[buffer->_buffer++]=ch;
+#define MemoryMap(buffer)buffer->pointer[buffer->_pointer++]=buffer->_buffer;
+#define Memory(buffer)buffer->buffer[buffer->_buffer++]=buffer->ch;
 
-void SequenceInit(struct Buffer * this, char * c) {
-    this->fp = fopen(c, "r");
-    if (this->fp == NULL) {
+void SequenceInit(struct Buffer *buffer, char * c) {
+    buffer->fp = fopen(c, "r");
+    if (buffer->fp == NULL) {
         printf("File %s not found", c);
         exit(0);
     }
 
-    fseek(this->fp, 0, SEEK_END);
-    int size = ftell(this->fp);
-    fseek(this->fp, 0, SEEK_SET);
+    fseek(buffer->fp, 0, SEEK_END);
+    int size = ftell(buffer->fp);
+    fseek(buffer->fp, 0, SEEK_SET);
 
-    this->buffer = malloc(size * sizeof (char));
-    this->pointer = malloc(size / 2 * sizeof (unsigned short));
-    this->output = malloc(size * sizeof (char));
-    this->output[0] = '\0';
+    buffer->buffer = (char*)malloc(size * sizeof (char));
+    buffer->pointer = (unsigned short*)malloc(size / 2 * sizeof (unsigned short));
+    buffer->output = (char*)malloc(size * sizeof (char));
+    buffer->output[0] = '\0';
 
-    this->_buffer = 0;
-    this->_pointer = 0;
-    this->c = 0;
+    buffer->_buffer = 0;
+    buffer->_pointer = 0;
+    buffer->c = 0;
 
     return;
 };

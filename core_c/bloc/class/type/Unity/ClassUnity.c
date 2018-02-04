@@ -1,46 +1,46 @@
 #include <stdio.h>
 
 int ClassUnity(
-        struct Buffer * this,
+        struct Buffer * buffer,
         int(classOuputType) (struct Buffer *, struct ClassCollectorUnity * collector)
         ) {
 
-    struct ClassCollectorUnity * collector = newClassCollectorUnity(this->_pointer - 2);
-    CollectorExtends(this, &collector->hasExtends);
+    struct ClassCollectorUnity * collector = newClassCollectorUnity(buffer->_pointer - 2);
+    CollectorExtends(buffer, &collector->hasExtends);
 
 
     while (1) {
-        switch (this->ch = fgetc(this->fp)) {
+        switch (buffer->ch = fgetc(buffer->fp)) {
             case 32:
                 break;
             case 10:
                 break;
             case 47:
-                RegexStrictComments(this);
+                RegexStrictComments(buffer);
                 break;
             case 99:
-                if (RegexConstructorOrFunc(this)) {
+                if (RegexConstructorOrFunc(buffer)) {
                     CollectorContructorArgsStrictType(
-                            this,
+                            buffer,
                             &collector->hasConstructor,
                             collector->constructor
                             );
                 } else {
                     CollectorFuncNameArgs(
-                            this,
+                            buffer,
                             &collector->_func,
                             collector->func
                             );
                 }
                 break;
             case 112:
-                switch (fgetc(this->fp)) {
+                switch (fgetc(buffer->fp)) {
                     case 117:
-                        if (RegexUblicOrFunc(this)) {
-                            RegexStrictSpaces(this);
+                        if (RegexUblicOrFunc(buffer)) {
+                            RegexStrictSpaces(buffer);
                         }
                         CollectorFuncNameArgsOrAttrStrictType(
-                                this,
+                                buffer,
                                 &collector->_func,
                                 collector->func,
                                 &collector->_attrPublic,
@@ -48,10 +48,10 @@ int ClassUnity(
                                 );
                         break;
                     case 114:
-                        if (RegexRivateOrFunc(this)) {
-                            RegexStrictSpaces(this);
+                        if (RegexRivateOrFunc(buffer)) {
+                            RegexStrictSpaces(buffer);
                             CollectorFuncNameArgsOrAttrStrictType(
-                                    this,
+                                    buffer,
                                     &collector->_funcPrivate,
                                     collector->funcPrivate,
                                     &collector->_attrPrivate,
@@ -59,7 +59,7 @@ int ClassUnity(
                                     );
                         } else {
                             CollectorFuncNameArgsOrAttrStrictType(
-                                    this,
+                                    buffer,
                                     &collector->_func,
                                     collector->func,
                                     &collector->_attrPublic,
@@ -70,7 +70,7 @@ int ClassUnity(
                         break;
                     default:
                         CollectorFuncNameArgsOrAttrStrictType(
-                                this,
+                                buffer,
                                 &collector->_func,
                                 collector->func,
                                 &collector->_attrPublic,
@@ -80,10 +80,10 @@ int ClassUnity(
                 }
                 break;
             case 115:
-                if (RegexStaticOrFunc(this)) {
-                    RegexStrictSpaces(this);
+                if (RegexStaticOrFunc(buffer)) {
+                    RegexStrictSpaces(buffer);
                     CollectorFuncNameArgsOrAttrStrictType(
-                            this,
+                            buffer,
                             &collector->_funcStatic,
                             collector->funcStatic,
                             &collector->_attrStatic,
@@ -92,7 +92,7 @@ int ClassUnity(
 
                 } else {
                     CollectorFuncNameArgsOrAttrStrictType(
-                            this,
+                            buffer,
                             &collector->_func,
                             collector->func,
                             &collector->_attrPublic,
@@ -102,7 +102,7 @@ int ClassUnity(
                 break;
             default:
                 CollectorFuncNameArgsOrAttrStrictType(
-                        this,
+                        buffer,
                         &collector->_func,
                         collector->func,
                         &collector->_attrPublic,
@@ -112,7 +112,7 @@ int ClassUnity(
             case EOF:
                 return 0;
             case 125:
-                classOuputType(this, collector);
+                classOuputType(buffer, collector);
                 return 1;
         }
     }

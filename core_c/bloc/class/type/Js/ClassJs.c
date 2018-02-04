@@ -1,43 +1,43 @@
 
 int ClassJs(
-        struct Buffer * this, 
+        struct Buffer * buffer, 
         int(classOuputType) (struct Buffer *, struct ClassCollectorJs * collector)
  ) {
 
-    struct ClassCollectorJs * collector  =  newClassCollectorJs(this->_pointer - 2);
+    struct ClassCollectorJs * collector  =  newClassCollectorJs(buffer->_pointer - 2);
     
-    CollectorExtends(this, &collector->hasExtends);
+    CollectorExtends(buffer, &collector->hasExtends);
 
     
     while (1) {
-        switch (this->ch = fgetc(this->fp)) {
+        switch (buffer->ch = fgetc(buffer->fp)) {
             case 32:
                 break;
             case 10:
                 break;
             case 47:
-                RegexStrictComments(this);
+                RegexStrictComments(buffer);
                 break;
             case 99:
-                if (RegexConstructorOrFunc(this)) {
+                if (RegexConstructorOrFunc(buffer)) {
                     CollectorContructorArgs(
-                            this, 
+                            buffer, 
                             &collector->hasConstructor ,
                             collector->constructor
                             );
                 } else {
                     CollectorFuncNameArgs(
-                            this,
+                            buffer,
                             &collector->_func,
                             collector->func
                             );
                 }
                 break;
             case 115:
-                if (RegexStaticOrFunc(this)) {
-                    RegexStrictSpaces(this);
+                if (RegexStaticOrFunc(buffer)) {
+                    RegexStrictSpaces(buffer);
                     CollectorFuncNameArgsOrAttr(
-                            this,
+                            buffer,
                             &collector->_funcStatic,
                             collector->funcStatic,
                             &collector->_attrStatic,
@@ -46,7 +46,7 @@ int ClassJs(
 
                 } else {
                     CollectorFuncNameArgs(
-                            this,
+                            buffer,
                             &collector->_func,
                             collector->func
                             );
@@ -54,14 +54,14 @@ int ClassJs(
                 break;
             default:
                 CollectorFuncNameArgs(
-                        this, &collector->_func,
+                        buffer, &collector->_func,
                         collector->func
                         );
                 break;
             case EOF:
                 return 0;
             case 125:
-                classOuputType(this, collector);
+                classOuputType(buffer, collector);
                 return 1;
 
         }
